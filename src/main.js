@@ -21,6 +21,10 @@ const mysql = require('mysql');
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
+
+const Game = require('./Back/Classes/Game.js')
+const scoreHandler = require("./Back/Modules/scoreHandler")
+
 app.use(express.static(__dirname + '/front/'));
 app.use(urlencodedParser);
 app.use(session);
@@ -68,5 +72,11 @@ http.listen(63342, () => {
     console.log('Serveur lancé sur le port 63342');
 });
 
+
+let game = new Game("elliott","sheron");
+game.remplirValue();
+//scoreHandler.writePersonnalScore(game);
+//scoreHandler.writeScore(game)
+scoreHandler.readPersonnalScore("elliott").then(()=>console.log(scoreHandler.getScores()))
 
 
