@@ -3,11 +3,15 @@
   <head>
     <title>Plateau - Stratego</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" href="plateau.css" />
-    <script type="text/javascript" src="pions.js"></script>
-    <script type="text/javascript" src="main.js"></script>
-    <script type="text/javascript" src="StrategoView.js"></script>
+	<link rel="stylesheet" type="text/css" href="../Css/plateau.css" />
+	<link rel="stylesheet" type="text/css" href="../Css/tableauPions.css" />
+
+	<!-- Modules JS à pré-télécharger -->
+	<script type="text/javascript" src="../../Back/Classes/GameAndPions.js"></script>
+    <!-- <script type="text/javascript" src="pions.js"></script> -->
+    <!--<script type="text/javascript" src="StrategoView.js"></script>-->
   </head>
+
   <body>  
     <h3>C'est au joueur <span id="player_number">?</span></h3>
 	<table id="stratego">
@@ -132,6 +136,87 @@
 			<td data='100'></td>
 		</tr>
 	</table>
-    <script type="text/javascript" src="main.js"></script>
+
+	<table id="pions">
+		<thead>
+			<tr>
+				<td>Type</td>
+				<td>Nombre restant</td>
+				<td>En placer un ?</td>
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr>
+				<td>Maréchal</td>
+				<td>1</td>
+				<td></td>
+			</tr>
+
+			<tr>
+				<td>Général</td>
+				<td>1</td>
+				<td></td>
+			</tr>
+
+			<tr>
+				<td>Colonels</td>
+				<td>2</td>
+				<td></td>
+			</tr>
+
+			<tr>
+				<td>Commandants</td>
+				<td>3</td>
+				<td></td>
+			</tr>
+
+			<tr>
+				<td>Capitaines</td>
+				<td>4</td>
+				<td></td>
+			</tr>
+
+			<tr>
+				<td>Lieutenants</td>
+				<td>4</td>
+				<td></td>
+			</tr>
+
+			<tr>
+				<td>Sergents</td>
+				<td>4</td>
+				<td></td>
+			</tr>
+
+			<tr>
+				<td>Démineurs</td>
+				<td>5</td>
+				<td></td>
+			</tr>
+
+			<tr>
+				<td>Eclaireurs</td>
+				<td>8</td>
+				<td></td>
+			</tr>
+
+			<tr>
+				<td>Espion</td>
+				<td>1</td>
+				<td></td>
+			</tr>
+
+			<tr>
+				<td>Drapeau</td>
+				<td>1</td>
+				<td></td>
+			</tr>
+
+		</tbody>
+	</table>
+
+	<script type="text/javascript" src="../../main.js"></script>
+	<script type="text/javascript" src="../Js/StrategoView.js"></script>
   </body>
 </html>

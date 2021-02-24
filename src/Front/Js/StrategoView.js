@@ -1,4 +1,12 @@
-class TicTacToeView
+
+class StrategoView{
+	constructor(game){
+		this.game=game;
+
+	}
+}
+
+/*class TicTacToeView
 {
 	constructor(game, name)
 	{
@@ -77,3 +85,4 @@ class TicTacToeView
     }
 	
 }
+*/
