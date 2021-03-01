@@ -76,7 +76,7 @@ http.listen(63342, () => {
 let game = new Game("elliott","sheron");
 game.remplirValue();
 //scoreHandler.writePersonnalScore(game);
-//scoreHandler.writeScore(game)
+scoreHandler.writeScore(game)
 scoreHandler.readPersonnalScore("elliott").then(()=>console.log(scoreHandler.getScores()))
 
 
