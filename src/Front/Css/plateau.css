@@ -1,5 +1,11 @@
+*{
+	margin:0;
+	padding:0;
+}
+
 table {
 	border-collapse: collapse;
+	display:inline;
 }
 
 td {
@@ -10,9 +16,3 @@ td {
 	text-align: center;
 }
 
-#pions{
-	margin:20px;
-}
-#pions tr:hoover{
-	background-color:red;
-}

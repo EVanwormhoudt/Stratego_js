@@ -2,8 +2,8 @@
     // Initialisation du jeu
     let player1 = new Player("Samuel")
     let player2 = new Player("Géraldine")
-    let game = new Game(player1,player2);
-    
+    let game = new Game(player1,player2); // Jeu en mémoire
+    let gameView = new StrategoView(game); // Jeu sur l'interface, événements lors du clic etc..
 
     console.log(game.joueur1)
     console.log("Le joueur 1 s'appelle :",game.player1name(),", il est de l'équipe :",game.player1color())
@@ -15,4 +15,20 @@
     // Usage des différentes pièces
     let cavalier = new Pions("Cavalier",9,player1.getName(),2,3);
 
+    // Initialisation des informations visuelles
+    gameView.lac();
+    gameView.piecesListener();
+
+    let test=document.getElementById("ready");
+    test.addEventListener("click",()=>{
+        if(game.isGridReady()){
+            console.log("La partie peut commencer.")
+        } else { console.log("La phase de préparation n'est pas encore terminée.")}
+    })
+    gameView.tableOfPiecesContent();
+    gameView.tabDesPions(); // A supprimer un jour
+    gameView.tabDuPlateau(); // A supprimer un jour
+    gameView.plateauCaseListener();
+    
+    //gameView.piecesListener();
 })();

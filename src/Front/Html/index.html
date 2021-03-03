@@ -12,211 +12,337 @@
     <!--<script type="text/javascript" src="StrategoView.js"></script>-->
   </head>
 
-  <body>  
-    <h3>C'est au joueur <span id="player_number">?</span></h3>
-	<table id="stratego">
-		<tr>
-			<td data='1'></td>
-			<td data='2'></td>
-			<td data='3'></td>
-			<td data='4'></td>
-			<td data='5'></td>
-			<td data='6'></td>
-			<td data='7'></td>
-			<td data='8'></td>
-			<td data='9'></td>
-			<td data='10'></td>
-		</tr>
-		<tr>
-			<td data='11'></td>
-			<td data='12'></td>
-			<td data='13'></td>
-			<td data='14'></td>
-			<td data='15'></td>
-			<td data='16'></td>
-			<td data='17'></td>
-			<td data='18'></td>
-			<td data='19'></td>
-			<td data='20'></td>
-		</tr>
-		<tr>
-			<td data='21'></td>
-			<td data='22'></td>
-			<td data='23'></td>
-			<td data='24'></td>
-			<td data='25'></td>
-			<td data='26'></td>
-			<td data='27'></td>
-			<td data='28'></td>
-			<td data='29'></td>
-			<td data='30'></td>
-		</tr>
-		<tr>
-			<td data='31'></td>
-			<td data='32'></td>
-			<td data='33'></td>
-			<td data='34'></td>
-			<td data='35'></td>
-			<td data='36'></td>
-			<td data='37'></td>
-			<td data='38'></td>
-			<td data='39'></td>
-			<td data='40'></td>
-		</tr>
-		<tr>
-			<td data='41'></td>
-			<td data='42'></td>
-			<td data='43'></td>
-			<td data='44'></td>
-			<td data='45'></td>
-			<td data='46'></td>
-			<td data='47'></td>
-			<td data='48'></td>
-			<td data='49'></td>
-			<td data='50'></td>
-		</tr>
-		<tr>
-			<td data='51'></td>
-			<td data='52'></td>
-			<td data='53'></td>
-			<td data='54'></td>
-			<td data='55'></td>
-			<td data='56'></td>
-			<td data='57'></td>
-			<td data='58'></td>
-			<td data='59'></td>
-			<td data='60'></td>
-		</tr>
-		<tr>
-			<td data='61'></td>
-			<td data='62'></td>
-			<td data='63'></td>
-			<td data='64'></td>
-			<td data='65'></td>
-			<td data='66'></td>
-			<td data='67'></td>
-			<td data='68'></td>
-			<td data='69'></td>
-			<td data='70'></td>
-		</tr>
-		<tr>
-			<td data='71'></td>
-			<td data='72'></td>
-			<td data='73'></td>
-			<td data='74'></td>
-			<td data='75'></td>
-			<td data='76'></td>
-			<td data='77'></td>
-			<td data='78'></td>
-			<td data='79'></td>
-			<td data='80'></td>
-		</tr>
-		<tr>
-			<td data='81'></td>
-			<td data='82'></td>
-			<td data='83'></td>
-			<td data='84'></td>
-			<td data='85'></td>
-			<td data='86'></td>
-			<td data='87'></td>
-			<td data='88'></td>
-			<td data='89'></td>
-			<td data='90'></td>
-		</tr>
-		<tr>
-			<td data='91'></td>
-			<td data='92'></td>
-			<td data='93'></td>
-			<td data='94'></td>
-			<td data='95'></td>
-			<td data='96'></td>
-			<td data='97'></td>
-			<td data='98'></td>
-			<td data='99'></td>
-			<td data='100'></td>
-		</tr>
-	</table>
+  <body>
+		<table id="stratego">
+			<thead>
+				<tr>
+					<td></td>
+					<td>1</td>
+					<td>2</td>
+					<td>3</td>
+					<td>4</td>
+					<td>5</td>
+					<td>6</td>
+					<td>7</td>
+					<td>8</td>
+					<td>9</td>
+					<td>10</td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>1</td>
+					<td id='1'></td>
+					<td id='2'></td>
+					<td id='3'></td>
+					<td id='4'></td>
+					<td id='5'></td>
+					<td id='6'></td>
+					<td id='7'></td>
+					<td id='8'></td>
+					<td id='9'></td>
+					<td id='10'></td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td id='11'></td>
+					<td id='12'></td>
+					<td id='13'></td>
+					<td id='14'></td>
+					<td id='15'></td>
+					<td id='16'></td>
+					<td id='17'></td>
+					<td id='18'></td>
+					<td id='19'></td>
+					<td id='20'></td>
+				</tr>
+				<tr>
+					<td>3</td>
+					<td id='21'></td>
+					<td id='22'></td>
+					<td id='23'></td>
+					<td id='24'></td>
+					<td id='25'></td>
+					<td id='26'></td>
+					<td id='27'></td>
+					<td id='28'></td>
+					<td id='29'></td>
+					<td id='30'></td>
+				</tr>
+				<tr>
+					<td>4</td>
+					<td id='31'></td>
+					<td id='32'></td>
+					<td id='33'></td>
+					<td id='34'></td>
+					<td id='35'></td>
+					<td id='36'></td>
+					<td id='37'></td>
+					<td id='38'></td>
+					<td id='39'></td>
+					<td id='40'></td>
+				</tr>
+				<tr>
+					<td>5</td>
+					<td id='41'></td>
+					<td id='42'></td>
+					<td id='43'></td>
+					<td id='44'></td>
+					<td id='45'></td>
+					<td id='46'></td>
+					<td id='47'></td>
+					<td id='48'></td>
+					<td id='49'></td>
+					<td id='50'></td>
+				</tr>
+				<tr>
+					<td>6</td>
+					<td id='51'></td>
+					<td id='52'></td>
+					<td id='53'></td>
+					<td id='54'></td>
+					<td id='55'></td>
+					<td id='56'></td>
+					<td id='57'></td>
+					<td id='58'></td>
+					<td id='59'></td>
+					<td id='60'></td>
+				</tr>
+				<tr>
+					<td>7</td>
+					<td id='61'></td>
+					<td id='62'></td>
+					<td id='63'></td>
+					<td id='64'></td>
+					<td id='65'></td>
+					<td id='66'></td>
+					<td id='67'></td>
+					<td id='68'></td>
+					<td id='69'></td>
+					<td id='70'></td>
+				</tr>
+				<tr>
+					<td>8</td>
+					<td id='71'></td>
+					<td id='72'></td>
+					<td id='73'></td>
+					<td id='74'></td>
+					<td id='75'></td>
+					<td id='76'></td>
+					<td id='77'></td>
+					<td id='78'></td>
+					<td id='79'></td>
+					<td id='80'></td>
+				</tr>
+				<tr>
+					<td>9</td>
+					<td id='81'></td>
+					<td id='82'></td>
+					<td id='83'></td>
+					<td id='84'></td>
+					<td id='85'></td>
+					<td id='86'></td>
+					<td id='87'></td>
+					<td id='88'></td>
+					<td id='89'></td>
+					<td id='90'></td>
+				</tr>
+				<tr>
+					<td>10</td>
+					<td id='91'></td>
+					<td id='92'></td>
+					<td id='93'></td>
+					<td id='94'></td>
+					<td id='95'></td>
+					<td id='96'></td>
+					<td id='97'></td>
+					<td id='98'></td>
+					<td id='99'></td>
+					<td id='100'></td>
+				</tr>
+			</tbody>
+		</table>
 
-	<table id="pions">
-		<thead>
-			<tr>
-				<td>Type</td>
-				<td>Nombre restant</td>
-				<td>En placer un ?</td>
-			</tr>
-		</thead>
+		<table id="pionsRouges">
+			<thead>
+				<tr>
+					<td>Type</td>
+					<td>Nombre restant</td>
+					<td>Force</td>
+				</tr>
+			</thead>
 
-		<tbody>
-			<tr>
-				<td>Maréchal</td>
-				<td>1</td>
-				<td></td>
-			</tr>
+			<tbody>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
 
-			<tr>
-				<td>Général</td>
-				<td>1</td>
-				<td></td>
-			</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
 
-			<tr>
-				<td>Colonels</td>
-				<td>2</td>
-				<td></td>
-			</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
 
-			<tr>
-				<td>Commandants</td>
-				<td>3</td>
-				<td></td>
-			</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
 
-			<tr>
-				<td>Capitaines</td>
-				<td>4</td>
-				<td></td>
-			</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
 
-			<tr>
-				<td>Lieutenants</td>
-				<td>4</td>
-				<td></td>
-			</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
 
-			<tr>
-				<td>Sergents</td>
-				<td>4</td>
-				<td></td>
-			</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
 
-			<tr>
-				<td>Démineurs</td>
-				<td>5</td>
-				<td></td>
-			</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
 
-			<tr>
-				<td>Eclaireurs</td>
-				<td>8</td>
-				<td></td>
-			</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
 
-			<tr>
-				<td>Espion</td>
-				<td>1</td>
-				<td></td>
-			</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
 
-			<tr>
-				<td>Drapeau</td>
-				<td>1</td>
-				<td></td>
-			</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
 
-		</tbody>
-	</table>
+				<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+				</tr>
 
-	<script type="text/javascript" src="../../main.js"></script>
+			</tbody>
+		</table>
+
+		<table id="pionsBleus">
+				<thead>
+					<tr>
+						<td>Type</td>
+						<td>Nombre restant</td>
+						<td>Force</td>
+					</tr>
+				</thead>
+	
+				<tbody>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+	
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+	
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+	
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+	
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+	
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+	
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+	
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+	
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+	
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+	
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+	
+					<tr>
+							<td></td>
+							<td></td>
+							<td></td>
+					</tr>
+	
+				</tbody>
+			</table>
+		
+		<div>Pièce actuellement séléctionnée par les rouges: <span id="pieceActuelleRouge"></span></div>
+		<div>Pièce actuellement séléctionnée par les bleus: <span id="pieceActuelleBleue"></span></div>
+		<div id="error"></div>
+
+		<!-- Utile en phase de test -->
+		<div id="tabDesPions">Voir tableau des pions</div>
+		<div id="tabDuPlateau">Voir tableau du plateau en donnée</div>
+		<div id="ready">Partie prête ?</div>
+
 	<script type="text/javascript" src="../Js/StrategoView.js"></script>
+	<script type="text/javascript" src="../../main.js"></script>
   </body>
 </html>
