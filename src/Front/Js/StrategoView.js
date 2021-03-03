@@ -105,13 +105,16 @@ class StrategoView{
 							console.log("Vous ne pouvez plus poser de pièce rouge de ce type.");
 						}
 					}
-					else { document.getElementById("error").innerHTML="Il y a déjà une pièce en (",Math.floor(w+1)-6,",",z+1,").";
-						console.log("Il y a déjà une pièce en (",Math.floor(w+1)-6,",",z+1,").");}
+					else { 
+						document.getElementById("error").innerHTML="Il y a déjà une pièce rouge en ("+(Math.floor(w+1))+","+(z+1)+").";
+						console.log("Il y a déjà une pièce rouge en (",Math.floor(w+1),",",z+1,").");
+					}
 				}else{
 					document.getElementById("error").innerHTML="Vous n'avez pas saisi de pièce rouge à positionner. Veuillez en choisir une avant de cliquer sur une case du plateau.";
 					console.log("Vous n'avez pas saisi de pièce rouge à positionner. Veuillez en choisir une avant de cliquer sur une case du plateau");
 				}
-			})
+			});
+
 			celluleBleue.addEventListener('click',()=>{
 				if(this.piecesActuelleBleue!=undefined){
 					if(this.game.getBoxContent(Math.floor(w)-6,z)==undefined){
@@ -132,13 +135,15 @@ class StrategoView{
 							document.getElementById("error").innerHTML="Vous ne pouvez plus poser de pièce bleue de ce type.";
 							console.log("Vous ne pouvez plus poser de pièce bleue de ce type.");
 						}
-					} else { document.getElementById("error").innerHTML="Il y a déjà une pièce en (",Math.floor(w+1)-6,",",z+1,").";
-					console.log("Il y a déjà une pièce en (",Math.floor(w+1)-6,",",z+1,").");}
+					} else { 
+						document.getElementById("error").innerHTML="Il y a déjà une pièce bleue en ("+(Math.floor(w+1)-6)+","+(z+1)+").";
+						console.log("Il y a déjà une pièce bleue en (",Math.floor(w+1)-6,",",z+1,").");
+					}
 				}else{
 					document.getElementById("error").innerHTML="Vous n'avez pas saisi de pièce bleue à positionner. Veuillez en choisir une avant de cliquer sur une case du plateau.";
 					console.log("Vous n'avez pas saisi de pièce bleue à positionner. Veuillez en choisir une avant de cliquer sur une case du plateau");
 				}
-			})
+			});
 		}
 	}
 	preparationListener(){ // Toutes les fonctions ici
