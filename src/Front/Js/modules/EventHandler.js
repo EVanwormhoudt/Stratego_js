@@ -18,15 +18,18 @@ let EventHandler = (function(){
 
     //Event for when you let drop the draged object, that move the object, and send this info to the serv
     function drop(obj) {
-        if(obj.target.style.backgroundImage!== "") {       //check if the place to drop is a valid place
-            console.log(obj.target.firstChild)
-            if(obj.target.firstChild !== null){            //Check if the location to drop is an enemy or just a blank space
-                socket.emit("attack",[id,obj.target.id]);  //if it's an enemy, send the info to the socket, and then the fight
+        if(obj.target.parentElement.id !== id && ((obj.target.parentElement.style.backgroundImage !== "" && obj.target.nodeName === "IMG") ||
+            (obj.target.style.backgroundImage !== "" && obj.target.nodeName=== "TD"))){      //check if the place to drop is a valid place
+            if(obj.target.nodeName === "IMG"){            //Check if the location to drop is an enemy or just a blank space
+                console.log("j'attaque " + obj.target.parentElement.id +" avec "+id)
+                socket.emit("attack",[id,obj.target.parentElement.id]);  //if it's an enemy, send the info to the socket, and then the fight
             }                                              // is handled on server side
             else{
-                socket.emit("move",[id,obj.target.id]);    //if it's a blank space, then the data is send to the serv
+                socket.emit("move",[id,obj.target.parentElement.id]);//if it's a blank space, then the data is send to the serv
                 let data = obj.dataTransfer.getData("text");    //and then the piece is moved.
                 obj.target.appendChild(document.getElementById(data));
+                console.log("je bouge le "+ id +" à " +obj.target.parentElement.id)
+
                 /*--------Here there might be a modif, where the data is send to the serv, then checked, and
                 the server send back if the move is valid or not*/
             }
@@ -49,11 +52,16 @@ let EventHandler = (function(){
     //Event for when a piece has been selected, you can click on a cell to move the piece
     function cellClick(obj){
         cellLeave(obj)
-        if(obj.target.parentElement.id !== id && obj.target.style.backgroundImage !== ""){ // check if the cell is a valid place
-            if(obj.target.firstChild !== null){
-                socket.emit("attack",[id, obj.target.id]);        //same as drop()
+        console.log("etape1")
+        if(obj.target.parentElement.id !== id && ((obj.target.parentElement.style.backgroundImage !== "" && obj.target.nodeName === "IMG") ||
+            (obj.target.style.backgroundImage !== "" && obj.target.nodeName=== "TD"))){ // check if the cell is a valid place
+            console.log("etape2")
+            if(obj.target.nodeName === "IMG"){
+                socket.emit("attack",[id, obj.target.parentElement.id]);      //same as drop()
+                console.log("j'attaque " + obj.target.parentElement.id +" avec "+id)
             }
             else {
+                console.log("je bouge le "+ id +" à " +obj.target.parentElement.id)
                 socket.emit("move", [id, obj.target.id]);
                 let img = document.getElementById(id).firstChild; // Except that instead of a data.transfer
                 obj.target.appendChild(img);                      //is just a simple move of the piece manually
@@ -81,7 +89,7 @@ let EventHandler = (function(){
                let move = document.getElementById((id - (10*i)).toString());
                if (move.innerHTML === '') {
                    move.style.backgroundImage = "url('../../Front/Images/round.png')";
-               } else if (move.innerText !== ' ' && move.classList.contains("enemy")) {
+               } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
                    move.style.backgroundImage = "url('../../Front/Images/corner.png')";
                }
                i ++;
@@ -91,13 +99,14 @@ let EventHandler = (function(){
                 if(document.getElementById((id + (10*i)).toString()).hasChildNodes()){
                     blocked = true;
                 }
-               let move = document.getElementById((id +(10*i)).toString());
-               if (move.innerHTML === '') {
+
+                let move = document.getElementById((id +(10*i)).toString());
+                if (move.innerHTML === '') {
                     move.style.backgroundImage = "url('../../Front/Images/round.png')";
-               } else if (move.innerText !== ' ' && move.classList.contains("enemy")) {
+                } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
                     move.style.backgroundImage = "url('../../Front/Images/corner.png')";
-               }
-               i++;
+                }
+                i++;
            }
             i = 1;blocked = false;
             while((id+i) % 10 !== 0 && !blocked){
@@ -106,9 +115,10 @@ let EventHandler = (function(){
                     blocked = true;
                 }
                 let move = document.getElementById((id +i).toString());
+
                 if (move.innerHTML === '') {
                     move.style.backgroundImage = "url('../../Front/Images/round.png')";
-                } else if (move.innerText !== ' ' && move.classList.contains("enemy")) {
+                } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
                     move.style.backgroundImage = "url('../../Front/Images/corner.png')";
                 }
                 i++;
@@ -119,9 +129,10 @@ let EventHandler = (function(){
                     blocked = true;
                 }
                 let move = document.getElementById((id - i).toString());
+
                 if (move.innerHTML === '') {
                     move.style.backgroundImage = "url('../../Front/Images/round.png')";
-                } else if (move.innerText !== ' ' && move.classList.contains("enemy")) {
+                } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
                     move.style.backgroundImage = "url('../../Front/Images/corner.png')";
                 }
                 i++;
@@ -132,7 +143,7 @@ let EventHandler = (function(){
                 let move = document.getElementById((id - 10).toString());
                 if (move.innerHTML === '') {
                     move.style.backgroundImage = "url('../../Front/Images/round.png')";
-                } else if (move.innerText !== ' ' && move.classList.contains("enemy")) {
+                } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
                     move.style.backgroundImage = "url('../../Front/Images/corner.png')";
                 }
             }
@@ -218,24 +229,43 @@ for(let i = 0;i < 10;i++){
 }
 
 let elem = document.getElementById('45');
-let img = document.createElement("img");
-EventHandler.addEvent(img);
+let elem2 = document.getElementById('46');
+let elem3 = document.getElementById('80');
+let elem4 = document.getElementById('90');
 
-img.src = "https://legacy.imagemagick.org/Usage/canvas/gradient_bilinear.jpg";
+
+
+let img = document.createElement("img");
+img.src = "../Images/r2.png";
 img.id = "img1";
 img.classList.add("scout");
+EventHandler.addEvent(img);
 
-let elem2 = document.getElementById('46');
 let img2 = document.createElement("img");
-EventHandler.addEvent(img2);
-
-img2.src = "../../Front/Images/round.png";
+img2.src = "../Images/bn.png";
 img2.id = "img2";
 img2.classList.add("enemy");
+
+let img3 = document.createElement("img");
+img3.src = "../Images/rb.png";
+img3.id = "img3";
+img3.classList.add("bomb");
+EventHandler.addEvent(img3);
+
+let img4 = document.createElement("img");
+img4.src = "../Images/r8.png";
+img4.id = "img4";
+EventHandler.addEvent(img4);
+
+
+
 
 
 elem.appendChild(img);
 elem2.appendChild(img2);
+elem3.appendChild(img3);
+elem4.appendChild(img4)
+
 
 
 
