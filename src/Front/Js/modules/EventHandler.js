@@ -212,61 +212,6 @@ let EventHandler = (function(){
 
 })();
 
-let tblbody = document.getElementsByTagName("tbody")
-
-for(let i = 0;i < 10;i++){
-    let tr = document.createElement("tr");
-    for(let j = 0 ;j < 10;j++){
-        let td = document.createElement("td");
-        td.id = i*10 + j;
-        EventHandler.addCaseDrop(td);
-        td.removeAttribute('dragable');
-        tr.appendChild(td);
-
-    }
-
-    tblbody[0].appendChild(tr);
-}
-
-let elem = document.getElementById('45');
-let elem2 = document.getElementById('46');
-let elem3 = document.getElementById('80');
-let elem4 = document.getElementById('90');
-
-
-
-let img = document.createElement("img");
-img.src = "../Images/r2.png";
-img.id = "img1";
-img.classList.add("scout");
-EventHandler.addEvent(img);
-
-let img2 = document.createElement("img");
-img2.src = "../Images/bn.png";
-img2.id = "img2";
-img2.classList.add("enemy");
-
-let img3 = document.createElement("img");
-img3.src = "../Images/rb.png";
-img3.id = "img3";
-img3.classList.add("bomb");
-EventHandler.addEvent(img3);
-
-let img4 = document.createElement("img");
-img4.src = "../Images/r8.png";
-img4.id = "img4";
-EventHandler.addEvent(img4);
-
-
-
-
-
-elem.appendChild(img);
-elem2.appendChild(img2);
-elem3.appendChild(img3);
-elem4.appendChild(img4)
-
-
-
+module.exports = EventHandler;
 
 

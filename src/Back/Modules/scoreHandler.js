@@ -71,6 +71,9 @@ let scoreHandler = (function (){
             });
         },
         readPersonnalScore(name){
+            //If you want to use this, careful that it's an async function
+            //there is a promise to use it, with this form:
+            // scoreHandler.readPersonnalScore("name here").then(function here)
             return new Promise((resolve, reject) => {
                 con.query("SELECT * FROM scores WHERE winner = ? OR looser = ?", [name,name], (err, result) => {
                     if (err) throw err;
