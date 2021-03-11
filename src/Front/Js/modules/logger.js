@@ -4,7 +4,7 @@ let logger = (function(){
         console.log(username);
         $.ajax({
             type: "POST",
-            url: "/login/",
+            url: "/login",
             data: {
                 login: username
             },

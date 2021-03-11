@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Registerpage</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="../Css/styleLog.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!----Ajouts pour form bootstrap--->
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!------ Fin ajouts bootstrap ---------->
+</head>
+<body>
+<section class="get-in-touch">
+    <h1 class="title">Register</h1>
+    <form id="reg-form" class="contact-form row">
+        <div class="form-field col-lg-6">
+            <input id="username" class="input-text js-input" autocomplete="off" type="text" required>
+            <label class="label" for="username">Username</label>
+        </div>
+        <div class="form-field col-lg-6 ">
+            <input id="email" class="input-text js-input" autocomplete="off" type="email" required>
+            <label class="label" for="email">E-mail</label>
+        </div>
+        <div class="form-field col-lg-6 ">
+            <input id="password" class="input-text js-input" autocomplete="off" type="password" required>
+            <label class="label" for="password">Password</label>
+        </div>
+        <div class="form-field col-lg-6 ">
+            <input id="passwordConf" class="input-text js-input" autocomplete="off" type="password" required>
+            <label class="label" for="passwordConf">Password Confirmation</label>
+        </div>
+        <div class="form-field col-lg-12">
+            <input class="submit-btn" type="submit" value="Sign up !">
+        </div>
+    </form>
+</section>
+<a href="/login">I already have an account !</a>
+</body>
+<script src="../Js/modules/logger.js"></script>
+<script src="../Js/register.js"></script>
+<script>
+    let socket = io();
+</script>
+</html>

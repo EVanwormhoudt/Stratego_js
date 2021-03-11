@@ -14,10 +14,13 @@ const session = require("express-session")({
         secure: false
     }
 });
+
 const sharedsession = require("express-socket.io-session");
 const bodyParser = require('body-parser');
 const { body, validationResult } = require('express-validator');
 const mysql = require('mysql');
+const fs = require('fs');
+
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
@@ -25,39 +28,74 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const Game = require('./Back/Classes/Game.js')
 const scoreHandler = require("./Back/Modules/scoreHandler")
 
+
 app.use(express.static(__dirname + '/front/'));
 app.use(urlencodedParser);
 app.use(session);
 
-// Configure socket io with session middleware
-io.use(sharedsession(session, {
-    // Session automatiquement sauvegardée en cas de modification
-    autoSave: true
-}));
-
-if (app.get('env') === 'production') {
-    app.set('trust proxy', 1) // trust first proxy
-    session.cookie.secure = true // serve secure cookies
-}
-
-app.get('/', (req, res) => {
-    let sessionData = req.session;
-
-    // Si l'utilisateur n'est pas connecté
-    if (!sessionData.username) {
-        res.sendFile(__dirname + '/front/html/login.html');
-    } else {
-        res.sendFile(__dirname + '/front/html/index.html');
-    }
+//Connexion à la base de donnée
+const con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "stratego"
 });
 
-app.post('/index', body('login').isLength({ min: 3 }).trim().escape(), (req, res) => {
+con.connect( err => {
+    if (err) throw err;
+    else console.log('Connexion a mysql effectuee');
+});
+/***************/
+
+
+
+//get
+app.get("/", (req, res) => {
+    res.sendFile(__dirname + '/Front/Html/accueil.html');
+});
+
+app.get("/login", (req, res) => {
+    res.sendFile(__dirname + '/Front/Html/login.html');
+});
+
+app.get("/register", (req, res) => {
+    res.sendFile(__dirname + '/Front/Html/register.html');
+});
+
+app.get('/logout', (req,res) => {
+    req.session = null;
+    res.redirect('/');
+});
+app.get('/waitingRoom', (req,res) => {
+    res.sendFile(__dirname + '/Front/Html/salleAttente.html');
+});
+/******************/
+
+io.on('connection', (socket) => {
+    socket.on("register", (info) => {
+        let sql = "INSERT INTO users VALUES (default,?,?,?)";
+        con.query(sql, [info[0], info[1],info[2]], (err, res)=> {
+            if (err)throw err;
+            console.log(res);
+        });
+    });
+    socket.on("login",(info)=>{
+        let sql = "SELECT id, username FROM users WHERE username = ? and password = ?";
+        con.query(sql, [info[0], info[1]], (err, res) => {
+            if(err) throw err;
+            socket.emit("testLogin",res)
+        });
+    })
+
+
+});
+
+app.post('/login', body('login').isLength({ min: 3 }).trim().escape(), (req, res) => {
     const login = req.body.login
 
     // Error management
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        console.log(errors);
         //return res.status(400).json({ errors: errors.array() });
     } else {
         // Store login
@@ -67,16 +105,9 @@ app.post('/index', body('login').isLength({ min: 3 }).trim().escape(), (req, res
     }
 });
 
-
-http.listen(63342, () => {
-    console.log('Serveur lancé sur le port 63342');
-});
-
-
-let game = new Game("elliott","sheron");
-game.remplirValue();
-//scoreHandler.writePersonnalScore(game);
-scoreHandler.writeScore(game)
-scoreHandler.readPersonnalScore("elliott").then(()=>console.log(scoreHandler.getScores()))
+/******************/
+http.listen(8880, () => {
+    console.log('Serveur lancé sur le port 8880');
+})
 
 
