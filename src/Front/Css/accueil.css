@@ -142,17 +142,17 @@ article p {
     animation-direction: alternate;
   }
   
-  @keyframes slidein {
-    from {
-      margin-left:100%;
-      width:300%
-    }
+  /*@keyframes slidein {*/
+  /*  from {*/
+  /*    margin-left:100%;*/
+  /*    width:300%*/
+  /*  }*/
   
-    to {
-      margin-left:0%;
-      width:100%;
-    }
-  }
+  /*  to {*/
+  /*    margin-left:0%;*/
+  /*    width:100%;*/
+  /*  }*/
+  /*}*/
 
 aside
 {
@@ -187,7 +187,7 @@ footer{
     body{
         margin-right:10px; 
         padding-left:10px; 
-        background:url('logo.jpg')no-repeat center center fixed;
+        background:url('../Images/logo.jpg')no-repeat center center fixed;
         background-size: 100%;
 
     }
