@@ -2,13 +2,16 @@ let form = document.getElementById("log-form");
 let inputUser = document.getElementById("username");
 let inputPass = document.getElementById("password");
 
-
 form.addEventListener('submit', event => {
     event.preventDefault();
-    socket.emit("login",[inputUser.value, inputPass.value])
-    logger.sendLogin(inputUser.value);
+    socket.emit("login",[inputUser.value, inputPass.value]);
 });
 
-socket.on("testLogin",(result)=>{
-    console.log(result)
+socket.on("resultLogin",result=>{
+    if(result.length){
+        logger.sendLogin(inputUser.value);
+    }
+    else{
+        alert('Erreur de mot de passe')
+    }
 });

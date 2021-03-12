@@ -47,7 +47,10 @@ con.connect( err => {
 });
 /***************/
 
-
+io.use(sharedsession(session, {
+    // Session automatiquement sauvegardée en cas de modification
+    autoSave: true
+}));
 
 //get
 app.get("/", (req, res) => {
@@ -76,14 +79,15 @@ io.on('connection', (socket) => {
         let sql = "INSERT INTO users VALUES (default,?,?,?)";
         con.query(sql, [info[0], info[1],info[2]], (err, res)=> {
             if (err)throw err;
-            console.log(res);
+            console.log("personne ajouté")
         });
     });
     socket.on("login",(info)=>{
+
         let sql = "SELECT id, username FROM users WHERE username = ? and password = ?";
         con.query(sql, [info[0], info[1]], (err, res) => {
             if(err) throw err;
-            socket.emit("testLogin",res)
+            socket.emit("resultLogin",res)
         });
     })
 
