@@ -13,7 +13,7 @@
             <header>
                 <div id="titre_principal">
                     <div id="logo">
-                        <img src="logo.jpg" alt="Logo" />
+                        <img src="../Images/logo.jpg" alt="Logo" />
                         <h1>Stratego</h1>    
                     </div>
                     <h2>Votre jeu en ligne</h2>
@@ -21,20 +21,21 @@
 
                 <nav>
                     <ul>
-                        <li><a href="/waitingRoom">Jouer</a></li>
-                        <li><a href="/register">Créer un compte</a></li>
+                        <li id="jouer"><a href="/waitingRoom">Jouer</a></li>
+                        <li id="lienLog"><a href="/login">Se connecter</a></li>
+                        <li id="lienReg"><a href="/register">Créer un compte</a></li>
                     </ul>
                 </nav>
 
 
             </header>
             
-            <img src="Stratego_plateau.jpg" class="separateur"/>
+            <img src="../Images/Stratego_plateau.jpg" class="separateur"/>
             
             
             <section>
                 <article class="text">
-                    <h1><img src="Strategogame.jpg" width="200" height="150" alt="image" class="ico_categorie" />Bienvenue sur Stratego</h1>
+                    <h1><img src="../Images/Strategogame.jpg" width="200" height="150" alt="image" class="ico_categorie" />Bienvenue sur Stratego</h1>
                     <p>Bonjour à tous,</p>
                     <p>Bienvenue sur Stratego, nous sommes ravie de vous recevoir sur notre champs de bataille et espérons que vous êtes prêts pour la guerre!</p>
                     <p>Description du jeu:</p>
@@ -59,7 +60,7 @@
                 <aside >
                     <h1>Informations Stratego</h1>
             
-                    <p id="image4"><img src="stratego.jpg" height="200" width="280" alt="image" /></p>
+                    <p id="image4"><img src="../Images/stratego.jpg" height="200" width="280" alt="image" /></p>
                     <p>Jouer à Stratego: c'est facile !</p>
                     <p>Vous trouverez sur votre gauche la description du jeu.</p>
                     <p>Dans un premier temps vous devrez vous créer un compte. Cliquez sur "Créer un compte" en haut à droite du site. Vous devrez alors remplir les informations du formulaire</p>
@@ -82,5 +83,6 @@
         <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
       </svg> <h>Playground officiel</h>
     </footer>
-
+    <script>let socket = io()</script>
+    <script src="../Js/accueil.js"></script>
 </html>

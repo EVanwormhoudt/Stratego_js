@@ -47,11 +47,16 @@ con.connect( err => {
 });
 /***************/
 
-
+io.use(sharedsession(session, {
+    // Session automatiquement sauvegardée en cas de modification
+    autoSave: true
+}));
 
 //get
 app.get("/", (req, res) => {
     res.sendFile(__dirname + '/Front/Html/accueil.html');
+    let sessionData = req.session;
+
 });
 
 app.get("/login", (req, res) => {
@@ -76,16 +81,22 @@ io.on('connection', (socket) => {
         let sql = "INSERT INTO users VALUES (default,?,?,?)";
         con.query(sql, [info[0], info[1],info[2]], (err, res)=> {
             if (err)throw err;
-            console.log(res);
+            console.log("personne ajouté")
         });
     });
     socket.on("login",(info)=>{
+
         let sql = "SELECT id, username FROM users WHERE username = ? and password = ?";
         con.query(sql, [info[0], info[1]], (err, res) => {
             if(err) throw err;
-            socket.emit("testLogin",res)
+
+            socket.emit("resultLogin",res)
         });
-    })
+    });
+
+    socket.on("isSession",()=>{
+        socket.emit("onSession",socket.handshake.session.username)
+    });
 
 
 });
@@ -103,7 +114,17 @@ app.post('/login', body('login').isLength({ min: 3 }).trim().escape(), (req, res
         req.session.save()
         res.redirect('/');
     }
+
 });
+
+
+function NumClientsInRoom(namespace, room) {
+    var clients = io.nsps[namespace].adapter.rooms[room];
+    return Object.keys(clients).length;
+}
+
+
+
 
 /******************/
 http.listen(8880, () => {
