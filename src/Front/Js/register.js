@@ -7,14 +7,27 @@ let inputMail = document.getElementById("email");
 
 form.addEventListener('submit', event => {
     event.preventDefault();
-    registerer.sendReg(inputUser.value, inputPass.value, inputConf.value, inputMail.value);
-    if(inputPass === inputConf){
-        let sql = "INSERT INTO `users` (`username`,`email`,`password`) VALUES (?,?,?)";
-        datab.query(sql,[inputUser, inputMail, inputPass], function(err, res){
-            console.log('Account created');
-            res.sendFile(__dirname + '/front/html/login.html');
+
+    if (inputPass.value === inputConf.value) {
+        socket.emit("username", inputUser.value);
+        socket.on("resultUser", res => {
+            if (res.length === 0) {
+                socket.emit("crypt", inputPass.value);
+                socket.on("resultCrypt", res => {
+                    socket.emit("register", [inputUser.value, inputMail.value, res]);
+                    logger.sendLogin(inputUser.value);
+                    alert('Compte créé avec succès.');
+                });
+            }
+            else {
+                alert("Ce nom d'utilisateur est déjà utilisé");
+                window.location.reload();
+            }
         });
-    } else {
-        console.log('Password and Password Confirmation do not match ');
     }
+    else {
+        event.preventDefault();
+        window.alert('Les mots de passe ne correspondent pas');
+    }
+
 });

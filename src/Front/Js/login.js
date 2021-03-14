@@ -4,20 +4,45 @@ let inputPass = document.getElementById("password");
 
 form.addEventListener('submit', event => {
     event.preventDefault();
-    logger.sendLogin(inputUser.value, inputPass.value);
-        let sql = "SELECT id, username FROM `users` WHERE `username`? and `password`?";
-        datab.query(sql, [inputUser, inputPass], (err, res) => {
-            if (res.length > 0) {
-                logger.sendLogin(inputUser);
-                req.session.userId = res[0].id;
-                req.session.user = res[0];
-                console.log(res[0].id);
-                res.sendFile(__dirname + '/front/html/home.html');
-            } else {
-                message = 'Invalid username or password';
-                //res.sendFile(__dirname + '/front/html/login.html');
-            }
-        });
 
-
+    socket.emit("password", [inputUser.value]);
+    socket.on("resultPass", res => {
+        if (res.length){
+            socket.emit("decrypt", [inputPass.value, res]);
+            socket.on("resultDecrypt", result => {
+                if(result){
+                    logger.sendLogin(inputUser.value);
+                }
+                else {
+                    alert('Mot de passe incorrect.')
+                }
+            });
+        }
+        else {
+            alert("Ce nom d'utilisateur n'existe pas.")
+        }
+    });
 });
+
+/* socket.emit("login",[inputUser.value, inputPass.value]);
+socket.on("resultDecrypt", isSame => {
+    console.log('something?');
+    if(isSame == true){
+        logger.sendLogin(inputUser.value);
+    }
+    else{
+        alert('Wrong password')
+    }
+});
+*/
+
+/*
+socket.on("resultLogin",result=>{
+    if(result.length){
+        logger.sendLogin(inputUser.value);
+    }
+    else{
+        alert('Erreur de mot de passe')
+    }
+});
+*/

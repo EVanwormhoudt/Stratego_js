@@ -1,13 +1,12 @@
 let logger = (function(){
 
-    function postLog(username, password) {
+    function postLog(username) {
         console.log(username);
         $.ajax({
             type: "POST",
-            url: "/login/",
+            url: "/login",
             data: {
-                user: username,
-                password: password
+                login: username
             },
             success: () => {
                 window.location.href = "/";
@@ -16,8 +15,8 @@ let logger = (function(){
     }
 
     return {
-        sendLogin(username, password) {
-            postLog(username, password);
+        sendLogin(username) {
+            postLog(username);
         }
     }
 })();

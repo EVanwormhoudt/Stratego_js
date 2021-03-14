@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>loginpage</title>
+    <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="../css/styleLog.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!----Ajouts pour form bootstrap--->
@@ -14,25 +15,31 @@
 <body>
 
 <section class="get-in-touch">
-    <h1 class="title">Login</h1>
-    <form id="log-form" action="" method="POST" class="contact-form row">
+    <h1 class="title">Connexion</h1>
+    <form id="log-form" action="" class="contact-form row">
         <div class="form-field col-lg-6">
             <input id="username" class="input-text js-input" autocomplete="off" type="text" required>
-            <label class="label" for="username">Username</label>
+            <label class="label" for="username">Nom d'utilisateur</label>
         </div>
         <div class="form-field col-lg-6 ">
             <input id="password" class="input-text js-input" autocomplete="off" type="password" required>
-            <label class="label" for="password">Password</label>
+            <label class="label" for="password">Mot de passe</label>
         </div>
         <div class="form-field col-lg-12">
             <input class="submit-btn" type="submit" value="Connexion !">
         </div>
     </form>
+    <div class="directionsLog">
+        <br> <a href="/register">Vous n'avez pas de compte? Inscrivez-vous !</a>
+        <br><a href="/">Retourner sur la page d'accueil.</a>
+    </div>
 </section>
 
-<br> <a href="/register">Don't have an account ? Sign up !</a>
-
 </body>
-<script src="../js/login.js">
+<script>
+    let socket = io();
 </script>
+<script src="../Js/login.js"></script>
+<script src="../Js/modules/logger.js"></script>
+
 </html>
