@@ -32,3 +32,5 @@
 
     //gameView.piecesListener();
 })();
+
+socket.emit("startGame");

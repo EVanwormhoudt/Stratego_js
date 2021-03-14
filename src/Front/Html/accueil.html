@@ -7,82 +7,82 @@
     <script src="/socket.io/socket.io.js"></script>
     <title>Projet </title>
 </head>
-    
+
 <body>
-        <div id="bloc_page">
-            <header>
-                <div id="titre_principal">
-                    <div id="logo">
-                        <img src="../Images/logo.jpg" alt="Logo" />
-                        <h1>Stratego</h1>    
-                    </div>
-                    <h2>Votre jeu en ligne</h2>
-                </div>
-
-                <nav>
-                    <ul>
-                        <li id="jouer"><a href="/waitingRoom">Jouer</a></li>
-                        <li id="lienLog"><a href="/login">Se connecter</a></li>
-                        <li id="lienReg"><a href="/register">Créer un compte</a></li>
-                    </ul>
-                </nav>
-
-
-            </header>
-            
-            <img src="../Images/Stratego_plateau.jpg" class="separateur"/>
-            
-            
-            <section>
-                <article class="text">
-                    <h1><img src="../Images/Strategogame.jpg" width="200" height="150" alt="image" class="ico_categorie" />Bienvenue sur Stratego</h1>
-                    <p>Bonjour à tous,</p>
-                    <p>Bienvenue sur Stratego, nous sommes ravie de vous recevoir sur notre champs de bataille et espérons que vous êtes prêts pour la guerre!</p>
-                    <p>Description du jeu:</p>
-                    <p>Le Stratego se joue à 2 joueurs sur un plateau carré de 92 cases. Chaque joueur possède 30 pièces. Au début de la partie chaque joueur dispose ses pièces comme il l'entend sur ses quatre premières rangées. Cette pré-phase du jeu est stratégique et déterminante pour la suite de la partie donc réfléchissez bien où placer vos pièces. 
-                    Chaque joueur déplace une pièce d'une case: à gauche, à droite, en avant ou en arrière (pas en diagonale). Une attaque se produit quand le joueur déplace sa pièce sur une case déjà occupée par l'adversaire. La pièce la plus forte reste en jeu, l'autre est éliminée ; en cas d'égalité, les deux sont éliminées.</p>
-                    <p>Voici les pièces classées de la plus forte à la plus faible (la force entre parenthèses) :</p>
-
-                    <p>le Maréchal (10), 1 par joueur
-                    le Général (9), 1 par joueur
-                    les Colonels (8), 2 par joueur
-                    les Commandants (7), 3 par joueur
-                    les Capitaines (6), 4 par joueur
-                    les Lieutenants (5), 4 par joueur
-                    les Sergents (4), 4 par joueur
-                    les Démineurs (3), 5 par joueur
-                    les Éclaireurs (2), 8 par joueur
-                    l'Espion (1), 1 par joueur
-                    le Drapeau (0), 1 par joueur</p>
-                    <p>Le but du jeu est de capturer le Drapeau de l'adversaire ou d'éliminer assez de pièces adverses afin que l'adversaire ne puisse plus faire de déplacements.</p>
-                </article>
-
-                <aside >
-                    <h1>Informations Stratego</h1>
-            
-                    <p id="image4"><img src="../Images/stratego.jpg" height="200" width="280" alt="image" /></p>
-                    <p>Jouer à Stratego: c'est facile !</p>
-                    <p>Vous trouverez sur votre gauche la description du jeu.</p>
-                    <p>Dans un premier temps vous devrez vous créer un compte. Cliquez sur "Créer un compte" en haut à droite du site. Vous devrez alors remplir les informations du formulaire</p>
-                    <p>Il est possible de en tant que 'inviter'. Pour cela il vous suffit de rentrer un pseudo.</p>
-                    <p>Une fois que vous êtes enregistré, vous n'avez plus qu'à cliquer sur "Jouer"</p>
-                    <p>Vous vous retrouvrez alors dans la salle d'attente en attendant un autre joueur.</p>
-                </aside>
-            </section>
-            
+<div id="bloc_page">
+    <header>
+        <div id="titre_principal">
+            <div id="logo">
+                <img src="../Images/logo.jpg" alt="Logo" />
+                <h1>Stratego</h1>
+            </div>
+            <h2>Votre jeu en ligne</h2>
         </div>
 
-    </div>
+        <nav>
+            <ul>
+                <li id="jouer"><a href="/waitingRoom">Jouer</a></li>
+                <li id="lienLog"><a href="/login">Se connecter</a></li>
+                <li id="lienReg"><a href="/register">Créer un compte</a></li>
+            </ul>
+        </nav>
 
-    </body>
-    <footer> 
+
+    </header>
+
+    <img src="../Images/Stratego_plateau.jpg" class="separateur"/>
+
+
+    <section>
+        <article class="text">
+            <h1><img src="../Images/Strategogame.jpg" width="200" height="150" alt="image" class="ico_categorie" />Bienvenue sur Stratego</h1>
+            <p>Bonjour à tous,</p>
+            <p>Bienvenue sur Stratego, nous sommes ravie de vous recevoir sur notre champs de bataille et espérons que vous êtes prêts pour la guerre!</p>
+            <p>Description du jeu:</p>
+            <p>Le Stratego se joue à 2 joueurs sur un plateau carré de 92 cases. Chaque joueur possède 30 pièces. Au début de la partie chaque joueur dispose ses pièces comme il l'entend sur ses quatre premières rangées. Cette pré-phase du jeu est stratégique et déterminante pour la suite de la partie donc réfléchissez bien où placer vos pièces.
+                Chaque joueur déplace une pièce d'une case: à gauche, à droite, en avant ou en arrière (pas en diagonale). Une attaque se produit quand le joueur déplace sa pièce sur une case déjà occupée par l'adversaire. La pièce la plus forte reste en jeu, l'autre est éliminée ; en cas d'égalité, les deux sont éliminées.</p>
+            <p>Voici les pièces classées de la plus forte à la plus faible (la force entre parenthèses) :</p>
+
+            <p>le Maréchal (10), 1 par joueur
+                le Général (9), 1 par joueur
+                les Colonels (8), 2 par joueur
+                les Commandants (7), 3 par joueur
+                les Capitaines (6), 4 par joueur
+                les Lieutenants (5), 4 par joueur
+                les Sergents (4), 4 par joueur
+                les Démineurs (3), 5 par joueur
+                les Éclaireurs (2), 8 par joueur
+                l'Espion (1), 1 par joueur
+                le Drapeau (0), 1 par joueur</p>
+            <p>Le but du jeu est de capturer le Drapeau de l'adversaire ou d'éliminer assez de pièces adverses afin que l'adversaire ne puisse plus faire de déplacements.</p>
+        </article>
+
+        <aside >
+            <h1>Informations Stratego</h1>
+
+            <p id="image4"><img src="../Images/stratego.jpg" height="200" width="280" alt="image" /></p>
+            <p>Jouer à Stratego: c'est facile !</p>
+            <p>Vous trouverez sur votre gauche la description du jeu.</p>
+            <p>Dans un premier temps vous devrez vous créer un compte. Cliquez sur "Créer un compte" en haut à droite du site. Vous devrez alors remplir les informations du formulaire</p>
+            <p>Il est possible de jouer en tant que 'inviter'. Pour cela il vous suffit de rentrer un pseudo.</p>
+            <p>Une fois que vous êtes enregistré, vous n'avez plus qu'à cliquer sur "Jouer"</p>
+            <p>Vous vous retrouvrez alors dans la salle d'attente en attendant un autre joueur.</p>
+        </aside>
+    </section>
+
+</div>
+
+</div>
+
+</body>
+<footer>
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-instagram" viewBox="0 0 16 16">
-    <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/>
+        <path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/>
     </svg> <h>Playground.games45</h>
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-facebook" viewBox="0 0 16 16">
         <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/>
-      </svg> <h>Playground officiel</h>
-    </footer>
-    <script>let socket = io()</script>
-    <script src="../Js/accueil.js"></script>
+    </svg> <h>Playground officiel</h>
+</footer>
+<script>let socket = io()</script>
+<script src="../Js/accueil.js"></script>
 </html>
