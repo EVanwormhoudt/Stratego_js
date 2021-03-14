@@ -66,7 +66,6 @@ io.use(sharedsession(session, {
 app.get("/", (req, res) => {
     res.sendFile(__dirname + '/Front/Html/accueil.html');
     let sessionData = req.session;
-
 });
 
 // redirige vers la page de connexion si l'URL contient '/login'
@@ -79,6 +78,7 @@ app.get("/login", (req, res) => {
 app.get("/register", (req, res) => {
     res.sendFile(__dirname + '/Front/Html/register.html');
 });
+
 
 // redirige vers la page d'accueil si l'URL contient '/logout'
 app.get('/logout', (req,res) => {
@@ -102,11 +102,12 @@ app.get('/game',(req,res)=>{
         res.redirect('/');
 
 });
-/******************/
 
+/******************/
 
 // Directement après la connexion d'un socket au serveur
 io.on('connection', (socket) => {
+
     socket.on("register", (info) => {
         let sql = "INSERT INTO users VALUES (default,?,?,?)";
         con.query(sql, [info[0], info[2],info[1]], (err, res)=> {
@@ -114,8 +115,8 @@ io.on('connection', (socket) => {
             console.log("personne ajouté")
         });
     });
-    socket.on("login",(info)=>{
 
+    socket.on("login",(info)=>{
         let sql = "SELECT id, username FROM users WHERE username = ? and password = ?";
         con.query(sql, [info[0], info[1]], (err, res) => {
             if(err) throw err;
@@ -205,7 +206,6 @@ app.post('/login', body('login').isLength({ min: 3 }).trim().escape(), (req, res
     }
 
 });
-
 
 
 
