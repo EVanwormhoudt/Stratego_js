@@ -15,12 +15,14 @@ const session = require("express-session")({
     }
 });
 
+
+
 const sharedsession = require("express-socket.io-session");
 const bodyParser = require('body-parser');
 const { body, validationResult } = require('express-validator');
 const mysql = require('mysql');
 const fs = require('fs');
-
+const bcrypt = require('bcrypt');
 
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
@@ -32,6 +34,14 @@ const scoreHandler = require("./Back/Modules/scoreHandler")
 app.use(express.static(__dirname + '/front/'));
 app.use(urlencodedParser);
 app.use(session);
+
+let rooms = new Array(10)
+
+for(let i = 0;i<10;i++){
+    rooms[i] = 0;
+}
+
+
 
 //Connexion à la base de donnée
 const con = mysql.createConnection({
@@ -63,12 +73,14 @@ app.get("/login", (req, res) => {
     res.sendFile(__dirname + '/Front/Html/login.html');
 });
 
+
 // redirige vers la page d'enregistrement si l'URL contient '/register'
 app.get("/register", (req, res) => {
     res.sendFile(__dirname + '/Front/Html/register.html');
 });
 
-// redirige vers la page de deconnexion si l'URL contient '/logout'
+
+// redirige vers la page d'accueil si l'URL contient '/logout'
 app.get('/logout', (req,res) => {
     req.session = null;
     res.redirect('/');
@@ -76,17 +88,29 @@ app.get('/logout', (req,res) => {
 
 // redirige vers la page d'attente si l'URL contient '/waitingRoom'
 app.get('/waitingRoom', (req,res) => {
-    res.sendFile(__dirname + '/Front/Html/salleAttente.html');
+    if(req.session)
+        res.sendFile(__dirname + '/Front/Html/salleAttente.html');
+    else
+        res.redirect('/');
+});
+
+// redirige vers la page de jeu si l'URL contient '/game'
+app.get('/game',(req,res)=>{
+    if(req.session)
+        res.sendFile(__dirname + '/Front/Html/game.html');
+    else
+        res.redirect('/');
+
 });
 
 /******************/
 
-// Directement après la connexion au serveur :
+// Directement après la connexion d'un socket au serveur
 io.on('connection', (socket) => {
 
     socket.on("register", (info) => {
         let sql = "INSERT INTO users VALUES (default,?,?,?)";
-        con.query(sql, [info[0], info[1],info[2]], (err, res)=> {
+        con.query(sql, [info[0], info[2],info[1]], (err, res)=> {
             if (err)throw err;
             console.log("personne ajouté")
         });
@@ -105,6 +129,65 @@ io.on('connection', (socket) => {
         socket.emit("onSession",socket.handshake.session.username)
     });
 
+    socket.on("username", (info) => {
+        let sql = "SELECT username FROM users WHERE username = ?";
+        con.query(sql, [info[0]], (err, res) => {
+            if (err) throw err;
+            socket.emit("resultUser",res)
+        });
+    });
+
+    socket.on("crypt", (info) =>{
+        bcrypt.hash(info,10, function (err, res){
+            if (err) throw err;
+            socket.emit("resultCrypt",res);
+        });
+    });
+
+    //judith socket login decrypt
+    socket.on("decrypt", (info) => {
+        bcrypt.compare(info[0], info[1], function (err, res) {
+            if (err) throw err;
+            console.log(res);
+            socket.emit("resultDecrypt", res);
+        });
+    });
+
+
+
+
+    socket.on("getRoom",()=>{
+       for(let i = 0;i<10;i++){
+           if(rooms[i] !== 2 && (i === 0||rooms[i-1]===2)){
+               rooms[i] +=1;
+               socket.handshake.session.player = rooms[i];
+               socket.join(i.toString());
+               console.log(rooms[i])
+               if(rooms[i] === 2){
+                   socket.handshake.session.room = i;
+                   io.to(i.toString()).emit("validStart")
+               }
+             i = 9;
+           }
+       }
+    });
+    socket.on("startGame",()=>{
+        socket.join((socket.handshake.session.room).toString());
+    });
+
+    socket.on("move",(start,end)=>{
+
+    });
+    socket.on("attack",(start,end)=>{
+
+    });
+    socket.on('disconnect', () => {
+        console.log(rooms[socket.handshake.session.room])
+       if(socket.handshake.session.room !==0){
+           rooms[socket.handshake.session.room]--;
+           console.log(rooms[socket.handshake.session.room])
+       }
+    });
 
 });
 
@@ -124,11 +207,6 @@ app.post('/login', body('login').isLength({ min: 3 }).trim().escape(), (req, res
 
 });
 
-
-function NumClientsInRoom(namespace, room) {
-    var clients = io.nsps[namespace].adapter.rooms[room];
-    return Object.keys(clients).length;
-}
 
 
 /******************/

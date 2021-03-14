@@ -21,17 +21,13 @@ let EventHandler = (function(){
         if(obj.target.parentElement.id !== id && ((obj.target.parentElement.style.backgroundImage !== "" && obj.target.nodeName === "IMG") ||
             (obj.target.style.backgroundImage !== "" && obj.target.nodeName=== "TD"))){      //check if the place to drop is a valid place
             if(obj.target.nodeName === "IMG"){            //Check if the location to drop is an enemy or just a blank space
-                console.log("j'attaque " + obj.target.parentElement.id +" avec "+id)
                 socket.emit("attack",[id,obj.target.parentElement.id]);  //if it's an enemy, send the info to the socket, and then the fight
             }                                              // is handled on server side
             else{
                 socket.emit("move",[id,obj.target.parentElement.id]);//if it's a blank space, then the data is send to the serv
                 let data = obj.dataTransfer.getData("text");    //and then the piece is moved.
                 obj.target.appendChild(document.getElementById(data));
-                console.log("je bouge le "+ id +" à " +obj.target.parentElement.id)
 
-                /*--------Here there might be a modif, where the data is send to the serv, then checked, and
-                the server send back if the move is valid or not*/
             }
 
         }
@@ -52,17 +48,13 @@ let EventHandler = (function(){
     //Event for when a piece has been selected, you can click on a cell to move the piece
     function cellClick(obj){
         cellLeave(obj)
-        console.log("etape1")
         if(obj.target.parentElement.id !== id && ((obj.target.parentElement.style.backgroundImage !== "" && obj.target.nodeName === "IMG") ||
             (obj.target.style.backgroundImage !== "" && obj.target.nodeName=== "TD"))){ // check if the cell is a valid place
-            console.log("etape2")
             if(obj.target.nodeName === "IMG"){
-                socket.emit("attack",[id, obj.target.parentElement.id]);      //same as drop()
-                console.log("j'attaque " + obj.target.parentElement.id +" avec "+id)
+                socket.emit("attack",(id, obj.target.parentElement.id));      //same as drop()
             }
             else {
-                console.log("je bouge le "+ id +" à " +obj.target.parentElement.id)
-                socket.emit("move", [id, obj.target.id]);
+                socket.emit("move", (id, obj.target.id));
                 let img = document.getElementById(id).firstChild; // Except that instead of a data.transfer
                 obj.target.appendChild(img);                      //is just a simple move of the piece manually
             }
@@ -212,6 +204,8 @@ let EventHandler = (function(){
 
 })();
 
-module.exports = EventHandler;
+socket.on("moveOpponent",(start,end)=>{
+
+});
 
 
