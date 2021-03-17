@@ -1,17 +1,4 @@
 const fs = require('fs');
-const mysql = require('mysql')
-const con = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "stratego"
-});
-
-con.connect(err => {
-    if (err) throw err;
-    else console.log('Connexion effectuée');
-});
-
 
 let scoreHandler = (function (){
     let scores = []
