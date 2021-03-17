@@ -35,10 +35,13 @@ app.use(express.static(__dirname + '/front/'));
 app.use(urlencodedParser);
 app.use(session);
 
-let rooms = new Array(10)
+const roomnbr = 10
+let rooms = new Array(roomnbr)
+let games =  new Array(roomnbr)
 
 for(let i = 0;i<10;i++){
-    rooms[i] = 0;
+    rooms[i] = new Array(3);
+    rooms[i][0]
 }
 
 
@@ -153,16 +156,13 @@ io.on('connection', (socket) => {
         });
     });
 
-
-
-
     socket.on("getRoom",()=>{
        for(let i = 0;i<10;i++){
-           if(rooms[i] !== 2 && (i === 0||rooms[i-1]===2)){
-               rooms[i] +=1;
-               socket.handshake.session.player = rooms[i];
+           if(rooms[i][0] !== 2 && (i === 0||rooms[i-1][0]===2)){
+               rooms[i][0] +=1;
+               socket.handshake.session.player = rooms[i][0];
                socket.join(i.toString());
-               console.log(rooms[i])
+               rooms[i][rooms[i][0]] = socket.handshake.session.username
                if(rooms[i] === 2){
                    socket.handshake.session.room = i;
                    io.to(i.toString()).emit("validStart")
@@ -173,6 +173,10 @@ io.on('connection', (socket) => {
     });
     socket.on("startGame",()=>{
         socket.join((socket.handshake.session.room).toString());
+        if (games[socket.handshake.session.room]){
+            games[socket.handshake.session.room] = new Game();
+
+        }
     });
 
     socket.on("move",(start,end)=>{
@@ -182,12 +186,27 @@ io.on('connection', (socket) => {
 
     });
     socket.on('disconnect', () => {
-        console.log(rooms[socket.handshake.session.room])
-       if(socket.handshake.session.room !==0){
-           rooms[socket.handshake.session.room]--;
-           console.log(rooms[socket.handshake.session.room])
-       }
+        if(socket.handshake.session.room !== undefined){
+            rooms[socket.handshake.session.room][0]--;
+            room[socket.handshake.session.room][socket.handshake.session.player] = undefined;
+            if(socket.handshake.session.player === 1){
+                let srvSockets = io.to[socket.handshake.session.room].sockets.sockets;
+                srvSockets.forEach(user => {
+                    if (user.handshake.session.room === socket.handshake.session.room){
+                        user.handshake.session.player = 1;
+                    }
+                });
+            }
+            io.to[(socket.handshake.session.room).toString()].emit("removePlay");
+        }
     });
+    socket.on("endPlacement",(tab)=> {
+            for(let i = 6;i< 10;i++){
+                for(let j  = 0; j < 10;j++){
+
+                }
+        }
+    })
 
 });
 
