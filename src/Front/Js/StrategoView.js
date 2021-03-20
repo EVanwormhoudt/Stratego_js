@@ -1,14 +1,22 @@
 class StrategoView{
+	
 	constructor(game){
 		this.game=game;
 		this.piecesActuelleRouge=undefined;
 		this.piecesActuelleBleue=undefined;
 	}
+	/*
+	constructor(){
+		this.piecesActuelleRouge=undefined;
+		this.piecesActuelleBleue=undefined;
+	}
+	*/
 	// Informations : tableau des pièces = 2ème tableau
 
 
 	// ----------------------------------- Tout ce qui concerne le tableau des pièces -----------------------------------
-
+	
+	// 1) Envoyer un socket au serveur pour savoir combien de Maréchal sont disponibles, combien d'espions etc... puis afficher ces données dans le tableau
 	tableOfPiecesContent(){ // Affiche dans le tableau des pièces, les types et nombre restant des différentes pièces des 2 joueurs
 		//playernumber
 		let tbodyPionsRouges=document.getElementById("pionsRouges").children[1];
@@ -26,6 +34,8 @@ class StrategoView{
 			celluleBleu.children[2].innerHTML=this.game.tableOfPawnsOfPlayer(2)[i].force;
 		}
 	}
+	// Lorsqu'une case du tableau des pions est cochée, puis clique dans une case du plateau
+	// demander au serveur via une socket si le joueur peut poser cette pièce en question ET à cet endroit
 	piecesListener(){ // Evénements sur les cases du tableau des pièces
 		let pieces = ["Bombes","Maréchal","Général","Colonels","Commandants","Capitaines","Lieutenants","Sergents","Démineurs","Eclaireurs","Espion","Drapeau"];
 		let tablePiecesRouges=document.getElementById("pionsRouges");
@@ -72,10 +82,11 @@ class StrategoView{
 			// En données
 			let x=lacCase[i]/10;
 			let y=lacCase[i]%10-1;
-			this.game.setBoxContent(Math.floor(x),y,null); // Math.floor(x) = arrondi à l'entier le plus proche SANS ALLER AU DESSUS
+			// ATTENTION this.game.setBoxContent(Math.floor(x),y,null); // Math.floor(x) = arrondi à l'entier le plus proche SANS ALLER AU DESSUS
 		}
 	}
 
+	/*
 	plateauCaseListener(){ // Evenement sur les cases du plateau
 		for(let i=61;i<=100;i++){ // Il y a un événement uniquement sur les 4 premières rangées
 			let celluleRouge=document.getElementById(i);
@@ -146,10 +157,12 @@ class StrategoView{
 			});
 		}
 	}
+	*/
 	preparationListener(){ // Toutes les fonctions ici
 
 	}
 	// ----------------------------------- Fonctions pour phase de test -----------------------------------
+	/*
 	tabDesPions(){
 		document.getElementById("tabDesPions").addEventListener('click',()=>{
 			console.table(this.game.joueur1.tableOfPawns);
@@ -158,5 +171,12 @@ class StrategoView{
 	}
 	tabDuPlateau(){
 		document.getElementById("tabDuPlateau").addEventListener('click',()=>{this.game.viewTable()});
+	}
+	*/
+	pieceActuRouge(){
+		return this.piecesActuelleRouge;
+	}
+	pieceActuBleue(){
+		return this.piecesActuelleBleue;
 	}
 }

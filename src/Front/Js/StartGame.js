@@ -1,4 +1,82 @@
-(function() {
+//import { Socket } from "socket.io";
+
+(function(){
+    let joueur1 = "Mathieu";
+    let joueur2 = "Annie";
+    let room = 1;
+
+    console.log("Joueur 1 : ",joueur1,"\nJoueur 2 : ",joueur2);
+
+    
+    socket.emit("newgame",joueur1,joueur2,room);
+
+    // Ces sockets coté serveur appellent les sockets homonymes (à la différence près du 'Server'/'Client') coté Client
+    socket.emit("tableauPionsServer");
+    socket.emit('tableauPionsListenerServerJ1');
+    socket.emit('tableauPionsListenerServerJ2');
+    socket.emit('strategoListenerServerJ1');
+    socket.emit('strategoListenerServerJ2');
+    
+    /* ---------------------- Implémentation des sockets coté client ---------------------- */
+
+    // Remplit d'après les informations du server (game.pionsInfos) les tableaux des pions des 2 joueurs. 
+    socket.on("tableauPionsClient",(tableau)=>{
+        console.log("Appel de la fonction 'tableauPionsClient' coté client.");
+        let tbodyPionsJ1 = document.getElementById("tableauPionsJ1").children[2];
+        let tbodyPionsJ2 = document.getElementById("tableauPionsJ2").children[2];
+        let i=0;
+        for(element of tableau){
+            tbodyPionsJ1.children[i].children[0].textContent=element.name;
+            tbodyPionsJ1.children[i].children[1].textContent=element.nombreRestant;
+            tbodyPionsJ1.children[i].children[2].textContent=element.force;
+
+            tbodyPionsJ2.children[i].children[0].textContent=element.name;
+            tbodyPionsJ2.children[i].children[1].textContent=element.nombreRestant;
+            tbodyPionsJ2.children[i].children[2].textContent=element.force;
+            i++;
+        }
+    })
+
+    /* ---------------------- Joueur1 ----------------------*/
+
+    // Applique un listener sur les cases du tableau des pions du joueur1
+    socket.on('tableauPionsListenerClientJ1',()=>{
+        console.log("Appel de la fonction 'tableauPionsListenerClientJ1' coté client.");
+        let tbodyPionsJ1 = document.getElementById("tableauPionsJ1").children[2];
+        for(let i=0;i<12;i++){
+            tbodyPionsJ1.children[i].addEventListener("click",()=>{
+                tbodyPionsJ1.children[i].style.background="red";
+                // Mettre ici l'histoire du strategoView.pièceActuRouge
+            })
+        }
+    });
+    // Applique un listener sur les cases du Stratego accessibles uniquement au joueur1
+    socket.on('strategoListenerClientJ1',()=>{
+        console.log("Appel de la fonction 'strategoListenerClientJ1' coté client.");
+
+    });
+    
+    /* ---------------------- Joueur2 ----------------------*/
+
+    socket.on('tableauPionsListenerClientJ2',()=>{
+        console.log("Appel de la fonction 'tableauPionsListenerClientJ2' coté client.");
+        let tbodyPionsJ2 = document.getElementById("tableauPionsJ2").children[2];
+        for(let i=0;i<12;i++){
+            tbodyPionsJ2.children[i].addEventListener("click",()=>{
+                tbodyPionsJ2.children[i].style.background="lightblue";
+            })
+        }
+    });
+
+    socket.on('strategoListenerClientJ2',()=>{
+        console.log("Appel de la fonction 'strategoListenerClientJ2' coté client.");
+
+    });
+    
+})();
+
+// socket.emit("startGame");
+/*(function() {
     // Initialisation du jeu
     let player1 = new Player("Samuel")
     let player2 = new Player("Géraldine")
@@ -32,5 +110,5 @@
 
     //gameView.piecesListener();
 })();
-
-socket.emit("startGame");
+*/
+// socket.emit("startGame");

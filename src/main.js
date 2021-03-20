@@ -14,6 +14,10 @@ const session = require("express-session")({
         secure: false
     }
 });
+/******************/
+http.listen(4200, () => {
+    console.log('Serveur lancé sur le port 4200');
+})
 
 
 
@@ -27,9 +31,9 @@ const bcrypt = require('bcrypt');
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 
-const Game = require('./Back/Classes/Game.js')
-const scoreHandler = require("./Back/Modules/scoreHandler")
-
+const Game = require('./Back/Classes/Game.js');
+const scoreHandler = require("./Back/Modules/scoreHandler.js");
+//const strategoViewFile = require('./Front/Js/StrategoView.js');
 
 app.use(express.static(__dirname + '/front/'));
 app.use(urlencodedParser);
@@ -50,7 +54,7 @@ for(let i = 0;i<10;i++){
 const con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "",
+    password: "sheron", // Mettre un password vide excepté pour la BDD de Sheron
     database: "stratego"
 });
 
@@ -99,8 +103,9 @@ app.get('/waitingRoom', (req,res) => {
 
 // redirige vers la page de jeu si l'URL contient '/game'
 app.get('/game',(req,res)=>{
-    if(req.session)
+    if(req.session){
         res.sendFile(__dirname + '/Front/Html/game.html');
+    }
     else
         res.redirect('/');
 
@@ -171,6 +176,8 @@ io.on('connection', (socket) => {
            }
        }
     });
+    // Sheron : Problème avec le ".toString()" lors du chargement de game.html
+    /* 
     socket.on("startGame",()=>{
         socket.join((socket.handshake.session.room).toString());
         if (games[socket.handshake.session.room]){
@@ -178,6 +185,7 @@ io.on('connection', (socket) => {
 
         }
     });
+    */
 
     socket.on("move",(start,end)=>{
 
@@ -208,6 +216,51 @@ io.on('connection', (socket) => {
         }
     })
 
+    // --------------- Socket pour la page game.html ---------------
+
+    socket.on("newgame",(joueur1,joueur2,room)=>{
+        console.log("Un nouveau Stratego vient d'être créé entre le joueur '"+joueur1+"' et le joueur '"+joueur2+"' dans la room numéro "+room);
+        let game = new Game(joueur1,joueur2);
+        //let viewgame= new StrategoView(game);
+
+        // Appelle la socket coté client qui remplit le tableau des pions des 2 joueurs
+        socket.on("tableauPionsServer",()=>{
+            console.log("Appel de la fonction 'tableauPionsServer' dans la room"+room+" coté serveur.");
+            io.emit('tableauPionsClient',game.pionsInfos);            
+        })
+        /* ---------------------- Joueur1 ----------------------*/
+
+        // Appelle la socket coté client qui applique des listeners sur le tableau des pions du J1
+        socket.on('tableauPionsListenerServerJ1',()=>{
+            console.log("Appel de la fonction 'tableauPionsListenerServerJ1' dans la room"+room+" coté serveur.")
+            io.emit('tableauPionsListenerClientJ1');
+        })
+        // Reçois la pièce actuellement selectionnée par le joueur1
+
+        // Appelle la socket coté client qui applique des listeners sur le plateau Stratego du J1
+        socket.on("strategoListenerServerJ1",()=>{
+            console.log("Appel de la fonction 'strategoListenerServerJ1' dans la room"+room+" coté serveur.")
+            io.emit('strategoListenerClientJ1');
+        })
+
+        /* ---------------------- Joueur2 ----------------------*/
+        
+        // Appelle la socket coté client qui applique des listeners sur le tableau des pions du J2
+        socket.on('tableauPionsListenerServerJ2',()=>{
+            console.log("Appel de la fonction 'tableauPionsListenerServerJ2' dans la room"+room+" coté serveur.")
+            io.emit('tableauPionsListenerClientJ2');
+        })
+        
+
+        // Reçois la pièce actuellement selectionnée par le joueur2
+        
+        // Appelle la socket coté client qui applique des listeners sur le plateau Stratego du J2
+        socket.on("strategoListenerServerJ2",()=>{
+            console.log("Appel de la fonction 'strategoListenerServerJ2' dans la room"+room+" coté serveur.")
+            io.emit('strategoListenerClientJ2');
+        })
+    })
+
 });
 
 app.post('/login', body('login').isLength({ min: 3 }).trim().escape(), (req, res) => {
@@ -225,12 +278,4 @@ app.post('/login', body('login').isLength({ min: 3 }).trim().escape(), (req, res
     }
 
 });
-
-
-
-/******************/
-http.listen(8880, () => {
-    console.log('Serveur lancé sur le port 8880');
-})
-
 
