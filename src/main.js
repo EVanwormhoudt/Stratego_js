@@ -31,9 +31,11 @@ const bcrypt = require('bcrypt');
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 
-const Game = require('./Back/Classes/Game.js');
+const Game = require('./Back/Classes/Game');
+const Player = require('./Back/Classes/Player')
+const StrategoView = require('./Front/Js/StrategoView');
 const scoreHandler = require("./Back/Modules/scoreHandler.js");
-//const strategoViewFile = require('./Front/Js/StrategoView.js');
+
 
 app.use(express.static(__dirname + '/front/'));
 app.use(urlencodedParser);
@@ -218,22 +220,26 @@ io.on('connection', (socket) => {
 
     // --------------- Socket pour la page game.html ---------------
 
-    socket.on("newgame",(joueur1,joueur2,room)=>{
-        console.log("Un nouveau Stratego vient d'être créé entre le joueur '"+joueur1+"' et le joueur '"+joueur2+"' dans la room numéro "+room);
-        let game = new Game(joueur1,joueur2);
+    socket.on("newgame",(joueur1name,joueur2name,room)=>{
+        console.log("Un nouveau Stratego vient d'être créé entre le joueur '"+joueur1name+"' et le joueur '"+joueur2name+"' dans la room numéro "+room);
+        let joueur1 = new Player(joueur1name)
+        let joueur2 = new Player(joueur2name)
+        let game = new Game(joueur1,joueur2)
         //let viewgame= new StrategoView(game);
 
         // Appelle la socket coté client qui remplit le tableau des pions des 2 joueurs
         socket.on("tableauPionsServer",()=>{
             console.log("Appel de la fonction 'tableauPionsServer' dans la room"+room+" coté serveur.");
-            io.emit('tableauPionsClient',game.pionsInfos);            
+            io.emit('tableauPionsClient',game.joueur1.tableOfPawnsView(),game.joueur2.tableOfPawnsView());
+            //On envoie ici les tableaux des pions des joueurs 1 et 2 même s'ils sont identiques car, dans le cas où un jour un joueur devait avoir + de pions que l'autre 
+            // (difficultés supplémentaires futures ?) cela permet que l'affiche des 2 joueurs soient indépendants
         })
         /* ---------------------- Joueur1 ----------------------*/
 
         // Appelle la socket coté client qui applique des listeners sur le tableau des pions du J1
         socket.on('tableauPionsListenerServerJ1',()=>{
             console.log("Appel de la fonction 'tableauPionsListenerServerJ1' dans la room"+room+" coté serveur.")
-            io.emit('tableauPionsListenerClientJ1');
+            io.emit('tableauPionsListenerClientJ1',game.joueur1);
         })
         // Reçois la pièce actuellement selectionnée par le joueur1
 

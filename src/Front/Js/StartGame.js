@@ -1,14 +1,14 @@
 //import { Socket } from "socket.io";
 
 (function(){
-    let joueur1 = "Mathieu";
-    let joueur2 = "Annie";
+    let joueur1name = "Mathieu";
+    let joueur2name = "Annie";
     let room = 1;
 
-    console.log("Joueur 1 : ",joueur1,"\nJoueur 2 : ",joueur2);
+    console.log("Joueur 1 : ",joueur1name,"\nJoueur 2 : ",joueur2name);
 
     
-    socket.emit("newgame",joueur1,joueur2,room);
+    socket.emit("newgame",joueur1name,joueur2name,room);
 
     // Ces sockets coté serveur appellent les sockets homonymes (à la différence près du 'Server'/'Client') coté Client
     socket.emit("tableauPionsServer");
@@ -19,34 +19,42 @@
     
     /* ---------------------- Implémentation des sockets coté client ---------------------- */
 
-    // Remplit d'après les informations du server (game.pionsInfos) les tableaux des pions des 2 joueurs. 
-    socket.on("tableauPionsClient",(tableau)=>{
+    // Remplit d'après les informations du server (game.joueur1.tableOfPawns()) les tableaux des pions des 2 joueurs. 
+    socket.on("tableauPionsClient",(tableOfPawnsJ1,tableOfPawnsJ2)=>{
         console.log("Appel de la fonction 'tableauPionsClient' coté client.");
         let tbodyPionsJ1 = document.getElementById("tableauPionsJ1").children[2];
         let tbodyPionsJ2 = document.getElementById("tableauPionsJ2").children[2];
         let i=0;
-        for(element of tableau){
+        for(element of tableOfPawnsJ1){
             tbodyPionsJ1.children[i].children[0].textContent=element.name;
             tbodyPionsJ1.children[i].children[1].textContent=element.nombreRestant;
-            tbodyPionsJ1.children[i].children[2].textContent=element.force;
-
+            tbodyPionsJ1.children[i++].children[2].textContent=element.force;
+        }
+        i=0;
+        for(element of tableOfPawnsJ2){
             tbodyPionsJ2.children[i].children[0].textContent=element.name;
             tbodyPionsJ2.children[i].children[1].textContent=element.nombreRestant;
-            tbodyPionsJ2.children[i].children[2].textContent=element.force;
-            i++;
+            tbodyPionsJ2.children[i++].children[2].textContent=element.force;
         }
+        
     })
 
     /* ---------------------- Joueur1 ----------------------*/
 
     // Applique un listener sur les cases du tableau des pions du joueur1
-    socket.on('tableauPionsListenerClientJ1',()=>{
+    socket.on('tableauPionsListenerClientJ1',(joueur1)=>{
         console.log("Appel de la fonction 'tableauPionsListenerClientJ1' coté client.");
         let tbodyPionsJ1 = document.getElementById("tableauPionsJ1").children[2];
+        let pieceActuelleRouge = document.getElementById("pieceActuelleRouge");
         for(let i=0;i<12;i++){
             tbodyPionsJ1.children[i].addEventListener("click",()=>{
                 tbodyPionsJ1.children[i].style.background="red";
+                console.log(joueur1.getName());
+                //tbodyPionsJ1.children[game.joueur1.indiceDuType(pieceActuelleRouge.textContent)].style.background="white";
+                
                 // Mettre ici l'histoire du strategoView.pièceActuRouge
+
+                pieceActuelleRouge.textContent=tbodyPionsJ1.children[i].children[0].textContent;
             })
         }
     });
