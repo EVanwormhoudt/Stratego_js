@@ -241,7 +241,17 @@ io.on('connection', (socket) => {
             console.log("Appel de la fonction 'tableauPionsListenerServerJ1' dans la room"+room+" coté serveur.")
             io.emit('tableauPionsListenerClientJ1',game.joueur1);
         })
-        // Reçois la pièce actuellement selectionnée par le joueur1
+        // Reçois le type de la pièce actuellement selectionnée par le joueur1 et renvoie le nombre restant du type de cette pièce dispo
+        socket.on("TypePionsJ1DispoDemandeServer",typePionsJ1=>{
+            socket.emit("TypePionsJ1DispoReponseServer",(joueur1.nombreRestantDuType(typePionsJ1)));
+        });
+
+        // Reçoie le type de la pièce et renvoie l'image correspondante
+        /* --------------------- ENVOIE ICI L IMAGE DU TYPE --------------------- */
+        socket.on("imagePionTypeDemandeJ1",type=>{
+            socket.emit("imagePionTypeReponseJ1",joueur1.imageDuType(type));
+        });
+        
 
         // Appelle la socket coté client qui applique des listeners sur le plateau Stratego du J1
         socket.on("strategoListenerServerJ1",()=>{

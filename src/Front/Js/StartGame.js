@@ -44,17 +44,49 @@
     // Applique un listener sur les cases du tableau des pions du joueur1
     socket.on('tableauPionsListenerClientJ1',(joueur1)=>{
         console.log("Appel de la fonction 'tableauPionsListenerClientJ1' coté client.");
+
         let tbodyPionsJ1 = document.getElementById("tableauPionsJ1").children[2];
         let pieceActuelleRouge = document.getElementById("pieceActuelleRouge");
+        let message=document.getElementById("message");
+        let precedentIndice = undefined;
+        // Evenement sur le plateau Stratego
+        for(let idCaseStratego=61;idCaseStratego<=100;idCaseStratego++){
+            document.getElementById(idCaseStratego).addEventListener("click",()=>{
+                if(pieceActuelleRouge.textContent!="Aucune"){
+                    console.log("La pièce '",pieceActuelleRouge.textContent,"' est selectionnée.")
+                    socket.emit("imagePionTypeDemandeJ1",pieceActuelleRouge.textContent);
+                    let test=0;
+                    socket.on("imagePionTypeReponseJ1",reponse=>{
+                        test= new Number(reponse);
+                        // Problème d'interconnexion du contenu des cases du stratego
+                    })
+                    console.log("La case "+idCaseStratego+" change de contenu. | test = ",test)
+                    document.getElementById(idCaseStratego).textContent=test;
+                    
+                } else { console.log("Pas de pièce selectionnée.")}
+            })
+        }
+        // Evenement sur le tableau des pions
         for(let i=0;i<12;i++){
-            tbodyPionsJ1.children[i].addEventListener("click",()=>{
-                tbodyPionsJ1.children[i].style.background="red";
-                console.log(joueur1.getName());
-                //tbodyPionsJ1.children[game.joueur1.indiceDuType(pieceActuelleRouge.textContent)].style.background="white";
-                
-                // Mettre ici l'histoire du strategoView.pièceActuRouge
-
-                pieceActuelleRouge.textContent=tbodyPionsJ1.children[i].children[0].textContent;
+            tbodyPionsJ1.children[i].addEventListener("click",()=>{    
+                // On demande au serveur si le type de pion de la case cliquée est encore disponible pour le joueur1
+                socket.emit("TypePionsJ1DispoDemandeServer",tbodyPionsJ1.children[i].children[0].textContent);
+                socket.on("TypePionsJ1DispoReponseServer",(reponse)=>{
+                    if(reponse>0){ // Si oui, on effectue un certain nombre d'actions
+                        message.textContent='';
+                        if(precedentIndice == undefined){
+                            precedentIndice = i;
+                        } else {
+                            tbodyPionsJ1.children[precedentIndice].style.background="white"; // Si precedentIndice existe, on met en blanc la case précédement cliquée
+                            precedentIndice=i;
+                        }
+                        tbodyPionsJ1.children[i].style.background="red"; // On selectionne la case cliquée
+                        pieceActuelleRouge.textContent=tbodyPionsJ1.children[i].children[0].textContent; // On actualise 
+                    } else { // Sinon, on ne fait rien.
+                        message.textContent="Vous ne pouvez pas selectionné un pion de type '"+tbodyPionsJ1.children[i].children[0].textContent+"' car le nombre restant de cette pièce est nul.";
+                        console.log("Vous ne pouvez plus selectionné cette pièce : nombre restant épuisé.");
+                    }
+                })
             })
         }
     });

@@ -56,6 +56,13 @@ class Player{
             }
         }
     }
+    imageDuType(type){
+        for(const element of this.tableOfPawns){
+            if(element.name==type){
+                return element.force; // ENVOIE L IMAGE
+            }
+        }
+    }
     decrNombreRestantDuType(type){
         for(const element of this.tableOfPawns){
             if(element.name==type){
