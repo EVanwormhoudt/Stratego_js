@@ -10,6 +10,7 @@ form.addEventListener('submit', event => {
         if (res.length){
             socket.emit("decrypt", [inputPass.value, res]);
             socket.on("resultDecrypt", result => {
+                console.log(result + " etape 3")
                 if(result){
                     logger.sendLogin(inputUser.value);
                 }

@@ -13,7 +13,6 @@ let scoreHandler = (function (){
                 if(scores.scores.length === 5){
                     scores.scores.shift();
                 }
-                newScore.grid = undefined;
                 scores.scores.push(newScore);
 
                 let mydatas = JSON.stringify(scores, null, 2);
@@ -50,8 +49,13 @@ let scoreHandler = (function (){
                 console.log("1 record inserted");
                 console.log(result);
                 sql = "INSERT INTO pionts VALUES (?,?,?)";
-                for(let i in newScore.pieces){
-                    con.query(sql, [result.insertId,i,newScore.pieces[i]], (err, result2) => {
+                for(let i in newScore.tabj1){
+                    con.query(sql, [result.insertId,i,newScore.tabj1[i].nombreRestant], (err, result2) => {
+                        if (err) throw err;
+                    });
+                }
+                for(let i in newScore.tabj2){
+                    con.query(sql, [result.insertId,i+12,newScore.tabj1[i].nombreRestant], (err, result2) => {
                         if (err) throw err;
                     });
                 }

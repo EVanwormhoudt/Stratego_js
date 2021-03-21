@@ -1,3 +1,5 @@
+const Player = require('./Player');
+
 class Game{
     initGrille(){
         let grille = new Array(10);
@@ -49,6 +51,18 @@ class Game{
         console.log(this.pionsInfos);
     }
     */
+
+    exportData(){
+        let data = {
+            joueur1 : this.joueur1.getName(),
+            joueur2 : this.joueur2.getName(),
+            tabj1 : this.joueur1.tableOfPawnsView(),
+            tabj2: this.joueur2.tableOfPawnsView(),
+            time : this.time,
+            winner : this.winner
+        }
+    }
+
 }
 
 module.exports = Game;
