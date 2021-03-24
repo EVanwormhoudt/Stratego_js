@@ -1,4 +1,5 @@
 class Pions{
+
     constructor(type,force,joueur,x,y){
         this.type=type; // Nom de la pièce
         this.force=force;

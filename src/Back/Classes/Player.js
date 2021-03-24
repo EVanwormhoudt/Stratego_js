@@ -1,5 +1,4 @@
 class Player{
-
     constructor(name){
         this.name=name;
         this.color=undefined;
@@ -35,13 +34,6 @@ class Player{
     tableOfPawnsView(){
         return this.tableOfPawns;
     }
-    indiceDuType(type){
-        for(const indice in this.tableOfPawns){
-            if(this.tableOfPawns[indice].name==type){
-                return indice;
-            }
-        }
-    }
     nombreRestantDuType(type){
         for(const element of this.tableOfPawns){
             if(element.name==type){
@@ -64,4 +56,3 @@ class Player{
         }
     }
 }
-module.exports = Player;
