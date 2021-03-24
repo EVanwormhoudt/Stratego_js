@@ -14,6 +14,10 @@ const session = require("express-session")({
         secure: false
     }
 });
+/******************/
+http.listen(4200, () => {
+    console.log('Serveur lancé sur le port 4200');
+})
 
 
 
@@ -27,8 +31,10 @@ const bcrypt = require('bcrypt');
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 
-const Game = require('./Back/Classes/Game.js')
-const scoreHandler = require("./Back/Modules/scoreHandler")
+const Game = require('./Back/Classes/Game');
+const Player = require('./Back/Classes/Player')
+const StrategoView = require('./Front/Js/StrategoView');
+const scoreHandler = require("./Back/Modules/scoreHandler.js");
 
 
 app.use(express.static(__dirname + '/front/'));
@@ -41,7 +47,7 @@ let games =  new Array(roomnbr)
 
 for(let i = 0;i<10;i++){
     rooms[i] = new Array(3);
-    rooms[i][0] = 0;
+    rooms[i][0]
 }
 
 
@@ -50,7 +56,7 @@ for(let i = 0;i<10;i++){
 const con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "",
+    password: "sheron", // Mettre un password vide excepté pour la BDD de Sheron
     database: "stratego"
 });
 
@@ -99,8 +105,9 @@ app.get('/waitingRoom', (req,res) => {
 
 // redirige vers la page de jeu si l'URL contient '/game'
 app.get('/game',(req,res)=>{
-    if(req.session)
+    if(req.session){
         res.sendFile(__dirname + '/Front/Html/game.html');
+    }
     else
         res.redirect('/');
 
@@ -113,7 +120,7 @@ io.on('connection', (socket) => {
 
     socket.on("register", (info) => {
         let sql = "INSERT INTO users VALUES (default,?,?,?)";
-        con.query(sql, [info[0], info[1],info[2]], (err, res)=> {
+        con.query(sql, [info[0], info[2],info[1]], (err, res)=> {
             if (err)throw err;
             console.log("personne ajouté")
         });
@@ -123,6 +130,7 @@ io.on('connection', (socket) => {
         let sql = "SELECT id, username FROM users WHERE username = ? and password = ?";
         con.query(sql, [info[0], info[1]], (err, res) => {
             if(err) throw err;
+
             socket.emit("resultLogin",res)
         });
     });
@@ -139,14 +147,6 @@ io.on('connection', (socket) => {
         });
     });
 
-    socket.on("password", (info) => {
-        let sql = "SELECT password FROM users WHERE username = ?";
-        con.query(sql, [info[0]], (err, res) => {
-            if (err) throw err;
-            socket.emit("resultPass", res[0].password);
-        });
-    });
-
     socket.on("crypt", (info) =>{
         bcrypt.hash(info,10, function (err, res){
             if (err) throw err;
@@ -154,12 +154,11 @@ io.on('connection', (socket) => {
         });
     });
 
-
+    //judith socket login decrypt
     socket.on("decrypt", (info) => {
-        console.log(info[0] )
-        console.log(info[1])
         bcrypt.compare(info[0], info[1], function (err, res) {
             if (err) throw err;
+            console.log(res);
             socket.emit("resultDecrypt", res);
         });
     });
@@ -179,48 +178,16 @@ io.on('connection', (socket) => {
            }
        }
     });
+    // Sheron : Problème avec le ".toString()" lors du chargement de game.html
+    /* 
     socket.on("startGame",()=>{
         socket.join((socket.handshake.session.room).toString());
         if (games[socket.handshake.session.room]){
-            let joueur1 = new Player(rooms[socket.handshake.session.room][1])
-            let joueur2 = new Player(rooms[socket.handshake.session.room][2]);
-            games[socket.handshake.session.room] = new Game(joueur1,joueur2);
+            games[socket.handshake.session.room] = new Game();
+
         }
     });
-    socket.on("tableauPionsServer",()=>{
-        console.log("Appel de la fonction 'tableauPionsServer' dans la room"+room+" coté serveur.");
-        io.emit('tableauPionsClient',game.joueur1.tableOfPawnsView(),game.joueur2.tableOfPawnsView());
-        //On envoie ici les tableaux des pions des joueurs 1 et 2 même s'ils sont identiques car, dans le cas où un jour un joueur devait avoir + de pions que l'autre
-        // (difficultés supplémentaires futures ?) cela permet que l'affiche des 2 joueurs soient indépendants
-    })
-    socket.on('tableauPionsListenerServerJ1',()=>{
-        console.log("Appel de la fonction 'tableauPionsListenerServerJ1' dans la room"+room+" coté serveur.")
-        io.emit('tableauPionsListenerClientJ1',game.joueur1);
-    })
-    // Reçois la pièce actuellement selectionnée par le joueur1
-
-    // Appelle la socket coté client qui applique des listeners sur le plateau Stratego du J1
-    socket.on("strategoListenerServerJ1",()=>{
-        console.log("Appel de la fonction 'strategoListenerServerJ1' dans la room"+room+" coté serveur.")
-        io.emit('strategoListenerClientJ1');
-    })
-
-    /* ---------------------- Joueur2 ----------------------*/
-
-    // Appelle la socket coté client qui applique des listeners sur le tableau des pions du J2
-    socket.on('tableauPionsListenerServerJ2',()=>{
-        console.log("Appel de la fonction 'tableauPionsListenerServerJ2' dans la room"+room+" coté serveur.")
-        io.emit('tableauPionsListenerClientJ2');
-    })
-
-
-    // Reçois la pièce actuellement selectionnée par le joueur2
-
-    // Appelle la socket coté client qui applique des listeners sur le plateau Stratego du J2
-    socket.on("strategoListenerServerJ2",()=>{
-        console.log("Appel de la fonction 'strategoListenerServerJ2' dans la room"+room+" coté serveur.")
-        io.emit('strategoListenerClientJ2');
-    })
+    */
 
     socket.on("move",(start,end)=>{
 
@@ -229,7 +196,7 @@ io.on('connection', (socket) => {
 
     });
     socket.on('disconnect', () => {
-        if(socket.handshake.session.room !== undefined && !game[socket.handshake.session.room]){
+        if(socket.handshake.session.room !== undefined){
             rooms[socket.handshake.session.room][0]--;
             room[socket.handshake.session.room][socket.handshake.session.player] = undefined;
             if(socket.handshake.session.player === 1){
@@ -243,6 +210,78 @@ io.on('connection', (socket) => {
             io.to[(socket.handshake.session.room).toString()].emit("removePlay");
         }
     });
+    socket.on("endPlacement",(tab)=> {
+            for(let i = 6;i< 10;i++){
+                for(let j  = 0; j < 10;j++){
+
+                }
+        }
+    })
+
+    // --------------- Socket pour la page game.html ---------------
+
+    socket.on("newgame",(joueur1name,joueur2name,room)=>{
+        console.log("Un nouveau Stratego vient d'être créé entre le joueur '"+joueur1name+"' et le joueur '"+joueur2name+"' dans la room numéro "+room);
+        let joueur1 = new Player(joueur1name)
+        let joueur2 = new Player(joueur2name)
+        let game = new Game(joueur1,joueur2)
+        //let viewgame= new StrategoView(game);
+
+        // Appelle la socket coté client qui remplit le tableau des pions des 2 joueurs
+        socket.on("tableauPionsServer",()=>{
+            console.log("Appel de la fonction 'tableauPionsServer' dans la room"+room+" coté serveur.");
+            io.emit('tableauPionsClient',game.joueur1.tableOfPawnsView(),game.joueur2.tableOfPawnsView());
+            //On envoie ici les tableaux des pions des joueurs 1 et 2 même s'ils sont identiques car, dans le cas où un jour un joueur devait avoir + de pions que l'autre 
+            // (difficultés supplémentaires futures ?) cela permet que l'affiche des 2 joueurs soient indépendants
+        })
+        /* ---------------------- Joueur1 ----------------------*/
+
+        // Appelle la socket coté client qui applique des listeners sur le tableau des pions du J1
+        socket.on('tableauPionsListenerServerJ1',()=>{
+            console.log("Appel de la fonction 'tableauPionsListenerServerJ1' dans la room"+room+" coté serveur.")
+            io.emit('tableauPionsListenerClientJ1',game.joueur1);
+        })
+        // Reçois le type de la pièce actuellement selectionnée par le joueur1 et renvoie le nombre restant du type de cette pièce dispo
+        socket.on("TypePionsJ1DispoDemandeServer",typePionsJ1=>{
+            socket.emit("TypePionsJ1DispoReponseServer",(joueur1.nombreRestantDuType(typePionsJ1)));
+        });
+
+        // Reçoie le type de la pièce et renvoie l'image correspondante
+        /* --------------------- ENVOIE ICI L IMAGE DU TYPE --------------------- */
+        socket.on("imagePionTypeDemandeJ1",(type,idcase)=>{
+            console.log("test ok | type = ",type," | idcase = ",idcase);
+            socket.emit("imagePionTypeReponseJ1",joueur1.forceDuType(type),idcase);
+        });
+        socket.on("decrementationTypeJoueur1",type=>{
+            joueur1.tableOfPawns[joueur1.indiceDuType(type)].nombreRestant--;
+            console.table(joueur1.tableOfPawns);
+            // PTIT GLITCH A FIXE
+        });
+           
+
+        // Appelle la socket coté client qui applique des listeners sur le plateau Stratego du J1
+        socket.on("strategoListenerServerJ1",()=>{
+            console.log("Appel de la fonction 'strategoListenerServerJ1' dans la room"+room+" coté serveur.")
+            io.emit('strategoListenerClientJ1');
+        })
+
+        /* ---------------------- Joueur2 ----------------------*/
+        
+        // Appelle la socket coté client qui applique des listeners sur le tableau des pions du J2
+        socket.on('tableauPionsListenerServerJ2',()=>{
+            console.log("Appel de la fonction 'tableauPionsListenerServerJ2' dans la room"+room+" coté serveur.")
+            io.emit('tableauPionsListenerClientJ2');
+        })
+        
+
+        // Reçois la pièce actuellement selectionnée par le joueur2
+        
+        // Appelle la socket coté client qui applique des listeners sur le plateau Stratego du J2
+        socket.on("strategoListenerServerJ2",()=>{
+            console.log("Appel de la fonction 'strategoListenerServerJ2' dans la room"+room+" coté serveur.")
+            io.emit('strategoListenerClientJ2');
+        })
+    })
 
 });
 
@@ -261,12 +300,4 @@ app.post('/login', body('login').isLength({ min: 3 }).trim().escape(), (req, res
     }
 
 });
-
-
-
-/******************/
-http.listen(8880, () => {
-    console.log('Serveur lancé sur le port 8880');
-})
-
 
