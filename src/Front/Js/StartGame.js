@@ -52,10 +52,9 @@
         // Evenement sur le plateau Stratego
         for(let idCaseStratego=61;idCaseStratego<=100;idCaseStratego++){
             document.getElementById(idCaseStratego).addEventListener("click",()=>{
-                if(pieceActuelleRouge.textContent!="Aucune"){
-                    console.log("La pièce '",pieceActuelleRouge.textContent,"' est selectionnée.")
+                if(pieceActuelleRouge.textContent!="Aucune"){ // Un type de pions a été préalablement selectionné
+                    /*
                     socket.emit("imagePionTypeDemandeJ1",pieceActuelleRouge.textContent,idCaseStratego);
-                    
                     socket.on("imagePionTypeReponseJ1",(reponse,idCaseStrategoServeur)=>{
                         console.log("force :",reponse," | idcase :",idCaseStrategoServeur);
                         if(idCaseStratego==idCaseStrategoServeur){
@@ -64,8 +63,20 @@
                         }
                     });
                     socket.emit("decrementationTypeJoueur1",pieceActuelleRouge.textContent);
-                    
-
+                    */
+                   socket.emit("decrementationTypeJoueur1Server",pieceActuelleRouge.textContent,idCaseStratego);
+                   socket.on("decrementationTypeJoueur1Client",(possible,image,idCase)=>{
+                        if(possible===true){
+                            console.log("force :",image," | idcase :",idCase);
+                            if(idCaseStratego==idCase){
+                                console.log("La case "+idCase+" change de contenu. | test = ",image)
+                                document.getElementById(idCaseStratego).textContent=image;
+                            }
+                        }else{
+                            console.log("Le joueur1 ne peut plus poser de pièce du type '"+pieceActuelleRouge.textContent+"'.")
+                            document.getElementById("message").textContent="Le joueur1 ne peut plus poser de pièce du type '"+pieceActuelleRouge.textContent+"'.";
+                        }
+                   });
                     
                 } else { console.log("Pas de pièce selectionnée.")}
             })

@@ -241,6 +241,7 @@ io.on('connection', (socket) => {
             console.log("Appel de la fonction 'tableauPionsListenerServerJ1' dans la room"+room+" coté serveur.")
             io.emit('tableauPionsListenerClientJ1',game.joueur1);
         })
+        
         // Reçois le type de la pièce actuellement selectionnée par le joueur1 et renvoie le nombre restant du type de cette pièce dispo
         socket.on("TypePionsJ1DispoDemandeServer",typePionsJ1=>{
             socket.emit("TypePionsJ1DispoReponseServer",(joueur1.nombreRestantDuType(typePionsJ1)));
@@ -248,16 +249,35 @@ io.on('connection', (socket) => {
 
         // Reçoie le type de la pièce et renvoie l'image correspondante
         /* --------------------- ENVOIE ICI L IMAGE DU TYPE --------------------- */
+        /*
         socket.on("imagePionTypeDemandeJ1",(type,idcase)=>{
             console.log("test ok | type = ",type," | idcase = ",idcase);
             socket.emit("imagePionTypeReponseJ1",joueur1.forceDuType(type),idcase);
         });
         socket.on("decrementationTypeJoueur1",type=>{
-            joueur1.tableOfPawns[joueur1.indiceDuType(type)].nombreRestant--;
-            console.table(joueur1.tableOfPawns);
+            if(joueur1.tableOfPawns[joueur1.indiceDuType(type)].nombreRestant>0){
+                joueur1.tableOfPawns[joueur1.indiceDuType(type)].nombreRestant--;
+                console.table(joueur1.tableOfPawns);
+            } else { console.log("Le joueur1 ne peut plus poser de pièce du type "+type)}
+            
             // PTIT GLITCH A FIXE
-        });
+        });*/
            
+        // TEST
+        socket.on("decrementationTypeJoueur1Server",(typePiece,idCaseStratego)=>{
+            let possible;
+            console.log("On est bien dans la fonction decrementation")
+            if(joueur1.tableOfPawns[joueur1.indiceDuType(typePiece)].nombreRestant>0){
+                joueur1.tableOfPawns[joueur1.indiceDuType(typePiece)].nombreRestant--;
+                console.table(joueur1.tableOfPawns);
+                possible=true;
+            } else { 
+                possible=false;
+                console.log("Le joueur1 ne peut plus poser de pièce du type "+typePiece)
+            }
+            socket.emit("decrementationTypeJoueur1Client",possible,joueur1.forceDuType(typePiece),idCaseStratego);
+        });
+
 
         // Appelle la socket coté client qui applique des listeners sur le plateau Stratego du J1
         socket.on("strategoListenerServerJ1",()=>{
