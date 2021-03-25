@@ -1,0 +1,74 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+.main {
+    background: no-repeat url(../Images/background.png);
+    background-size: cover;
+    background-position: center;
+}
+
+.bg-black {
+    background-color: black;
+}
+
+.logo {
+    background-image: url(../Images/logo.png);
+    background-size: cover;
+    width: 120px;
+    height: 35px;
+}
+
+.icon {
+    width: 28px;
+    height: 28px;
+}
+
+nav {
+    position: fixed;
+    width: 100%;
+    transition: 1s;
+}
+
+nav.black {
+    z-index: 10;
+    background: black;
+    display: inline-block;
+    padding: 0 25px;
+}
+
+.container {
+    text-align: justify;
+}
+
+
+/* classe pour le fond d'écran de l'accueil principal  */
+.masthead {
+    height: 100vh;
+    background: linear-gradient(to bottom, rgba(22, 22, 22, 0.3) 0%, rgba(22, 22, 22, 0.7) 75%, #000000 100%), url(../Images/ban.png);
+    background-size: cover;
+}
+/* fin header */
+
+/* body */
+
+/* fin body */
+
+/* footer */
+#footer {
+    bottom: 0;
+    width: 100%;
+    background-color: #f5f5f5;
+    text-align: center;
+    /* Set the fixed height of the footer here */
+    height: 30px;
+}
+
+#footer p {
+    margin: 6px 0 0 0;
+    font-size: 12px;
+    text-align: center;
+    font-weight: normal;
+}
+/*fin footer*/

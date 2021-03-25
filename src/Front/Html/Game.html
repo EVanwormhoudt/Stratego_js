@@ -2,9 +2,9 @@
 <html>
 <head>
 	<title>Plateau - Stratego</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link rel="stylesheet" type="text/css" href="../Css/plateau.css" />
-	<link rel="stylesheet" type="text/css" href="../Css/tableauPions.css" />
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<link rel="stylesheet" type="text/css" href="../Css/plateau.css"/>
+	<link rel="stylesheet" type="text/css" href="../Css/tableauPions.css"/>
 
 	<!-- Modules JS à pré-télécharger -->
 	<script type="text/javascript" src="../../Back/Classes/game.js"></script>
@@ -343,8 +343,15 @@
 <div id="tabDesPions">Voir tableau des pions</div>
 <div id="tabDuPlateau">Voir tableau du plateau en donnée</div>
 <div id="ready">Partie prête ?</div>
+<script src="../Js/modules/EventHandler.js"></script>
+<script src="../Js/StrategoView.js" type="text/javascript"></script>
+<script src="../Js/StartGame.js" type="text/javascript"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	let socket = io()
+	socket.emit("startGame");
+</script>
 
-<script type="text/javascript" src="../Js/StrategoView.js"></script>
-<script type="text/javascript" src="../../startGame.js"></script>
+
 </body>
 </html>

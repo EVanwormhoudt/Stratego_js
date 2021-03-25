@@ -174,19 +174,72 @@ io.on('connection', (socket) => {
     socket.on("startGame",()=>{
         socket.join((socket.handshake.session.room).toString());
     });
+    socket.on("tableauPionsServer",()=>{
+        console.log("Appel de la fonction 'tableauPionsServer' dans la room"+room+" coté serveur.");
+        io.to((socket.handshake.session.room).toString()).emit('tableauPionsClient',game.joueur1.tableOfPawnsView(),game.joueur2.tableOfPawnsView());
+        //On envoie ici les tableaux des pions des joueurs 1 et 2 même s'ils sont identiques car, dans le cas où un jour un joueur devait avoir + de pions que l'autre
+        // (difficultés supplémentaires futures ?) cela permet que l'affiche des 2 joueurs soient indépendants
+    })
+    socket.on('tableauPionsListenerServerJ1',()=>{
+        console.log("Appel de la fonction 'tableauPionsListenerServerJ1' dans la room"+room+" coté serveur.")
+        io.to((socket.handshake.session.room).toString()).emit('tableauPionsListenerClientJ1',game.joueur1);
+    })
+    // Reçois la pièce actuellement selectionnée par le joueur1
+
+    // Appelle la socket coté client qui applique des listeners sur le plateau Stratego du J1
+    socket.on("strategoListenerServerJ1",()=>{
+        console.log("Appel de la fonction 'strategoListenerServerJ1' dans la room"+room+" coté serveur.")
+        io.to((socket.handshake.session.room).toString()).emit('strategoListenerClientJ1');
+    })
+
+    /* ---------------------- Joueur2 ----------------------*/
+
+    // Appelle la socket coté client qui applique des listeners sur le tableau des pions du J2
+    socket.on('tableauPionsListenerServerJ2',()=>{
+        console.log("Appel de la fonction 'tableauPionsListenerServerJ2' dans la room"+room+" coté serveur.")
+        io.emit('tableauPionsListenerClientJ2');
+    })
+
+
+    // Reçois la pièce actuellement selectionnée par le joueur2
+
+    // Appelle la socket coté client qui applique des listeners sur le plateau Stratego du J2
+    socket.on("strategoListenerServerJ2",()=>{
+        console.log("Appel de la fonction 'strategoListenerServerJ2' dans la room"+room+" coté serveur.")
+        io.to((socket.handshake.session.room).toString()).emit('strategoListenerClientJ2');
+    })
 
     socket.on("move",(start,end)=>{
-
+        if(!games[socket.handshake.session.room].verifMove(socket.handshake.session.player,start,end))
+            socket.emit("moveImpossible");
     });
     socket.on("attack",(start,end)=>{
+        if(!games[socket.handshake.session.room].verifMove(socket.handshake.session.player,start,end))
+            socket.emit("moveImpossible")
 
     });
     socket.on('disconnect', () => {
+
+        if(socket.handshake.session.room !== undefined && !game[socket.handshake.session.room]){
+            rooms[socket.handshake.session.room][0]--;
+            rooms[socket.handshake.session.room][socket.handshake.session.player] = undefined;
+            if(socket.handshake.session.player === 1){
+                let srvSockets = io.to[socket.handshake.session.room].sockets.sockets;
+                srvSockets.forEach(user => {
+                    if (user.handshake.session.room === socket.handshake.session.room){
+                        user.handshake.session.player = 1;
+                    }
+                });
+            }
+            io.to[(socket.handshake.session.room).toString()].emit("removePlay");
+        }
+
         console.log(rooms[socket.handshake.session.room])
        if(socket.handshake.session.room !==0){
            rooms[socket.handshake.session.room]--;
            console.log(rooms[socket.handshake.session.room])
        }
+
     });
 
 });
