@@ -15,8 +15,8 @@ const session = require("express-session")({
     }
 });
 /******************/
-http.listen(4200, () => {
-    console.log('Serveur lancé sur le port 4200');
+http.listen(8880, () => {
+    console.log('Serveur lancé sur le port 8880');
 })
 
 
@@ -33,6 +33,7 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const Game = require('./Back/Classes/Game');
 const Player = require('./Back/Classes/Player')
+const Pions = require('./Back/Classes/pions');
 const StrategoView = require('./Front/Js/StrategoView');
 const scoreHandler = require("./Back/Modules/scoreHandler.js");
 
@@ -264,18 +265,30 @@ io.on('connection', (socket) => {
         });*/
            
         // TEST
-        socket.on("decrementationTypeJoueur1Server",(typePiece,idCaseStratego)=>{
+        socket.on("decrementationTypePionJoueur1Server",(typePiece,idCaseStratego,nbrDeClics)=>{
             let possible;
-            console.log("On est bien dans la fonction decrementation")
+            let x = Math.floor((idCaseStratego-1)/10);
+            let y = (idCaseStratego-1)%10;
+            let idPiecePop = undefined;
+            console.log("Nbr de clics : ",nbrDeClics)
             if(joueur1.tableOfPawns[joueur1.indiceDuType(typePiece)].nombreRestant>0){
+                if(!game.isCaseEmpty(x,y)){
+                    let typePrecedentePiece=game.getCase(x,y).typeDeLaPiece();
+                    console.log("On enlève la pièce précedente !");
+                    joueur1.tableOfPawns[joueur1.indiceDuType(typePrecedentePiece)].nombreRestant++;
+                    idPiecePop=joueur1.indiceDuType(typePrecedentePiece);
+                    
+                }
                 joueur1.tableOfPawns[joueur1.indiceDuType(typePiece)].nombreRestant--;
-                console.table(joueur1.tableOfPawns);
+                // Transmission en données de la case où mettre la pièce
+                let piece = new Pions(typePiece,joueur1.forceDuType(typePiece),joueur1name,Math.floor((idCaseStratego-1)/10),(idCaseStratego-1)%10);
+                game.setCase(x,y,piece);
                 possible=true;
             } else { 
                 possible=false;
                 console.log("Le joueur1 ne peut plus poser de pièce du type "+typePiece)
             }
-            socket.emit("decrementationTypeJoueur1Client",possible,joueur1.forceDuType(typePiece),idCaseStratego);
+            socket.emit("decrementationTypePionJoueur1Client",possible,joueur1.forceDuType(typePiece),idCaseStratego,joueur1.indiceDuType(typePiece),idPiecePop,nbrDeClics);
         });
 
 
@@ -300,6 +313,14 @@ io.on('connection', (socket) => {
         socket.on("strategoListenerServerJ2",()=>{
             console.log("Appel de la fonction 'strategoListenerServerJ2' dans la room"+room+" coté serveur.")
             io.emit('strategoListenerClientJ2');
+        })
+        
+        socket.on("strategoDonneesServer",()=>{
+            game.consoleLogTable();
+            socket.emit("strategoDonneesClient",game.grille);
+        })
+        socket.on("tableauPiecesJ1Server",()=>{
+            socket.emit("tableauPiecesJ1Client",joueur1.tableOfPawnsView())
         })
     })
 

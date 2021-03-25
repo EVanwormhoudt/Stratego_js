@@ -12,8 +12,9 @@
 
 <body>
 
-	<div id="annonceur">
+	<div id="annonceur" style="font-size:30px;">
 		<p>Bienvenu [NomDuJoueur].</p>
+		<p>Vous êtes dans la room [NumeroDeLaRoom].</p>
 		<p>Vous êtes le joueur [NuméroDuJoueur]</p>
 		<p>Phase de préparation !</p>
 	</div>
@@ -342,14 +343,15 @@
 	</table>
 </div>
 
-<div id="message">Pas de message.</div>
 
-
-<div>Pièce actuellement séléctionnée par les rouges: <span id="pieceActuelleRouge">Aucun</span></div>
-<div>Pièce actuellement séléctionnée par les bleus: <span id="pieceActuelleBleue">Aucun</span></div>
-
-<!-- <div id="error"></div> -->
-
+<div style="font-size:40px;">
+	<div id="message"></div>
+	<div>Pièce actuellement séléctionnée par les rouges: <span id="pieceActuelleRouge">Aucun</span></div>
+	<div>Pièce actuellement séléctionnée par les bleus: <span id="pieceActuelleBleue">Aucun</span></div>
+	<span id="voirTableauDesPieces" onclick="socket.emit('tableauPiecesJ1Server');">Voir le tableau des pièces du joueur1</span>
+	<span id="voirPlateauDonnees" onclick="socket.emit('strategoDonneesServer');">Voir plateau Stratego en données.</span>
+	<!-- <div id="error"></div> -->
+</div>
 
 <!-- Utile en phase de test
 <div id="tabDesPions">Voir tableau des pions</div>
