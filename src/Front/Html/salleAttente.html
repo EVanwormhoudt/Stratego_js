@@ -77,8 +77,13 @@
     let socket = io();
     socket.emit("getRoom");
     socket.on("validStart",()=>{
+        location.href = '/Game';
         document.getElementById("start").style.display= "block";
     });
+    socket.on("removePlay",()=>{
+        console.log("test")
+        document.getElementById("start").style.display= "none";
+    })
 
 </script>
 </body>
