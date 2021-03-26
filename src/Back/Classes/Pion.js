@@ -11,8 +11,9 @@ class Pion{
         this.discovered=false; // Attribut permettant de savoir si le joueur adverse connait cette pièce (suite à une préalable bataille)
         this.alive=true;
     }
-
+    typeDeLaPiece(){
+        return this.type;
+    }
 }
-
 module.exports = Pion;
 

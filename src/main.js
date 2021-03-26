@@ -27,7 +27,7 @@ const bcrypt = require('bcrypt');
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 
-const Game = require('./Back/Classes/Game.js')
+const Game = require('./Back/Classes/Game')
 const Pion = require('./Back/Classes/Pion')
 const Player = require('./Back/Classes/Player')
 const scoreHandler = require("./Back/Modules/scoreHandler")
@@ -46,9 +46,12 @@ for(let i = 0;i<10;i++){
     rooms[i][0] = 0;
 }
 
+// Le serveur ecoute sur ce port
+http.listen(8880, () => {
+    console.log('Serveur lancé sur le port 8880');
+})
 
-
-//Connexion à la base de donnée
+// Connexion à la base de donnée
 const con = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -185,41 +188,6 @@ io.on('connection', (socket) => {
         }
     });
 
-    socket.on("tableauPionsServer",()=>{
-        console.log("Appel de la fonction 'tableauPionsServer' dans la room"+room+" coté serveur.");
-        io.to((socket.handshake.session.room).toString()).emit('tableauPionsClient',game.joueur1.tableOfPawnsView(),game.joueur2.tableOfPawnsView());
-        //On envoie ici les tableaux des pions des joueurs 1 et 2 même s'ils sont identiques car, dans le cas où un jour un joueur devait avoir + de pions que l'autre
-        // (difficultés supplémentaires futures ?) cela permet que l'affiche des 2 joueurs soient indépendants
-    })
-    socket.on('tableauPionsListenerServerJ1',()=>{
-        console.log("Appel de la fonction 'tableauPionsListenerServerJ1' dans la room"+room+" coté serveur.")
-        io.to((socket.handshake.session.room).toString()).emit('tableauPionsListenerClientJ1',game.joueur1);
-    })
-    // Reçois la pièce actuellement selectionnée par le joueur1
-
-    // Appelle la socket coté client qui applique des listeners sur le plateau Stratego du J1
-    socket.on("strategoListenerServerJ1",()=>{
-        console.log("Appel de la fonction 'strategoListenerServerJ1' dans la room"+room+" coté serveur.")
-        io.to("room"+(socket.handshake.session.room)).emit('strategoListenerClientJ1');
-    })
-
-    /* ---------------------- Joueur2 ----------------------*/
-
-    // Appelle la socket coté client qui applique des listeners sur le tableau des pions du J2
-    socket.on('tableauPionsListenerServerJ2',()=>{
-        console.log("Appel de la fonction 'tableauPionsListenerServerJ2' dans la room"+room+" coté serveur.")
-        io.emit('tableauPionsListenerClientJ2');
-    })
-
-
-    // Reçois la pièce actuellement selectionnée par le joueur2
-
-    // Appelle la socket coté client qui applique des listeners sur le plateau Stratego du J2
-    socket.on("strategoListenerServerJ2",()=>{
-        console.log("Appel de la fonction 'strategoListenerServerJ2' dans la room"+room+" coté serveur.")
-        io.to("room"+(socket.handshake.session.room)).emit('strategoListenerClientJ2');
-    })
-
     socket.on("move",(start,end)=>{
         if(!games[socket.handshake.session.room].verifMove(socket.handshake.session.player,start,end))
             socket.emit("moveImpossible");
@@ -253,6 +221,81 @@ io.on('connection', (socket) => {
 
     });
 
+    // --------------- Socket pour la page game.html ---------------
+
+    socket.on("newgame",(joueur1name,joueur2name,room)=>{
+        console.log("Un nouveau Stratego vient d'être créé entre le joueur '"+joueur1name+"' et le joueur '"+joueur2name+"' dans la room numéro "+room);
+        let joueur1 = new Player(joueur1name)
+        let joueur2 = new Player(joueur2name)
+        let game = new Game(joueur1,joueur2)
+
+        // Appelle la socket coté client qui remplit le tableau des pions des 2 joueurs
+        socket.on("tableauPionsServer",()=>{
+            console.log("Appel de la fonction 'tableauPionsServer' dans la room"+room+" coté serveur.");
+            io.emit('tableauPionsClient',game.joueur1.tableOfPawnsView(),game.joueur2.tableOfPawnsView());
+            //On envoie ici les tableaux des pions des joueurs 1 et 2 même s'ils sont identiques car, dans le cas où un jour un joueur devait avoir + de pions que l'autre 
+            // (difficultés supplémentaires futures ?) cela permet que l'affichage du tableau des 2 joueurs soit indépendants
+        })
+        /* ---------------------- Joueur1 ----------------------*/
+
+        // Appelle la socket coté client qui applique des listeners sur le tableau des pions du J1
+        socket.on('preparationListenersServerJ1',()=>{
+            console.log("Appel de la fonction 'preparationListenersServerJ1' dans la room"+room+" coté serveur.")
+            io.emit('preparationListenersClientJ1',game.joueur1);
+        })
+        
+        // Reçois le type de la pièce actuellement selectionnée par le joueur1 et renvoie le nombre restant du type de cette pièce dispo
+        socket.on("TypePionsJ1DispoDemandeServer",typePionsJ1=>{
+            socket.emit("TypePionsJ1DispoReponseServer",(joueur1.nombreRestantDuType(typePionsJ1)));
+        });
+
+        // Lors du clic sur une case, on vérifie si 'nbrRestant' de la pièce est > 0 (possible), s'il y avait déjà une pièce auquel cas on la suppr du plateau en données 
+        // et incrémente nbrRestant de cette pièce, etc...
+        socket.on("decrementationTypePionJoueur1Server",(typePiece,idCaseStratego,nbrDeClics)=>{
+            let possible;
+            let x = Math.floor((idCaseStratego-1)/10);
+            let y = (idCaseStratego-1)%10;
+            let idPiecePop = undefined;
+            console.log("Nbr de clics : ",nbrDeClics)
+            if(joueur1.tableOfPawns[joueur1.indiceDuType(typePiece)].nombreRestant>0){
+                if(!game.isCaseEmpty(x,y)){
+                    let typePrecedentePiece=game.getCase(x,y).typeDeLaPiece();
+                    console.log("On enlève la pièce précedente !");
+                    joueur1.tableOfPawns[joueur1.indiceDuType(typePrecedentePiece)].nombreRestant++;
+                    idPiecePop=joueur1.indiceDuType(typePrecedentePiece);
+                    
+                }
+                joueur1.tableOfPawns[joueur1.indiceDuType(typePiece)].nombreRestant--;
+                // Transmission en données de la case où mettre la pièce
+                let piece = new Pion(typePiece,joueur1.forceDuType(typePiece),joueur1name,Math.floor((idCaseStratego-1)/10),(idCaseStratego-1)%10);
+                game.setCase(x,y,piece);
+                possible=true;
+            } else { 
+                possible=false;
+                console.log("Le joueur1 ne peut plus poser de pièce du type "+typePiece)
+            }
+            socket.emit("decrementationTypePionJoueur1Client",possible,joueur1.forceDuType(typePiece),idCaseStratego,joueur1.indiceDuType(typePiece),idPiecePop,nbrDeClics);
+        });
+
+        /* ---------------------- Joueur2 ----------------------*/
+        
+        // Appelle la socket coté client qui applique des listeners sur le tableau des pions du J2
+        socket.on('preparationListenersServerJ2',()=>{
+            console.log("Appel de la fonction 'preparationListenersServerJ2' dans la room"+room+" coté serveur.")
+            io.emit('preparationListenersClientJ2');
+        })
+
+        /* ---------------- Information pour débuger ---------------- */
+        // Evenements sur les phrases 'Voir le tableau des pièces du joueur1' et 'Voir plateau Stratego en données.'
+
+        socket.on("strategoDonneesServer",()=>{
+            game.consoleLogTable();
+            socket.emit("strategoDonneesClient",game.grille);
+        })
+        socket.on("tableauPiecesJ1Server",()=>{
+            socket.emit("tableauPiecesJ1Client",joueur1.tableOfPawnsView())
+        })
+    }) // Fin de la socket "newgame"
 });
 
 app.post('/login', body('login').isLength({ min: 3 }).trim().escape(), (req, res) => {
@@ -270,12 +313,5 @@ app.post('/login', body('login').isLength({ min: 3 }).trim().escape(), (req, res
     }
 
 });
-
-
-
-/******************/
-http.listen(8880, () => {
-    console.log('Serveur lancé sur le port 8880');
-})
 
 

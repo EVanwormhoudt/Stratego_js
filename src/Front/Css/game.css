@@ -14,3 +14,12 @@
     height:100%;
     display:inline-block;
 }
+#annonceur p{
+    align-items:center;
+}
+#voirPlateauDonnees:hover{
+    background:red;
+}
+#voirTableauDesPieces:hover{
+    background:green;
+}
