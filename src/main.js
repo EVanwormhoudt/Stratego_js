@@ -55,7 +55,7 @@ http.listen(8880, () => {
 const con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "",
+    password: "sheron",
     database: "stratego"
 });
 
@@ -164,18 +164,26 @@ io.on('connection', (socket) => {
     socket.on("getRoom",()=>{
         for(let i = 0;i<10;i++){
             if(rooms[i][0] !== 2 && (i === 0||rooms[i-1][0]===2)){
-                rooms[i][0] +=1;
+                rooms[i][0] +=1; // Nbr de joueurs
                 socket.handshake.session.player = rooms[i][0];
                 socket.join("room"+i);
                 rooms[i][rooms[i][0]] = socket.handshake.session.username
                 socket.handshake.session.room = i;
+                socket.handshake.session.game= new Array(10);
                 if(rooms[i][0] === 2){
-                    io.to("room"+i).emit("validStart");
+                    socket.to("room"+i).broadcast.emit("redirectJ1"); // Envoie uniquement à l'autre joueur cette socket
+                    socket.emit("redirectJ2"); // socket envoyé uniquement à l'emetteur
                 }
                 i = 9;
             }
         }
     });
+    socket.on("emitInfo",()=>{
+        socket.emit("getInfo",socket.handshake.session,rooms[socket.handshake.session.room],socket.handshake.session.username,socket.handshake.session.player,socket.handshake.session.room)
+    })
+    socket.on("changeLe",()=>{
+        socket.handshake.session.game[0]=9;
+    })
     socket.on("startGame",()=>{
         socket.join((socket.handshake.session.room).toString());
         if (games[socket.handshake.session.room] === undefined) {
@@ -229,19 +237,30 @@ io.on('connection', (socket) => {
         let joueur2 = new Player(joueur2name)
         let game = new Game(joueur1,joueur2)
 
+        socket.on("introductionServer",(userSocket,userRoom)=>{
+            console.log("Appel de la fonction 'introduction' dans la room '"+room+"' coté serveur pour le joueur ",userSocket.player,".")
+            socket.emit("introductionClient",userSocket,userRoom);
+        })
+        // Appelle la socket coté client qui crée dynamiquement le tableau des pions du joueur, en fonction de 'playerNbr' (J1 ou J2)
+        socket.on("tableauPionsServerBuild",(playerNbr)=>{
+            console.log("tableauPionsServerBuild appelé coté Serveur.")
+            socket.emit("tableauPionsClientBuild",playerNbr);
+        })
         // Appelle la socket coté client qui remplit le tableau des pions des 2 joueurs
-        socket.on("tableauPionsServer",()=>{
-            console.log("Appel de la fonction 'tableauPionsServer' dans la room"+room+" coté serveur.");
-            io.emit('tableauPionsClient',game.joueur1.tableOfPawnsView(),game.joueur2.tableOfPawnsView());
+        socket.on("tableauPionsServerContent",(playerNbr)=>{
+            //console.log("Appel de la fonction 'tableauPionsServer' dans la room"+room+" coté serveur.");
+            let sendContent = (playerNbr==1) ? game.joueur1.tableOfPawnsView() : game.joueur2.tableOfPawnsView() ; 
+            //io.emit('tableauPionsClient',game.joueur1.tableOfPawnsView(),game.joueur2.tableOfPawnsView());
+            socket.emit('tableauPionsClientContent',sendContent,playerNbr);
             //On envoie ici les tableaux des pions des joueurs 1 et 2 même s'ils sont identiques car, dans le cas où un jour un joueur devait avoir + de pions que l'autre 
             // (difficultés supplémentaires futures ?) cela permet que l'affichage du tableau des 2 joueurs soit indépendants
         })
         /* ---------------------- Joueur1 ----------------------*/
 
         // Appelle la socket coté client qui applique des listeners sur le tableau des pions du J1
-        socket.on('preparationListenersServerJ1',()=>{
-            console.log("Appel de la fonction 'preparationListenersServerJ1' dans la room"+room+" coté serveur.")
-            io.emit('preparationListenersClientJ1',game.joueur1);
+        socket.on('preparationListenersServer',(playerNbr)=>{
+            console.log("Appel de la fonction 'preparationListenersServerJ1' dans la room '"+room+"' coté serveur pour le joueur ",playerNbr,".")
+            socket.emit('preparationListenersClient',playerNbr);
         })
         
         // Reçois le type de la pièce actuellement selectionnée par le joueur1 et renvoie le nombre restant du type de cette pièce dispo
@@ -276,14 +295,6 @@ io.on('connection', (socket) => {
             }
             socket.emit("decrementationTypePionJoueur1Client",possible,joueur1.forceDuType(typePiece),idCaseStratego,joueur1.indiceDuType(typePiece),idPiecePop,nbrDeClics);
         });
-
-        /* ---------------------- Joueur2 ----------------------*/
-        
-        // Appelle la socket coté client qui applique des listeners sur le tableau des pions du J2
-        socket.on('preparationListenersServerJ2',()=>{
-            console.log("Appel de la fonction 'preparationListenersServerJ2' dans la room"+room+" coté serveur.")
-            io.emit('preparationListenersClientJ2');
-        })
 
         /* ---------------- Information pour débuger ---------------- */
         // Evenements sur les phrases 'Voir le tableau des pièces du joueur1' et 'Voir plateau Stratego en données.'

@@ -76,12 +76,16 @@
 <script>
     let socket = io();
     socket.emit("getRoom");
-    socket.on("validStart",()=>{
-        location.href = '/Game';
+
+    socket.on("redirectJ1",()=>{
         document.getElementById("start").style.display= "block";
-    });
+        location.href = '/Game';
+    })
+    socket.on("redirectJ2",()=>{
+        document.getElementById("start").style.display= "block";
+        location.href = '/Game';
+    })
     socket.on("removePlay",()=>{
-        console.log("test")
         document.getElementById("start").style.display= "none";
     })
 
