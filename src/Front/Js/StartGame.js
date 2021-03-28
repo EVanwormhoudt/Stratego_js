@@ -12,10 +12,9 @@
         console.log("currentUser : ",currentUser)
         console.log("currentUserPlayerNbr: ",currentUserPlayerNbr)
         console.log("Numero de la room : ",roomNbr)
-
         
-
-        socket.emit("newgame",roomEntiere[1],roomEntiere[2],socketEntiere.room);
+        
+        socket.emit("game",currentUserPlayerNbr,socketEntiere.room);
 
         socket.emit("introductionServer",socketEntiere,roomEntiere); // Phrases d'introduction en fonction des 2 joueurs de la room
 
@@ -25,11 +24,8 @@
 
         socket.emit('preparationListenersServer',socketEntiere.player); // Applique les listeners sur le tableau des pions et le plateau
 
-        // Devrait faire "socket.handshake.session.game[0]=9"
-        socket.emit("changeLe");
-
+        socket.emit("grilleCommuneClient");
     })
-
 
     // Affiche correctement les données au dessus du plateau
     socket.on("introductionClient",(userSocket,userRoom)=>{
@@ -103,9 +99,9 @@
         let playerColor = (playerNbr==1) ? "red" : "lightblue";
         for(let i=0;i<12;i++){
             tbodyPion.children[i].addEventListener("click",()=>{    
-                // On demande au serveur si le type de pion de la case cliquée est encore disponible pour le joueur1
-                socket.emit("TypePionsJ1DispoDemandeServer",tbodyPion.children[i].children[0].textContent);
-                socket.on("TypePionsJ1DispoReponseServer",(reponse)=>{
+                // On demande au serveur si le type de pion de la case cliquée est encore disponible pour le joueur
+                socket.emit("TypePionsDispoDemandeServer",tbodyPion.children[i].children[0].textContent);
+                socket.on("TypePionsDispoReponseServer",(reponse)=>{
                     if(reponse>0){ // Si oui, on effectue un certain nombre d'actions
                         message.textContent='';
                         if(precedentIndice == undefined){
@@ -133,11 +129,11 @@
                                         soit appliqué aussi bien pour celui qui emet la socket que l'autre joueur (faut rajouter roomNbr en argument de 'preparationListenersClientJ1' auquel cas) */
 
                     // On envoie la pièce actuellement selectionnée, l'id (1-100) de la case cliqué et le nombre de fois qu'on a cliqué sur cette case
-                   socket.emit("decrementationTypePionJoueur1Server",pieceActuelle.textContent,idCaseStratego,nbrClicsCase[idCaseStratego-1]);
+                   socket.emit("decrementationTypePionJoueurServer",pieceActuelle.textContent,idCaseStratego,nbrClicsCase[idCaseStratego-1]);
                    // On reçoie si on peut poser la pièce, son image si oui, confirmation de l'id de la case, type de pièce selectionné,
                    // id du type de la pièce qu'il y avait avant sur cette case (joueur1.tableOfPawns) pour incrémentation vu qu'on l'a enlevée
                    // Ainsi que le nombre de clics sur la case cliquée
-                   socket.on("decrementationTypePionJoueur1Client",(possible,image,idCase,indiceDuTypePion,idPiecePop,nbrDeClicsServeur)=>{
+                   socket.on("decrementationTypePionJoueurClient",(possible,image,idCase,indiceDuTypePion,idPiecePop,nbrDeClicsServeur)=>{
                         if(idCaseStratego==idCase){ // Permet d'empecher l'interconnexion des sockets 'decrementationTypePionJoueur1Client' des cases différentes
                             if(nbrClicsCase[idCase-1]==nbrDeClicsServeur){ // Permet d'empecher l'interconnexion des sockets 'decrementationTypePionJoueur1Client' lorsqu'on clique plus d'une fois sur la MEME case
                                 nbrClicsCase[idCase-1]++;
@@ -152,8 +148,8 @@
                                         tbodyPion.children[idPiecePop].children[1].textContent++; // 
                                     }
                                 }else{
-                                    console.log("Le joueur1 ne peut plus poser de pièce du type '"+pieceActuelle.textContent+"'.")
-                                    document.getElementById("message").textContent="Le joueur1 ne peut plus poser de pièce du type '"+pieceActuelleRouge.textContent+"'.";
+                                    console.log("Vous ne pouvez plus poser de pièce du type '"+pieceActuelle.textContent+"'.")
+                                    document.getElementById("message").textContent="Vous ne pouvez plus poser de pièce du type '"+pieceActuelleRouge.textContent+"'.";
                                 }
                             }
                             
@@ -167,11 +163,20 @@
     
     /* ---------------- Information pour débuger ---------------- */
     // Evenements sur les phrases 'Voir le tableau des pièces du joueur1' et 'Voir plateau Stratego en données.'
-    socket.on("strategoDonneesClient",(grille)=>{
+    
+    socket.on("tableauPiecesJoueurClient",grille=>{
         console.table(grille);
     })
-    socket.on("tableauPiecesJ1Client",grille=>{
+    socket.on("grilleCommuneClient",(grille)=>{
         console.table(grille);
     })
+
+    socket.on("readyButtonClient",(ready)=>{
+        if(ready){
+            document.getElementById("ready").style.background="green";
+            // Enlever les listeners sur le plateau
+            // Définir les nvs listeners sur le plateau en fonction du joueur en question
+        }
+    });
 
 })();

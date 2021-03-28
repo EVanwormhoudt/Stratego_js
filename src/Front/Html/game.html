@@ -179,8 +179,12 @@
 	-->
 	<div>Pièce actuellement séléctionnée par les rouges: <span id="pieceActuelleRouge">Aucun</span></div>
 	<div>Pièce actuellement séléctionnée par les bleus: <span id="pieceActuelleBleue">Aucun</span></div>
-	<span id="voirTableauDesPieces" onclick="socket.emit('tableauPiecesJ1Server');">Voir le tableau des pièces du joueur1</span>
-	<span id="voirPlateauDonnees" onclick="socket.emit('strategoDonneesServer');">Voir plateau Stratego en données.</span>
+	<div id="voirTableauDesPieces" onclick="socket.emit('tableauPiecesJoueurServer');">Voir le tableau des pièces du joueur</div>
+	<div id="grilleCommune" onclick="socket.emit('grilleCommuneServer');">Voir plateau en données.</div>
+
+	<div>
+	<button type="button" id='ready' onclick="socket.emit('readyButtonServer')">Pret</button>
+	</div>
 </div>
 
 <script src="socket.io/socket.io.js"></script>

@@ -17,9 +17,13 @@
 #annonceur p{
     align-items:center;
 }
-#voirPlateauDonnees:hover{
-    background:red;
-}
 #voirTableauDesPieces:hover{
     background:green;
+}
+#grilleCommune:hover{
+    background:red;
+}
+#ready{
+    height:100px;
+    width:100px;
 }
