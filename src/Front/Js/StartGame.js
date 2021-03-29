@@ -141,21 +141,26 @@
                                     /*console.log("Le nombre de pièce restant est supérieur à 0.");
                                     console.log("La case "+idCase+" change de contenu et prend la valeur : ",image)
                                     console.log("indicedutype : ",indiceDuTypePion);*/
-                                    document.getElementById(idCaseStratego).textContent=image; // On affiche l'image dans la case du plateau Stratego
-                                    
+                                    let img = document.createElement("img")
+                                    img.src  = (playerNbr ===1) ? "../Images/"+image+"r.png":"../Images/"+image+"b.png";
+                                    img.classList.add("Général")
+                                    console.log(document.getElementById(idCaseStratego).children)
+                                    if(!document.getElementById(idCaseStratego).children.length)
+                                        document.getElementById(idCaseStratego).appendChild(img) // On affiche l'image dans la case du plateau Stratego
+
                                     tbodyPion.children[indiceDuTypePion].children[1].textContent--;
                                     if(idPiecePop!=undefined){ // S'il y avait une pièce précédemment, on incremente sur le tableau le nbr restant de cette pièce
-                                        tbodyPion.children[idPiecePop].children[1].textContent++; // 
+                                        tbodyPion.children[idPiecePop].children[1].textContent++; //
                                     }
                                 }else{
                                     console.log("Vous ne pouvez plus poser de pièce du type '"+pieceActuelle.textContent+"'.")
                                     document.getElementById("message").textContent="Vous ne pouvez plus poser de pièce du type '"+pieceActuelleRouge.textContent+"'.";
                                 }
                             }
-                            
+
                         }
                     });
-                    
+
                 } else { console.log("Pas de pièce selectionnée.")}
             })
         }
@@ -174,9 +179,101 @@
     socket.on("readyButtonClient",(ready)=>{
         if(ready){
             document.getElementById("ready").style.background="green";
-            // Enlever les listeners sur le plateau
-            // Définir les nvs listeners sur le plateau en fonction du joueur en question
+
+            for(let i = 1;i< 101;i++){
+                var el = document.getElementById(i.toString()),
+                    elClone = el.cloneNode(true);
+                el.parentNode.replaceChild(elClone, el);
+                if(i !== 54 && i !== 53 && i  !== 57 && i !== 58 && i !== 44 && i !== 43 && i  !== 47 && i !== 48){
+                    EventHandler.addCaseDrop(document.getElementById(i.toString()))
+                }
+                else{
+
+                    document.getElementById(i.toString()).textContent = ' ';
+                    document.getElementById(i.toString()).style.backgroundColor = "black"
+                }
+            }
         }
     });
+
+    socket.on("gameBegin",(player)=> {
+        console.log(player)
+        let tableID = (player === 1) ? "tableauPionsJ1" : "tableauPionsJ2";
+
+        console.log("pk ça marche plus")
+        let tab = document.getElementById(tableID);
+        tab.children = null;
+        let caseDispo = (player === 1) ? 1 : 61;
+
+        for (let i = caseDispo; i < caseDispo + 40; i++) {
+            let img = document.createElement("img")
+            if (player === 1) {
+                img.src = "../Images/blue.png"
+
+            } else{
+                img.src = "../Images/red.png"
+
+            }
+            img.classList.add("enemy")
+            let test = document.getElementById(i.toString())
+            test.appendChild(img)
+        }
+        caseDispo = (player === 1) ? 61 : 1;
+        for (let i = caseDispo; i < caseDispo + 40; i++) {
+
+            let td = document.getElementById(i.toString())
+            EventHandler.addEvent(td.firstChild);
+        }
+    });
+    socket.on("PieceMoved",(start,end)=>{
+        let previousLocation = document.getElementById(start.toString())
+        let newLocation = document.getElementById(end.toString())
+        newLocation.appendChild(previousLocation.firstChild);
+        previousLocation.firstChild = undefined;
+    });
+
+    socket.on("attackLost",(start,end,piece,player)=>{
+        let previousLocation = document.getElementById(start.toString()).firstChild = undefined
+        let newLocation = document.getElementById(end.toString())
+        newLocation.firstChild.src = (player === 1) ?  piece+"r.png" : piece+"b.png";
+    })
+
+    socket.on("attackWon",(start,end)=>{
+        let previousLocation = document.getElementById(start.toString())
+        let newLocation = document.getElementById(end.toString())
+        newLocation.firstChild = undefined;
+        newLocation.appendChild(previousLocation.firstChild);
+        previousLocation.firstChild = undefined;
+    });
+
+    socket.on("attackEven",(start,end)=>{
+        let previousLocation = document.getElementById(start.toString())
+        let newLocation = document.getElementById(end.toString())
+        newLocation.firstChild = undefined;
+        previousLocation.firstChild = undefined;
+    });
+
+    socket.on("defenseWon",(start)=>{
+        let previousLocation = document.getElementById(start.toString())
+        previousLocation.firstChild = undefined;
+    })
+
+    socket.on("defenseLost",(start,end,piece,player)=>{
+        let previousLocation = document.getElementById(start.toString())
+        let newLocation = document.getElementById(end.toString())
+        newLocation.firstChild = undefined;
+        newLocation.appendChild(previousLocation.firstChild);
+        previousLocation.firstChild = undefined;
+        newLocation.firstChild.src = (player === 1) ?  piece+"r.png" : piece+"b.png";
+    });
+
+    socket.on("Victory",()=>{
+        alert("Victory!")
+    })
+
+    socket.on("Defeat",()=>{
+        alert("Defeat!")
+    })
+
 
 })();

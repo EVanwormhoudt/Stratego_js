@@ -11,6 +11,7 @@ class Game{
         this.joueur1=joueur1;
         this.joueur2=joueur2;
         this.grille=this.initGrille();
+        this.ready = 0;
         this.time = 0;
         this.winner = undefined;
     }
@@ -38,6 +39,52 @@ class Game{
     consoleLogTable(){
         console.log(this.grille);
     }
+
+    attack(start,end,player){
+        if(this.grille[Math.trunc(start/10)][start%10].force < this.grille[Math.trunc(end/10)][end%10].force){
+            if(player === 1){
+                this.joueur1().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].force)
+            }
+            else{
+                this.joueur2().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].force)
+            }
+            this.grille[Math.trunc(start/10)][start%10] = undefined;
+            this.grille[Math.trunc(end/10)][end%10].discovered = true;
+            return -1;
+        }
+        if(this.grille[Math.trunc(start/10)][start%10].force === this.grille[Math.trunc(end/10)][end%10].force){
+            this.grille[Math.trunc(start/10)][start%10] = undefined;
+            this.grille[Math.trunc(end/10)][end%10] = undefined;
+
+            if(player === 1){
+                this.joueur1().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].force)
+                this.joueur2().decrNombreRestantDuType(this.grille[Math.trunc(end/10)][end%10].force)
+            }
+            else{
+                this.joueur2().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].force)
+            }
+
+            return 0
+        }
+        if(this.grille[Math.trunc(start/10)][start%10].force > this.grille[Math.trunc(end/10)][end%10].force){
+            if(player === 1){
+                this.joueur2().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].force)
+            }
+            else{
+                this.joueur1().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].force)
+            }
+            this.grille[Math.trunc(end/10)][end%10] = this.grille[Math.trunc(start/10)][start%10];
+            this.grille[Math.trunc(end/10)][end%10].discovered = true;
+            this.grille[Math.trunc(start/10)][start%10] = undefined;
+            return 1;
+        }
+    }
+
+    move(start,end,player){
+        this.grille[Math.trunc(end/10)][end%10] = this.grille[Math.trunc(start/10)][start%10];
+        this.grille[Math.trunc(start/10)][start%10] = undefined;
+    }
+
 
     verifMove(player,start,end){
         if(this.grille[Math.trunc(start/10)][start%10].force === 0 ||this.grille[Math.trunc(start/10)][start%10].force === 100){

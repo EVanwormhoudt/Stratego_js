@@ -185,27 +185,8 @@ io.on('connection', (socket) => {
     socket.on("emitInfo",()=>{
         socket.emit("getInfo",socket.handshake.session,rooms[socket.handshake.session.room],socket.handshake.session.username,socket.handshake.session.player,socket.handshake.session.room)
     })
-    socket.on("startGame",()=>{
-        socket.join((socket.handshake.session.room).toString());
-        if (games[socket.handshake.session.room] === undefined) {
-            games[socket.handshake.session.room] = "something"
-        }
-        else{
-            let joueur1 = new Player(rooms[socket.handshake.session.room][1])
-            let joueur2 = new Player(rooms[socket.handshake.session.room][2]);
-            games[socket.handshake.session.room] = new Game(joueur1,joueur2);
-        }
-    });
 
-    socket.on("move",(start,end)=>{
-        if(!games[socket.handshake.session.room].verifMove(socket.handshake.session.player,start,end))
-            socket.emit("moveImpossible");
-    });
-    socket.on("attack",(start,end)=>{
-        if(!games[socket.handshake.session.room].verifMove(socket.handshake.session.player,start,end))
-            socket.emit("moveImpossible")
 
-    });
     socket.on('disconnect', () => {
 
         /*if(socket.handshake.session.room !== undefined && !games[socket.handshake.session.room]){
@@ -323,9 +304,55 @@ io.on('connection', (socket) => {
                     socket.handshake.session.ready=true;
                 }
                 socket.emit("readyButtonClient",joueurReady);
+                console.log(games[socket.handshake.session.room].ready)
+                if(games[socket.handshake.session.room].ready === 2){
+
+                    socket.emit("gameBegin",(socket.handshake.session.player))
+                    socket.broadcast.to("room"+socket.handshake.session.room).emit("gameBegin",((socket.handshake.session.player)%2 +1));
+                }
             }else{console.log("Vous ne pouvez pas etre ready 2 fois.")}
         })
     }) // Fin de la socket "newgame"
+
+    socket.on("move",(start,end)=>{
+        if(!games[socket.handshake.session.room].verifMove(socket.handshake.session.player,start,end)) {
+            socket.emit("moveImpossible");
+            return
+        }
+        games[socket.handshake.session.room].move(start,end,socket.handshake.session.player);
+        socket.broadcast.to("room"+socket.handshake.session.room).emit("PieceMoved",start,end);
+    });
+    socket.on("attack",(start,end)=>{
+        if(!games[socket.handshake.session.room].verifMove(socket.handshake.session.player,start,end)) {
+            socket.emit("moveImpossible");
+            return
+        }
+        if(games[socket.handshake.session.room].attack(start,end,socket.handshake.session.player)===-1){
+            socket.emit("attackLost",start,end,
+                games[socket.handshake.session.room].getCase(Math.trunc(end/10),end%10).force,socket.handshake.session.player);
+            socket.broadcast.to("room"+socket.handshake.session.room).emit("defenseWon",start,end);
+        }
+        if(games[socket.handshake.session.room].attack(start,end,socket.handshake.session.player) ===0){
+            socket.emit("attackEven",start,end);
+            socket.broadcast.to("room"+socket.handshake.session.room).emit("attackEven",start,end);
+        }
+        if(games[socket.handshake.session.room].attack(start,end,socket.handshake.session.player) ===1){
+            socket.emit("attackWon",start,end);
+            socket.broadcast.to("room"+socket.handshake.session.room).emit("defenseLost",start,end
+                ,games[socket.handshake.session.room].getCase(Math.trunc(end/10),end%10).force,socket.handshake.session.player);
+        }
+        if(games[socket.handshake.session.room].isFinished()){
+            if(socket.handshake.session.player === games[socket.handshake.session.room].winner){
+                socket.emit("Victory")
+                socket.broadcast.to("room"+socket.handshake.session.room).emit("Defeat");
+            }
+            else{
+                socket.emit("Defeat")
+                socket.broadcast.to("room"+socket.handshake.session.room).emit("Victory");
+            }
+        }
+
+    });
 });
 
 app.post('/login', body('login').isLength({ min: 3 }).trim().escape(), (req, res) => {

@@ -5,6 +5,8 @@ let EventHandler = (function(){
     function dragStart(obj) {
         obj.dataTransfer.setData('text', obj.target.id);
         let data = obj.dataTransfer.getData("text");
+        console.log(data)
+        console.log(document.getElementById(data))
         let cell = document.getElementById(data).parentElement;
         id = parseInt(cell.id);
         addDot(obj);
@@ -64,15 +66,15 @@ let EventHandler = (function(){
 
     //Function that removes the indicators for possible moves
     function removeDot(){
-        for(let i = 0; i< 100;i++){
-            document.getElementById(i).style.backgroundImage = "";
+        for(let i = 1; i< 101;i++){
+            document.getElementById(i.toString()).style.backgroundImage = "";
         }
     }
 
     //Function that add the indicators for possible moves, depending on the kind of pieces
     function addDot(obj){
-        if(obj.target.classList.contains("flag") || obj.target.classList.contains("bomb")){}
-        else if(obj.target.classList.contains("scout")){
+        if(obj.target.classList.contains("Bombes") || obj.target.classList.contains("Drapeau")){}
+        else if(obj.target.classList.contains("Eclaireurs")){
            let i = 1;let blocked = false;
            while(id-(10*i) > 0 && !blocked){
                if(document.getElementById((id - (10*i)).toString()).hasChildNodes()){
@@ -80,9 +82,9 @@ let EventHandler = (function(){
                }
                let move = document.getElementById((id - (10*i)).toString());
                if (move.innerHTML === '') {
-                   move.style.backgroundImage = "url('../../Front/Images/round.png')";
+                   move.style.backgroundImage = "url('../Front/Images/round.png')";
                } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                   move.style.backgroundImage = "url('../../Front/Images/corner.png')";
+                   move.style.backgroundImage = "url('../Front/Images/corner.png')";
                }
                i ++;
            }
@@ -94,9 +96,9 @@ let EventHandler = (function(){
 
                 let move = document.getElementById((id +(10*i)).toString());
                 if (move.innerHTML === '') {
-                    move.style.backgroundImage = "url('../../Front/Images/round.png')";
+                    move.style.backgroundImage = "url('../Front/Images/round.png')";
                 } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../../Front/Images/corner.png')";
+                    move.style.backgroundImage = "url('../Front/Images/corner.png')";
                 }
                 i++;
            }
@@ -109,9 +111,9 @@ let EventHandler = (function(){
                 let move = document.getElementById((id +i).toString());
 
                 if (move.innerHTML === '') {
-                    move.style.backgroundImage = "url('../../Front/Images/round.png')";
+                    move.style.backgroundImage = "url('../Front/Images/round.png')";
                 } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../../Front/Images/corner.png')";
+                    move.style.backgroundImage = "url('../Front/Images/corner.png')";
                 }
                 i++;
             }
@@ -123,9 +125,9 @@ let EventHandler = (function(){
                 let move = document.getElementById((id - i).toString());
 
                 if (move.innerHTML === '') {
-                    move.style.backgroundImage = "url('../../Front/Images/round.png')";
+                    move.style.backgroundImage = "url('../Images/round.png')";
                 } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../../Front/Images/corner.png')";
+                    move.style.backgroundImage = "url('../Images/corner.png')";
                 }
                 i++;
             }
@@ -134,9 +136,9 @@ let EventHandler = (function(){
             if (Math.trunc(id / 10) !== 0) {
                 let move = document.getElementById((id - 10).toString());
                 if (move.innerHTML === '') {
-                    move.style.backgroundImage = "url('../../Front/Images/round.png')";
+                    move.style.backgroundImage = "url('../Images/round.png')";
                 } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../../Front/Images/corner.png')";
+                    move.style.backgroundImage = "url('../Images/corner.png')";
                 }
             }
 
@@ -144,25 +146,25 @@ let EventHandler = (function(){
             if (Math.trunc(id / 10) !== 9) {
                 let move = document.getElementById((id + 10).toString());
                 if (move.innerHTML === '') {
-                    move.style.backgroundImage = "url('../../Front/Images/round.png')";
+                    move.style.backgroundImage = "url('../Images/round.png')";
                 } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../../Front/Images/corner.png')";
+                    move.style.backgroundImage = "url('../Images/corner.png')";
                 }
             }
             if (id % 10 !== 0) {
                 let move = document.getElementById((id- 1).toString());
                 if (move.innerHTML === '') {
-                    move.style.backgroundImage = "url('../../Front/Images/round.png')";
+                    move.style.backgroundImage = "url('../Images/round.png')";
                 } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../../Front/Images/corner.png')";
+                    move.style.backgroundImage = "url('../Images/corner.png')";
                 }
             }
             if (id % 10 !== 9) {
                 let move = document.getElementById((id + 1).toString());
                 if (move.innerHTML === '') {
-                    move.style.backgroundImage = "url('../../Front/Images/round.png')";
+                    move.style.backgroundImage = "url('../Images/round.png')";
                 } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../../Front/Images/corner.png')";
+                    move.style.backgroundImage = "url('../Images/corner.png')";
                 }
             }
         }
@@ -204,8 +206,6 @@ let EventHandler = (function(){
 
 })();
 
-socket.on("moveOpponent",(start,end)=>{
 
-});
 
 
