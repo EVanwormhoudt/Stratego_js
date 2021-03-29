@@ -73,8 +73,8 @@ let EventHandler = (function(){
 
     //Function that add the indicators for possible moves, depending on the kind of pieces
     function addDot(obj){
-        if(obj.target.classList.contains("Bombes") || obj.target.classList.contains("Drapeau")){}
-        else if(obj.target.classList.contains("Eclaireurs")){
+        if(obj.target.classList.contains("100strength") || obj.target.classList.contains("0strength")){}
+        else if(obj.target.classList.contains("2strength")){
            let i = 1;let blocked = false;
            while(id-(10*i) > 0 && !blocked){
                if(document.getElementById((id - (10*i)).toString()).hasChildNodes()){
@@ -82,9 +82,9 @@ let EventHandler = (function(){
                }
                let move = document.getElementById((id - (10*i)).toString());
                if (move.innerHTML === '') {
-                   move.style.backgroundImage = "url('../Front/Images/round.png')";
+                   move.style.backgroundImage = "url('../Images/round.png')";
                } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                   move.style.backgroundImage = "url('../Front/Images/corner.png')";
+                   move.style.backgroundImage = "url('../Images/corner.png')";
                }
                i ++;
            }
@@ -96,9 +96,9 @@ let EventHandler = (function(){
 
                 let move = document.getElementById((id +(10*i)).toString());
                 if (move.innerHTML === '') {
-                    move.style.backgroundImage = "url('../Front/Images/round.png')";
+                    move.style.backgroundImage = "url('../Images/round.png')";
                 } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../Front/Images/corner.png')";
+                    move.style.backgroundImage = "url('../Images/corner.png')";
                 }
                 i++;
            }
@@ -111,9 +111,9 @@ let EventHandler = (function(){
                 let move = document.getElementById((id +i).toString());
 
                 if (move.innerHTML === '') {
-                    move.style.backgroundImage = "url('../Front/Images/round.png')";
+                    move.style.backgroundImage = "url('../Images/round.png')";
                 } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../Front/Images/corner.png')";
+                    move.style.backgroundImage = "url('../Images/corner.png')";
                 }
                 i++;
             }

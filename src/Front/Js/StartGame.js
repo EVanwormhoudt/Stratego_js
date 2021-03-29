@@ -142,8 +142,10 @@
                                     console.log("La case "+idCase+" change de contenu et prend la valeur : ",image)
                                     console.log("indicedutype : ",indiceDuTypePion);*/
                                     let img = document.createElement("img")
-                                    img.src  = (playerNbr ===1) ? "../Images/"+image+"r.png":"../Images/"+image+"b.png";
-                                    img.classList.add("Général")
+                                    img.src  = (playerNbr ===1) ? "../Images/icons/"+image+"r.svg":"../Images/icons/"+image+"b.svg";
+                                    img.classList.add(image + "strength")
+                                    img.style.height = "100px";
+                                    img.style.width = "80px";
                                     console.log(document.getElementById(idCaseStratego).children)
                                     if(!document.getElementById(idCaseStratego).children.length)
                                         document.getElementById(idCaseStratego).appendChild(img) // On affiche l'image dans la case du plateau Stratego
@@ -200,7 +202,6 @@
         console.log(player)
         let tableID = (player === 1) ? "tableauPionsJ1" : "tableauPionsJ2";
 
-        console.log("pk ça marche plus")
         let tab = document.getElementById(tableID);
         tab.children = null;
         let caseDispo = (player === 1) ? 1 : 61;
@@ -208,12 +209,14 @@
         for (let i = caseDispo; i < caseDispo + 40; i++) {
             let img = document.createElement("img")
             if (player === 1) {
-                img.src = "../Images/blue.png"
+                img.src = "../Images/icons/blue.svg"
 
             } else{
-                img.src = "../Images/red.png"
+                img.src = "../Images/icons/red.svg"
 
             }
+            img.style.height = "100px";
+            img.style.width = "100px";
             img.classList.add("enemy")
             let test = document.getElementById(i.toString())
             test.appendChild(img)
@@ -235,7 +238,7 @@
     socket.on("attackLost",(start,end,piece,player)=>{
         let previousLocation = document.getElementById(start.toString()).firstChild = undefined
         let newLocation = document.getElementById(end.toString())
-        newLocation.firstChild.src = (player === 1) ?  piece+"r.png" : piece+"b.png";
+        newLocation.firstChild.src = (player === 1) ?  piece+"r.svg" : piece+"b.svg";
     })
 
     socket.on("attackWon",(start,end)=>{
@@ -264,7 +267,7 @@
         newLocation.firstChild = undefined;
         newLocation.appendChild(previousLocation.firstChild);
         previousLocation.firstChild = undefined;
-        newLocation.firstChild.src = (player === 1) ?  piece+"r.png" : piece+"b.png";
+        newLocation.firstChild.src = (player === 1) ?  piece+"r.svg" : piece+"b.svg";
     });
 
     socket.on("Victory",()=>{
