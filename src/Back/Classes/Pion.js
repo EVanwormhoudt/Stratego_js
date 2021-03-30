@@ -14,6 +14,9 @@ class Pion{
     typeDeLaPiece(){
         return this.type;
     }
+    getForce(){
+        return this.force
+    }
 }
 module.exports = Pion;
 

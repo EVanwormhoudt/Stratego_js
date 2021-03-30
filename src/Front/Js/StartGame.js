@@ -179,23 +179,29 @@
     })
 
     socket.on("readyButtonClient",(ready)=>{
-        if(ready){
-            document.getElementById("ready").style.background="green";
+        console.log(testReady)
+        testReady = testReady + 1;
+        if(testReady === 3) {
+            socket.emit("testgameBegin")
+            ready = true;
+        }
+        if (ready) {
+            document.getElementById("ready").style.background = "green";
 
-            for(let i = 1;i< 101;i++){
+            for (let i = 1; i < 101; i++) {
                 var el = document.getElementById(i.toString()),
                     elClone = el.cloneNode(true);
                 el.parentNode.replaceChild(elClone, el);
-                if(i !== 54 && i !== 53 && i  !== 57 && i !== 58 && i !== 44 && i !== 43 && i  !== 47 && i !== 48){
+                if (i !== 54 && i !== 53 && i !== 57 && i !== 58 && i !== 44 && i !== 43 && i !== 47 && i !== 48) {
                     EventHandler.addCaseDrop(document.getElementById(i.toString()))
-                }
-                else{
+                } else {
 
                     document.getElementById(i.toString()).textContent = ' ';
                     document.getElementById(i.toString()).style.backgroundColor = "black"
                 }
             }
         }
+
     });
 
     socket.on("gameBegin",(player)=> {
@@ -223,9 +229,10 @@
         }
         caseDispo = (player === 1) ? 61 : 1;
         for (let i = caseDispo; i < caseDispo + 40; i++) {
-
-            let td = document.getElementById(i.toString())
-            EventHandler.addEvent(td.firstChild);
+            if(document.getElementById(i.toString()).firstChild) {
+                let td = document.getElementById(i.toString())
+                EventHandler.addEvent(td.firstChild);
+            }
         }
     });
     socket.on("PieceMoved",(start,end)=>{
@@ -280,3 +287,5 @@
 
 
 })();
+
+let testReady = 0;

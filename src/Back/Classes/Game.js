@@ -41,24 +41,24 @@ class Game{
     }
 
     attack(start,end,player){
-        if(this.grille[Math.trunc(start/10)][start%10].force < this.grille[Math.trunc(end/10)][end%10].force){
+        if(this.grille[Math.trunc(start/10)][start%10].getForce() < this.grille[Math.trunc(end/10)][end%10].getForce()){
             if(player === 1){
-                this.joueur1().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].force)
+                this.joueur1().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].getForce())
             }
             else{
-                this.joueur2().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].force)
+                this.joueur2().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].getForce())
             }
             this.grille[Math.trunc(start/10)][start%10] = undefined;
             this.grille[Math.trunc(end/10)][end%10].discovered = true;
             return -1;
         }
-        if(this.grille[Math.trunc(start/10)][start%10].force === this.grille[Math.trunc(end/10)][end%10].force){
+        if(this.grille[Math.trunc(start/10)][start%10].getForce() === this.grille[Math.trunc(end/10)][end%10].getForce()){
             this.grille[Math.trunc(start/10)][start%10] = undefined;
             this.grille[Math.trunc(end/10)][end%10] = undefined;
 
             if(player === 1){
-                this.joueur1().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].force)
-                this.joueur2().decrNombreRestantDuType(this.grille[Math.trunc(end/10)][end%10].force)
+                this.joueur1().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].getForce())
+                this.joueur2().decrNombreRestantDuType(this.grille[Math.trunc(end/10)][end%10].getForce())
             }
             else{
                 this.joueur2().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].force)
@@ -87,22 +87,26 @@ class Game{
 
 
     verifMove(player,start,end){
+        console.log(start)
+        console.log(this.grille)
+        console.log(Math.trunc(start/10))
+        console.log(start%10)
         if(this.grille[Math.trunc(start/10)][start%10].force === 0 ||this.grille[Math.trunc(start/10)][start%10].force === 100){
             return false;
         }
-        if(this.grille[Math.trunc(start/10)][start%10].force === 2){
+        /*if(this.grille[Math.trunc(start/10)][start%10].force === 2){
             if(!(Math.trunc(start/10) === Math.trunc(end/10) || start%10 === end%10) ){
                 return false
             }
-        }
+        }*/
         else{
             if(end !== start + 1 || end !== start -1 || end !== start -10 || end !== start + 10){
                 return false;
             }
         }
-        if(this.grille[Math.trunc(end/10)][end%10].player === player){
+        /*if(this.grille[Math.trunc(end/10)][end%10].player === player){
             return false;
-        }
+        }*/
         return true;
 
     }

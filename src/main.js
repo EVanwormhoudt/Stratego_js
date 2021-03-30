@@ -291,6 +291,11 @@ io.on('connection', (socket) => {
         socket.on("grilleCommuneServer",()=>{
             socket.emit("grilleCommuneClient", games[socket.handshake.session.room].grille);
         })
+
+        socket.on("testgameBegin",()=>{
+            socket.emit("gameBegin",(socket.handshake.session.player))
+            socket.broadcast.to("room"+socket.handshake.session.room).emit("gameBegin",((socket.handshake.session.player)%2 +1));
+        })
         socket.on('readyButtonServer',()=>{
             if(!socket.handshake.session.ready){ // Pour empecher games[roomNbr].ready==2 à partir d'une seule fenetre
                 let joueurReady=true;
@@ -315,8 +320,11 @@ io.on('connection', (socket) => {
     }) // Fin de la socket "newgame"
 
     socket.on("move",(start,end)=>{
+        console.log("Move")
+
         if(!games[socket.handshake.session.room].verifMove(socket.handshake.session.player,start,end)) {
             socket.emit("moveImpossible");
+            console.log("moveImpossible")
             return
         }
         games[socket.handshake.session.room].move(start,end,socket.handshake.session.player);
@@ -325,18 +333,22 @@ io.on('connection', (socket) => {
     socket.on("attack",(start,end)=>{
         if(!games[socket.handshake.session.room].verifMove(socket.handshake.session.player,start,end)) {
             socket.emit("moveImpossible");
+            console.log("moveImpossible")
             return
         }
         if(games[socket.handshake.session.room].attack(start,end,socket.handshake.session.player)===-1){
+            console.log("attackLost")
             socket.emit("attackLost",start,end,
                 games[socket.handshake.session.room].getCase(Math.trunc(end/10),end%10).force,socket.handshake.session.player);
             socket.broadcast.to("room"+socket.handshake.session.room).emit("defenseWon",start,end);
         }
         if(games[socket.handshake.session.room].attack(start,end,socket.handshake.session.player) ===0){
+            console.log("attackEven")
             socket.emit("attackEven",start,end);
             socket.broadcast.to("room"+socket.handshake.session.room).emit("attackEven",start,end);
         }
         if(games[socket.handshake.session.room].attack(start,end,socket.handshake.session.player) ===1){
+            console.log("attackWon")
             socket.emit("attackWon",start,end);
             socket.broadcast.to("room"+socket.handshake.session.room).emit("defenseLost",start,end
                 ,games[socket.handshake.session.room].getCase(Math.trunc(end/10),end%10).force,socket.handshake.session.player);
