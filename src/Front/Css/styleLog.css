@@ -43,7 +43,7 @@
 .contact-form .label {
     position: absolute;
     left: 20px;
-    bottom: 25px;
+    bottom: 11px;
     font-size: 18px;
     line-height: 26px;
     font-weight: 400;
@@ -66,15 +66,4 @@
     border: none;
     width:200px;
     cursor: pointer;
-}
-
-.directionsReg {
-    position: absolute;
-    margin-left: 580px;
-    margin-top: -65px;
-}
-.directionsLog {
-    position: absolute;
-    margin-left: 540px;
-    margin-top: -90px;
 }

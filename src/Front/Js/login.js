@@ -23,26 +23,3 @@ form.addEventListener('submit', event => {
         }
     });
 });
-
-/* socket.emit("login",[inputUser.value, inputPass.value]);
-socket.on("resultDecrypt", isSame => {
-    console.log('something?');
-    if(isSame == true){
-        logger.sendLogin(inputUser.value);
-    }
-    else{
-        alert('Wrong password')
-    }
-});
-*/
-
-/*
-socket.on("resultLogin",result=>{
-    if(result.length){
-        logger.sendLogin(inputUser.value);
-    }
-    else{
-        alert('Erreur de mot de passe')
-    }
-});
-*/

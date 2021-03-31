@@ -1,5 +1,4 @@
-class Pions{
-
+class Pion{
     constructor(type,force,joueur,x,y){
         this.type=type; // Nom de la pièce
         this.force=force;
@@ -12,8 +11,12 @@ class Pions{
         this.discovered=false; // Attribut permettant de savoir si le joueur adverse connait cette pièce (suite à une préalable bataille)
         this.alive=true;
     }
-
+    typeDeLaPiece(){
+        return this.type;
+    }
+    getForce(){
+        return this.force
+    }
 }
-
-
+module.exports = Pion;
 
