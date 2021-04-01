@@ -13,7 +13,8 @@
         console.log("currentUserPlayerNbr: ",currentUserPlayerNbr)
         console.log("Numero de la room : ",roomNbr)
         
-        
+        tableauStratego();
+
         socket.emit("game",currentUserPlayerNbr,socketEntiere.room);
 
         socket.emit("introductionServer",socketEntiere,roomEntiere); // Phrases d'introduction en fonction des 2 joueurs de la room
@@ -27,6 +28,43 @@
         socket.emit("grilleCommuneClient");
     })
 
+    tableauStratego = ()=> {
+        let conteneurJeu = document.getElementById("conteneurDuJeu");
+        let tbl = document.createElement('table')
+        let tblThead = document.createElement('thead')
+        let tblTbody = document.createElement('tbody')
+        
+        let rowThead = document.createElement('tr');
+        let caseVide = document.createElement('td');
+        rowThead.appendChild(caseVide);
+
+        for(let i=0;i<10;i++){
+            let ligne = document.createElement('td');
+            ligne.textContent=i;
+            rowThead.appendChild(ligne);
+        }
+        tblThead.appendChild(rowThead);
+
+        for(let i=0;i<10;i++){
+            let rowTbody = document.createElement('tr');
+            let firstTD = document.createElement('td');
+            firstTD.textContent=i;
+
+            rowTbody.appendChild(firstTD);
+            for(let a=0;a<10;a++){
+                let contentTD = document.createElement('td');
+                contentTD.id=a+(i*10);
+                
+                rowTbody.appendChild(contentTD);
+            }
+            tblTbody.appendChild(rowTbody);
+        }
+        tbl.appendChild(tblThead);
+        tbl.appendChild(tblTbody);
+        tbl.id="tableauStratego";
+        conteneurJeu.appendChild(tbl);
+
+    }
     // Affiche correctement les données au dessus du plateau
     socket.on("introductionClient",(userSocket,userRoom)=>{
         document.getElementById("roomNbr").textContent=userSocket.room;
@@ -120,7 +158,7 @@
             })
         }
         // ---------------- Evenements sur le plateau Stratego ----------------
-        let caseDispo = (playerNbr==1) ? 61 : 1;
+        let caseDispo = (playerNbr==1) ? 60 : 0;
         for(let idCaseStratego=caseDispo;idCaseStratego<(caseDispo+40);idCaseStratego++){
             document.getElementById(idCaseStratego).addEventListener("click",()=>{
                 if(pieceActuelle.textContent!="Aucune"){ // Un type de pions a été préalablement selectionné
@@ -129,14 +167,14 @@
                                         soit appliqué aussi bien pour celui qui emet la socket que l'autre joueur (faut rajouter roomNbr en argument de 'preparationListenersClientJ1' auquel cas) */
 
                     // On envoie la pièce actuellement selectionnée, l'id (1-100) de la case cliqué et le nombre de fois qu'on a cliqué sur cette case
-                   socket.emit("decrementationTypePionJoueurServer",pieceActuelle.textContent,idCaseStratego,nbrClicsCase[idCaseStratego-1]);
+                   socket.emit("decrementationTypePionJoueurServer",pieceActuelle.textContent,idCaseStratego,nbrClicsCase[idCaseStratego]);
                    // On reçoie si on peut poser la pièce, son image si oui, confirmation de l'id de la case, type de pièce selectionné,
                    // id du type de la pièce qu'il y avait avant sur cette case (joueur1.tableOfPawns) pour incrémentation vu qu'on l'a enlevée
                    // Ainsi que le nombre de clics sur la case cliquée
                    socket.on("decrementationTypePionJoueurClient",(possible,image,idCase,indiceDuTypePion,idPiecePop,nbrDeClicsServeur)=>{
                         if(idCaseStratego==idCase){ // Permet d'empecher l'interconnexion des sockets 'decrementationTypePionJoueur1Client' des cases différentes
-                            if(nbrClicsCase[idCase-1]==nbrDeClicsServeur){ // Permet d'empecher l'interconnexion des sockets 'decrementationTypePionJoueur1Client' lorsqu'on clique plus d'une fois sur la MEME case
-                                nbrClicsCase[idCase-1]++;
+                            if(nbrClicsCase[idCase]==nbrDeClicsServeur){ // Permet d'empecher l'interconnexion des sockets 'decrementationTypePionJoueur1Client' lorsqu'on clique plus d'une fois sur la MEME case
+                                nbrClicsCase[idCase]++;
                                 if(possible==true){ // Si (possible == true) ==> type.nbrRestant > 0, la decrementation en données a déjà été faite, on affiche donc l'image au client
                                     /*console.log("Le nombre de pièce restant est supérieur à 0.");
                                     console.log("La case "+idCase+" change de contenu et prend la valeur : ",image)
@@ -147,9 +185,13 @@
                                     img.style.height = "100px";
                                     img.style.width = "80px";
                                     console.log(document.getElementById(idCaseStratego).children)
-                                    if(!document.getElementById(idCaseStratego).children.length)
+                                    if(!document.getElementById(idCaseStratego).children.length){
+                                        console.log("Il n'y avait pas d'ancienne pièce")
                                         document.getElementById(idCaseStratego).appendChild(img) // On affiche l'image dans la case du plateau Stratego
-
+                                    } else { 
+                                        console.log("On remplace l'ancienne pièce");
+                                        document.getElementById(idCaseStratego).replaceChild(img,document.getElementById(idCaseStratego).firstChild)
+                                    }
                                     tbodyPion.children[indiceDuTypePion].children[1].textContent--;
                                     if(idPiecePop!=undefined){ // S'il y avait une pièce précédemment, on incremente sur le tableau le nbr restant de cette pièce
                                         tbodyPion.children[idPiecePop].children[1].textContent++; //
@@ -210,7 +252,7 @@
 
         let tab = document.getElementById(tableID);
         tab.children = null;
-        let caseDispo = (player === 1) ? 1 : 61;
+        let caseDispo = (player === 1) ? 0 : 60;
 
         for (let i = caseDispo; i < caseDispo + 40; i++) {
             let img = document.createElement("img")
@@ -227,7 +269,7 @@
             let test = document.getElementById(i.toString())
             test.appendChild(img)
         }
-        caseDispo = (player === 1) ? 61 : 1;
+        caseDispo = (player === 1) ? 60 : 0;
         for (let i = caseDispo; i < caseDispo + 40; i++) {
             if(document.getElementById(i.toString()).firstChild) {
                 let td = document.getElementById(i.toString())

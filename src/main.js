@@ -55,7 +55,7 @@ http.listen(8880, () => {
 const con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "",
+    password: "sheron",
     database: "stratego"
 });
 

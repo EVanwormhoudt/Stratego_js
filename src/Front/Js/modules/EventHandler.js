@@ -57,8 +57,8 @@ let EventHandler = (function(){
             }
             else {
                 socket.emit("move", (id, obj.target.id));
-                let img = document.getElementById(id).firstChild; // Except that instead of a data.transfer
-                obj.target.appendChild(img);                      //is just a simple move of the piece manually
+                // let img = document.getElementById(id).firstChild; // Except that instead of a data.transfer
+                // obj.target.appendChild(img);                      //is just a simple move of the piece manually
             }
             removeDot();
         }
