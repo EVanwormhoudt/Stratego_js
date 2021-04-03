@@ -1,5 +1,4 @@
 class Player{
-
     constructor(name){
         this.name=name;
         this.color=undefined;

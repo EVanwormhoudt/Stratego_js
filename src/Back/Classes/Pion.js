@@ -1,4 +1,4 @@
-class Pions{
+class Pion{
     constructor(type,force,joueur,x,y){
         this.type=type; // Nom de la pièce
         this.force=force;
@@ -14,7 +14,9 @@ class Pions{
     typeDeLaPiece(){
         return this.type;
     }
+    getForce(){
+        return this.force
+    }
 }
-module.exports = Pions;
-
+module.exports = Pion;
 

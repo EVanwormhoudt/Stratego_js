@@ -7,8 +7,6 @@ let logger = (function(){
             url: "/login",
             data: {
                 login: username,
-                room : undefined,
-                player : undefined
             },
             success: () => {
                 window.location.href = "/";
