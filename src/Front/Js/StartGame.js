@@ -5,25 +5,26 @@
 
     console.log("Le script 'StartGame.js' est lancé.")
     socket.emit("emitInfo");
-    socket.on("getInfo",(socketEntiere,roomEntiere,currentUser,currentUserPlayerNbr,roomNbr)=>{
+    socket.on("getInfo",(socketEntiere,roomEntiere,currentUser,currentUserPlayerNbr,roomNbr,games)=>{
         
-        console.log("La socket entière : ",socketEntiere)
-        console.log("La room entière : ",roomEntiere)
+        console.log("La socket du joueur : ",socketEntiere)
+        console.log("La room du joueur : ",roomEntiere)
         console.log("currentUser : ",currentUser)
         console.log("currentUserPlayerNbr: ",currentUserPlayerNbr)
         console.log("Numero de la room : ",roomNbr)
-        
+        console.log("games[room] :",games)
+
         tableauStratego();
 
-        socket.emit("game",currentUserPlayerNbr,socketEntiere.room);
+        socket.emit("game");
 
-        socket.emit("introductionServer",socketEntiere,roomEntiere); // Phrases d'introduction en fonction des 2 joueurs de la room
+        socket.emit("introductionServer"); // Phrases d'introduction en fonction des 2 joueurs de la room
 
-        socket.emit("tableauPionsServerBuild",socketEntiere.player); // Crée dynamiquement le tableau des pions du joueur
+        socket.emit("tableauPionsServerBuild"); // Crée dynamiquement le tableau des pions du joueur
 
-        socket.emit("tableauPionsServerContent",socketEntiere.player); // Affiche les valeurs pour le tableau des pions
+        socket.emit("tableauPionsServerContent"); // Affiche les valeurs pour le tableau des pions
 
-        socket.emit('preparationListenersServer',socketEntiere.player); // Applique les listeners sur le tableau des pions et le plateau
+        socket.emit("preparationListenersServer"); // Applique les listeners sur le tableau des pions et le plateau
 
         socket.emit("grilleCommuneClient");
     })
@@ -65,14 +66,14 @@
         conteneurJeu.appendChild(tbl);
 
     }
+
     // Affiche correctement les données au dessus du plateau
-    socket.on("introductionClient",(userSocket,userRoom)=>{
-        document.getElementById("roomNbr").textContent=userSocket.room;
-        document.getElementById("currentPlayer").textContent=userSocket.username;
-        document.getElementById('playerID').textContent=userSocket.player;
-        let ennemyID = (userSocket.player==1) ? 2 : 1;
-        document.getElementById('enemy').textContent=userRoom[ennemyID];
-        document.getElementById('enemyID').textContent=ennemyID;
+    socket.on("introductionClient",(userName,userNumber,enemyName,enemyNumber,roomID)=>{
+        document.getElementById("currentPlayer").textContent=userName;
+        document.getElementById('playerID').textContent=userNumber;
+        document.getElementById('enemy').textContent=enemyName;
+        document.getElementById('enemyID').textContent=enemyNumber;
+        document.getElementById("roomNbr").textContent=roomID;
     });
 
     // Crée dynamiquement le tableau des pions du joueur en question
@@ -125,7 +126,8 @@
         console.log("Appel de la fonction 'preparationListenersClient' coté client pour le joueur",playerNbr,".");
         
         let tbodyPion = (playerNbr==1) ? document.getElementById("tableauPionsJ1").children[2] : document.getElementById("tableauPionsJ2").children[2];
-        let pieceActuelle = (playerNbr==1) ? document.getElementById("pieceActuelleRouge") : document.getElementById("pieceActuelleBleue");
+        // let pieceActuelle = (playerNbr==1) ? document.getElementById("pieceActuelleRouge") : document.getElementById("pieceActuelleBleue");
+        let pieceActuelle;
         let message=document.getElementById("message");
         let precedentIndice = undefined;
         let nbrClicsCase = new Array(100); // Important pour gérer les sockets lorsqu'il y a plus d'un clic sur une même case.
@@ -138,21 +140,24 @@
         for(let i=0;i<12;i++){
             tbodyPion.children[i].addEventListener("click",()=>{    
                 // On demande au serveur si le type de pion de la case cliquée est encore disponible pour le joueur
-                socket.emit("TypePionsDispoDemandeServer",tbodyPion.children[i].children[0].textContent);
-                socket.on("TypePionsDispoReponseServer",(reponse)=>{
-                    if(reponse>0){ // Si oui, on effectue un certain nombre d'actions
-                        message.textContent='';
-                        if(precedentIndice == undefined){
-                            precedentIndice = i;
-                        } else {
-                            tbodyPion.children[precedentIndice].style.background="white"; // Si precedentIndice existe, on met en blanc la case précédement cliquée
-                            precedentIndice=i;
+                socket.emit("TypePionsDispoDemandeServer",tbodyPion.children[i].children[0].textContent,i);
+                socket.on("TypePionsDispoReponseServer",(reponse,indice)=>{
+                    if(i==indice){ // Sans ça, tous les sockets de ce type appelés précedemment sont appelés une fois de plus
+                        if(reponse>0){ // Si oui, on effectue un certain nombre d'actions
+                            message.textContent='';
+                            if(precedentIndice == undefined){
+                                precedentIndice = i;
+                            } else {
+                                tbodyPion.children[precedentIndice].style.background="white"; // Si precedentIndice existe, on met en blanc la case précédement cliquée
+                                precedentIndice=i;
+                            }
+                            tbodyPion.children[i].style.background=playerColor; // On selectionne la case cliquée
+                            pieceActuelle=tbodyPion.children[i].children[0].textContent; // On actualise 
+                            console.log("Piece actuelle :",pieceActuelle)
+                        } else { // Sinon, on ne fait rien.
+                            message.textContent="Vous ne pouvez pas selectionné un pion de type '"+tbodyPion.children[i].children[0].textContent+"' car le nombre restant de cette pièce est nul.";
+                            console.log("Vous ne pouvez plus selectionné cette pièce : nombre restant épuisé.");
                         }
-                        tbodyPion.children[i].style.background=playerColor; // On selectionne la case cliquée
-                        pieceActuelle.textContent=tbodyPion.children[i].children[0].textContent; // On actualise 
-                    } else { // Sinon, on ne fait rien.
-                        message.textContent="Vous ne pouvez pas selectionné un pion de type '"+tbodyPion.children[i].children[0].textContent+"' car le nombre restant de cette pièce est nul.";
-                        console.log("Vous ne pouvez plus selectionné cette pièce : nombre restant épuisé.");
                     }
                 })
             })
@@ -161,13 +166,10 @@
         let caseDispo = (playerNbr==1) ? 60 : 0;
         for(let idCaseStratego=caseDispo;idCaseStratego<(caseDispo+40);idCaseStratego++){
             document.getElementById(idCaseStratego).addEventListener("click",()=>{
-                if(pieceActuelle.textContent!="Aucune"){ // Un type de pions a été préalablement selectionné
-
-                    /* ---- ATTENTION : potentiellement une histoire de socket.to("room"+roomNbr).emit("") à ajouter qlq part, pour que le fait de poser une pièce
-                                        soit appliqué aussi bien pour celui qui emet la socket que l'autre joueur (faut rajouter roomNbr en argument de 'preparationListenersClientJ1' auquel cas) */
+                if(pieceActuelle!=undefined){ // Un type de pions a été préalablement selectionné
 
                     // On envoie la pièce actuellement selectionnée, l'id (1-100) de la case cliqué et le nombre de fois qu'on a cliqué sur cette case
-                   socket.emit("decrementationTypePionJoueurServer",pieceActuelle.textContent,idCaseStratego,nbrClicsCase[idCaseStratego]);
+                   socket.emit("decrementationTypePionJoueurServer",pieceActuelle,idCaseStratego,nbrClicsCase[idCaseStratego]);
                    // On reçoie si on peut poser la pièce, son image si oui, confirmation de l'id de la case, type de pièce selectionné,
                    // id du type de la pièce qu'il y avait avant sur cette case (joueur1.tableOfPawns) pour incrémentation vu qu'on l'a enlevée
                    // Ainsi que le nombre de clics sur la case cliquée
@@ -197,8 +199,8 @@
                                         tbodyPion.children[idPiecePop].children[1].textContent++; //
                                     }
                                 }else{
-                                    console.log("Vous ne pouvez plus poser de pièce du type '"+pieceActuelle.textContent+"'.")
-                                    document.getElementById("message").textContent="Vous ne pouvez plus poser de pièce du type '"+pieceActuelleRouge.textContent+"'.";
+                                    console.log("Vous ne pouvez plus poser de pièce du type '"+pieceActuelle+"'.")
+                                    document.getElementById("message").textContent="Vous ne pouvez plus poser de pièce du type '"+pieceActuelle+"'.";
                                 }
                             }
 
@@ -230,14 +232,13 @@
         if (ready) {
             document.getElementById("ready").style.background = "green";
 
-            for (let i = 1; i < 101; i++) {
+            for (let i = 0; i < 100; i++) {
                 var el = document.getElementById(i.toString()),
                     elClone = el.cloneNode(true);
                 el.parentNode.replaceChild(elClone, el);
                 if (i !== 54 && i !== 53 && i !== 57 && i !== 58 && i !== 44 && i !== 43 && i !== 47 && i !== 48) {
                     EventHandler.addCaseDrop(document.getElementById(i.toString()))
                 } else {
-
                     document.getElementById(i.toString()).textContent = ' ';
                     document.getElementById(i.toString()).style.backgroundColor = "black"
                 }
