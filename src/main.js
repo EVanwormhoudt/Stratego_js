@@ -41,13 +41,13 @@ const roomnbr = 10
 let rooms = new Array(roomnbr)
 let games =  new Array(roomnbr)
 
-for(let i = 0;i<10;i++){
+for(let i = 0;i<roomnbr;i++){
     rooms[i] = new Array(3);
     rooms[i][0] = 0;
 }
 
 // Le serveur ecoute sur ce port
-http.listen(8700, () => {
+http.listen(8880, () => {
     console.log('Serveur lancé sur le port 8880');
 })
 
@@ -55,7 +55,7 @@ http.listen(8700, () => {
 const con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "sheron",
+    password: "",
     database: "stratego"
 });
 
@@ -164,7 +164,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on("getRoom",()=>{
-        for(let i = 0;i<10;i++){
+        for(let i = 0;i<roomnbr;i++){
             if(rooms[i][0] !== 2 && (i === 0||rooms[i-1][0]===2)){
                 rooms[i][0] +=1; // Nbr de joueurs
                 socket.handshake.session.player = rooms[i][0];
@@ -180,7 +180,7 @@ io.on('connection', (socket) => {
                     socket.to("room"+i).broadcast.emit("redirectJ1"); // Envoie uniquement à l'autre joueur cette socket
                     socket.emit("redirectJ2"); // socket envoyé uniquement à l'emetteur
                 }
-                i = 9; // ??????????
+                i = roomnbr;
             }
         }
     });
