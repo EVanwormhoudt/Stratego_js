@@ -36,12 +36,12 @@ let scoreHandler = (function (){
             let sql = "INSERT INTO scores VALUES (default,?,?,?)";
             let winner,looser;
             if (newScore.winner === 1){
-                winner = newScore.joueur1;
-                looser = newScore.joueur2;
+                winner = newScore.joueur1.name;
+                looser = newScore.joueur2.name;
             }
             else{
-                winner = newScore.joueur2;
-                looser = newScore.joueur1;
+                winner = newScore.joueur2.name;
+                looser = newScore.joueur1.name;
             }
 
             con.query(sql, [winner,looser,newScore.time], (err, result) => {

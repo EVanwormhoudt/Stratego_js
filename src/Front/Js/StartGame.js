@@ -88,6 +88,7 @@
         tbl.appendChild(tblcaption);
         tbl.appendChild(tblThead);
         tbl.appendChild(tblTbody);
+        console.log(tbl)
         conteneurDuJeu.appendChild(tbl);
     })
 
@@ -339,8 +340,8 @@
                 img.src = "../Images/icons/red.svg"
 
             }
-            img.style.height = "70px";
-            img.style.width = "70px";
+            img.style.height = "65px";
+            img.style.width = "65px";
             img.classList.add("enemy")
 
             let test = document.getElementById(i.toString())
@@ -351,7 +352,6 @@
         for (let i = caseDispo; i < caseDispo + 40; i++) {
             if(document.getElementById(i.toString()).firstChild) {
                 let td = document.getElementById(i.toString())
-                console.log("verif une seul fois")
                 EventHandler.addEvent(td.firstChild);
             }
         }

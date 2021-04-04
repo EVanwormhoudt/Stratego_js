@@ -12,7 +12,8 @@ class Game{
         this.joueur2=joueur2;
         this.grille=this.initGrille();
         this.ready = 0;
-        this.time = 0;
+        let now = new Date();
+        this.time = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds() ;  //faut pas jouer a minuit lol
         this.winner = undefined;
         this.turn = 1;
     }
@@ -85,7 +86,6 @@ class Game{
             return -1;
         }
         else if(parseInt(this.grille[Math.trunc(s/10)][s%10].getForce()) === parseInt(this.grille[Math.trunc(e/10)][e%10].getForce())){
-            console.log("force :" +this.grille[Math.trunc(s/10)][s%10].getForce())
             this.joueur1.tableOfPawns = this.joueur1.decrNombreRestantDuType(this.grille[Math.trunc(s/10)][s%10].getForce())
             this.joueur2.tableOfPawns = this.joueur2.decrNombreRestantDuType(this.grille[Math.trunc(e/10)][e%10].getForce())
             this.grille[Math.trunc(s/10)][s%10] = null;
@@ -121,10 +121,9 @@ class Game{
         let s = parseInt(start)
         let e = parseInt(end)
         if(this.grille[Math.trunc(s/10)][(s%10)].force == 0 ||this.grille[Math.trunc(s/10)][(s%10)].force == 100){
-            console.log("erreur1")
             return false;
         }
-        /*if(this.grille[Math.trunc(start/10)][start%10].force === 2){
+        if(this.grille[Math.trunc(start/10)][start%10].force === 2){
             if(!(Math.trunc(start/10) === Math.trunc(end/10) || start%10 === end%10) ){
                 return false
             }
@@ -134,25 +133,18 @@ class Game{
                 return false;
             }
         }
-        if(this.grille[Math.trunc(end/10)][end%10].player === player){
-            return false;
-        }*/
+
         return true;
 
     }
     isFinished(){
-        console.log(this.joueur1.tableOfPawnsView())
-        console.table(this.joueur1.tableOfPawnsView())
-        console.log(this.joueur2.tableOfPawnsView())
-        console.table(this.joueur2.tableOfPawnsView())
+
         if(this.joueur1.tableOfPawnsView()[11].nombreRestant =='0'){
             this.winner = 2;
-            console.log("victoire type 1")
             return true;
         }
         if(this.joueur2.tableOfPawnsView()[11].nombreRestant == '0'){
             this.winner = 1;
-            console.log("victoire type 1")
             return true;
         }
         let nbr = 10;
@@ -164,7 +156,6 @@ class Game{
         }
         if(!nbr) {
             this.winner = 2;
-            console.log("victoire type 2")
             return true;
 
         }
@@ -177,14 +168,19 @@ class Game{
         }
         if(!nbr){
             this.winner = 1;
-            console.log("victoire type 3")
             return true;
         }
-        console.log(this.joueur1.tableOfPawnsView())
-        console.table(this.joueur1.tableOfPawnsView())
-        console.log(this.joueur2.tableOfPawnsView())
-        console.table(this.joueur2.tableOfPawnsView())
         return false;
+    }
+    setTime(){
+        let now = new Date();
+        let gameTime = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds() ;
+        if( gameTime - this.time < 0){
+            this.time = gameTime + 3600*24 - this.time;
+        }
+        else {
+            this.time = gameTime - this.time;
+        }
     }
 
     exportData(){
