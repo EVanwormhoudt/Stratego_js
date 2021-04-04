@@ -299,13 +299,6 @@ io.on('connection', (socket) => {
 
         /* -------------------------------- Effets des boutons cliquables -------------------------------- */
 
-        socket.on("testgameBegin",()=>{
-            console.log("dev Route")
-            games[socket.handshake.session.room].getjoueur1().Remplirtab();
-            games[socket.handshake.session.room].getjoueur2().Remplirtab();
-            socket.emit("gameBegin",(socket.handshake.session.player))
-            socket.broadcast.to("room"+socket.handshake.session.room).emit("gameBegin",((socket.handshake.session.player)%2 +1));
-        })
 
         // Bouton 'Pret' 
         socket.on('readyButtonServer',()=>{
@@ -322,6 +315,8 @@ io.on('connection', (socket) => {
                 socket.emit("readyButtonClient",joueurReady);
 
                 if(games[socket.handshake.session.room].ready === 2){
+                    games[socket.handshake.session.room].getjoueur1().Remplirtab();
+                    games[socket.handshake.session.room].getjoueur2().Remplirtab()
                     socket.emit("gameBegin",(socket.handshake.session.player))
                     socket.broadcast.to("room"+socket.handshake.session.room).emit("gameBegin",((socket.handshake.session.player)%2 +1));
                 }

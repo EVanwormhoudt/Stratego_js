@@ -338,6 +338,8 @@
         document.getElementById(start).removeChild(document.getElementById(start).firstChild)
         let newLocation = document.getElementById(end.toString())
         newLocation.firstChild.src = (player === 1) ? "../Images/icons/"+piece+"b.svg" : "../Images/icons/"+ piece+"r.svg";
+        newLocation.firstChild.style.height = "65px";
+        newLocation.firstChild.style.width = "55px";
     })
 
     socket.on("attackWon",(start,end)=>{
@@ -363,6 +365,8 @@
         newLocation.removeChild(newLocation.firstChild)
         newLocation.appendChild(previousLocation);
         newLocation.firstChild.src = (player === 1) ?  "../Images/icons/"+piece+"r.svg" : "../Images/icons/"+ piece+"b.svg";
+        newLocation.firstChild.style.height = "65px";
+        newLocation.firstChild.style.width = "55px";
     });
 
     socket.on("Victory",()=>{

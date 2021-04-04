@@ -62,7 +62,6 @@ class Player{
         }
     }
     decrNombreRestantDuType(type){
-        console.log("type :"  +type)
         for(let element of this.tableOfPawns){
             if(element.force==type){
                 element.nombreRestant--;
