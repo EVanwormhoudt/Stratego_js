@@ -22,14 +22,18 @@ let EventHandler = (function(){
     function drop(obj) {
         if(obj.target.parentElement.id !== id && ((obj.target.parentElement.style.backgroundImage !== "" && obj.target.nodeName === "IMG") ||
             (obj.target.style.backgroundImage !== "" && obj.target.nodeName=== "TD"))){      //check if the place to drop is a valid place
-            if(obj.target.nodeName === "IMG"){            //Check if the location to drop is an enemy or just a blank space
-                socket.emit("attack",[id,obj.target.parentElement.id]);  //if it's an enemy, send the info to the socket, and then the fight
-            }                                              // is handled on server side
+            if(obj.target.nodeName === "IMG"){//Check if the location to drop is an enemy or just a blank space
+                socket.emit("getTurn")               //if it's an enemy, send the info to the socket, and then the fight
+                socket.on("sendTurn",(canPlay)=>{
+                    if(canPlay)
+                        socket.emit("attack",id, obj.target.parentElement.id);     // is handled on server side
+                })
+            }
             else{
-                socket.emit("move",[id,obj.target.parentElement.id]);//if it's a blank space, then the data is send to the serv
-                let data = obj.dataTransfer.getData("text");    //and then the piece is moved.
-                obj.target.appendChild(document.getElementById(data));
-
+                socket.on("sendTurn",(canPlay)=>{
+                    if(canPlay)
+                        socket.emit("move", id, obj.target.id);
+                })
             }
 
         }
@@ -53,10 +57,31 @@ let EventHandler = (function(){
         if(obj.target.parentElement.id !== id && ((obj.target.parentElement.style.backgroundImage !== "" && obj.target.nodeName === "IMG") ||
             (obj.target.style.backgroundImage !== "" && obj.target.nodeName=== "TD"))){ // check if the cell is a valid place
             if(obj.target.nodeName === "IMG"){
-                socket.emit("attack",(id, obj.target.parentElement.id));      //same as drop()
+
+                let i = 0
+                console.log(i)
+                socket.emit("getTurn")
+                socket.on("sendTurn", (canPlay) => {
+                        if (canPlay && i === 0){
+                            console.log("attack")
+                            socket.emit("attack", id, obj.target.parentElement.id);      //same as drop()
+                        }
+                        i++
+                    })
+
             }
             else {
-                socket.emit("move", (id, obj.target.id));
+                    let i = 0
+                    socket.emit("getTurn")
+
+                    socket.on("sendTurn", (canPlay) => {
+                        console.log(i)
+                        console.log("sending")
+                        if (canPlay && i === 0)
+                            socket.emit("move", id, obj.target.id); //same as drop()
+                        i++
+                    })
+
                 // let img = document.getElementById(id).firstChild; // Except that instead of a data.transfer
                 // obj.target.appendChild(img);                      //is just a simple move of the piece manually
             }
@@ -66,7 +91,7 @@ let EventHandler = (function(){
 
     //Function that removes the indicators for possible moves
     function removeDot(){
-        for(let i = 1; i< 101;i++){
+        for(let i = 0; i< 100;i++){
             document.getElementById(i.toString()).style.backgroundImage = "";
         }
     }
@@ -83,8 +108,9 @@ let EventHandler = (function(){
                let move = document.getElementById((id - (10*i)).toString());
                if (move.innerHTML === '') {
                    move.style.backgroundImage = "url('../Images/round.png')";
-               } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                   move.style.backgroundImage = "url('../Images/corner.png')";
+               } else if (move.style.color !== 'pink') {
+                   if(move.firstChild.classList.contains("enemy"))
+                       move.style.backgroundImage = "url('../Images/corner.png')";
                }
                i ++;
            }
@@ -97,8 +123,9 @@ let EventHandler = (function(){
                 let move = document.getElementById((id +(10*i)).toString());
                 if (move.innerHTML === '') {
                     move.style.backgroundImage = "url('../Images/round.png')";
-                } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../Images/corner.png')";
+                } else if (move.style.color !== 'pink') {
+                    if(move.firstChild.classList.contains("enemy"))
+                        move.style.backgroundImage = "url('../Images/corner.png')";
                 }
                 i++;
            }
@@ -112,8 +139,9 @@ let EventHandler = (function(){
 
                 if (move.innerHTML === '') {
                     move.style.backgroundImage = "url('../Images/round.png')";
-                } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../Images/corner.png')";
+                } else if (move.style.color !== 'pink') {
+                    if(move.firstChild.classList.contains("enemy"))
+                        move.style.backgroundImage = "url('../Images/corner.png')";
                 }
                 i++;
             }
@@ -126,8 +154,9 @@ let EventHandler = (function(){
 
                 if (move.innerHTML === '') {
                     move.style.backgroundImage = "url('../Images/round.png')";
-                } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../Images/corner.png')";
+                } else if (move.style.color !== 'pink') {
+                    if(move.firstChild.classList.contains("enemy"))
+                        move.style.backgroundImage = "url('../Images/corner.png')";
                 }
                 i++;
             }
@@ -137,9 +166,11 @@ let EventHandler = (function(){
                 let move = document.getElementById((id - 10).toString());
                 if (move.innerHTML === '') {
                     move.style.backgroundImage = "url('../Images/round.png')";
-                } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../Images/corner.png')";
+                } else if (move.style.color !== 'pink') {
+                    if(move.firstChild.classList.contains("enemy"))
+                        move.style.backgroundImage = "url('../Images/corner.png')";
                 }
+
             }
 
 
@@ -147,25 +178,29 @@ let EventHandler = (function(){
                 let move = document.getElementById((id + 10).toString());
                 if (move.innerHTML === '') {
                     move.style.backgroundImage = "url('../Images/round.png')";
-                } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../Images/corner.png')";
+                } else if (move.style.color !== 'pink') {
+                    if(move.firstChild.classList.contains("enemy"))
+                        move.style.backgroundImage = "url('../Images/corner.png')";
                 }
             }
             if (id % 10 !== 0) {
                 let move = document.getElementById((id- 1).toString());
                 if (move.innerHTML === '') {
                     move.style.backgroundImage = "url('../Images/round.png')";
-                } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../Images/corner.png')";
+                } else if (move.style.color !== 'pink') {
+                    if(move.firstChild.classList.contains("enemy"))
+                        move.style.backgroundImage = "url('../Images/corner.png')";
                 }
             }
             if (id % 10 !== 9) {
                 let move = document.getElementById((id + 1).toString());
                 if (move.innerHTML === '') {
                     move.style.backgroundImage = "url('../Images/round.png')";
-                } else if (move.innerText !== ' ' && move.firstChild.classList.contains("enemy")) {
-                    move.style.backgroundImage = "url('../Images/corner.png')";
+                } else if (move.style.color !== 'pink') {
+                    if(move.firstChild.classList.contains("enemy"))
+                        move.style.backgroundImage = "url('../Images/corner.png')";
                 }
+
             }
         }
     }

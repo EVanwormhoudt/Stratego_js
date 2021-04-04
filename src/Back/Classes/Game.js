@@ -14,14 +14,19 @@ class Game{
         this.ready = 0;
         this.time = 0;
         this.winner = undefined;
+        this.turn = 1;
     }
-    joueur1(){
+    getjoueur1(){
         return this.joueur1;
     }
-    joueur2(){
+    getjoueur2(){
         return this.joueur2;
 
     }
+    getTurn(){
+        return this.turn;
+    }
+
     setCase(x,y,content){
         this.grille[x][y]=content;
     }
@@ -41,107 +46,144 @@ class Game{
     }
 
     attack(start,end,player){
-        if(this.grille[Math.trunc(start/10)][start%10].getForce() < this.grille[Math.trunc(end/10)][end%10].getForce()){
+        let s = parseInt(start)
+        let e = parseInt(end)
+        this.turn = this.turn %2 +1;
+        if(this.grille[Math.trunc(s/10)][s%10].getForce() == 3 && this.grille[Math.trunc(e/10)][e%10].getForce() == 100 ){
             if(player === 1){
-                this.joueur1().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].getForce())
+                this.joueur2.tableOfPawns = this.joueur2.decrNombreRestantDuType('100')
             }
             else{
-                this.joueur2().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].getForce())
+                this.joueur1.tableOfPawns = this.joueur1.decrNombreRestantDuType('100')
             }
-            this.grille[Math.trunc(start/10)][start%10] = undefined;
-            this.grille[Math.trunc(end/10)][end%10].discovered = true;
-            return -1;
-        }
-        if(this.grille[Math.trunc(start/10)][start%10].getForce() === this.grille[Math.trunc(end/10)][end%10].getForce()){
-            this.grille[Math.trunc(start/10)][start%10] = undefined;
-            this.grille[Math.trunc(end/10)][end%10] = undefined;
-
-            if(player === 1){
-                this.joueur1().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].getForce())
-                this.joueur2().decrNombreRestantDuType(this.grille[Math.trunc(end/10)][end%10].getForce())
-            }
-            else{
-                this.joueur2().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].force)
-            }
-
-            return 0
-        }
-        if(this.grille[Math.trunc(start/10)][start%10].force > this.grille[Math.trunc(end/10)][end%10].force){
-            if(player === 1){
-                this.joueur2().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].force)
-            }
-            else{
-                this.joueur1().decrNombreRestantDuType(this.grille[Math.trunc(start/10)][start%10].force)
-            }
-            this.grille[Math.trunc(end/10)][end%10] = this.grille[Math.trunc(start/10)][start%10];
-            this.grille[Math.trunc(end/10)][end%10].discovered = true;
-            this.grille[Math.trunc(start/10)][start%10] = undefined;
+            this.grille[Math.trunc(e/10)][e%10] = this.grille[Math.trunc(s/10)][s%10];
+            this.grille[Math.trunc(e/10)][e%10].discovered = true;
+            this.grille[Math.trunc(s/10)][s%10] = null;
             return 1;
         }
+        else if(this.grille[Math.trunc(s/10)][s%10].getForce() == 1 && this.grille[Math.trunc(e/10)][e%10].getForce() == 10 ){
+            if(player == 1){
+                this.joueur2.tableOfPawns = this.joueur2.decrNombreRestantDuType('10')
+            }
+            else{
+                this.joueur1.tableOfPawns = this.joueur1.decrNombreRestantDuType('10')
+            }
+            this.grille[Math.trunc(e/10)][e%10] = this.grille[Math.trunc(s/10)][s%10];
+            this.grille[Math.trunc(e/10)][e%10].discovered = true;
+            this.grille[Math.trunc(s/10)][s%10] = null;
+            return 1;
+        }
+        else if(parseInt(this.grille[Math.trunc(s/10)][s%10].getForce()) < parseInt(this.grille[Math.trunc(e/10)][e%10].getForce())){
+            if(player == 1){
+                this.joueur1.tableOfPawns = this.joueur1.decrNombreRestantDuType(this.grille[Math.trunc(s/10)][s%10].getForce())
+            }
+            else{
+                this.joueur2.tableOfPawns = this.joueur2.decrNombreRestantDuType(this.grille[Math.trunc(s/10)][s%10].getForce())
+            }
+            this.grille[Math.trunc(s/10)][s%10] = null;
+            this.grille[Math.trunc(e/10)][e%10].discovered = true;
+            return -1;
+        }
+        else if(parseInt(this.grille[Math.trunc(s/10)][s%10].getForce()) === parseInt(this.grille[Math.trunc(e/10)][e%10].getForce())){
+            console.log("force :" +this.grille[Math.trunc(s/10)][s%10].getForce())
+            this.joueur1.tableOfPawns = this.joueur1.decrNombreRestantDuType(this.grille[Math.trunc(s/10)][s%10].getForce())
+            this.joueur2.tableOfPawns = this.joueur2.decrNombreRestantDuType(this.grille[Math.trunc(e/10)][e%10].getForce())
+            this.grille[Math.trunc(s/10)][s%10] = null;
+            this.grille[Math.trunc(e/10)][e%10] = null;
+            return 0
+        }
+        else if(parseInt(this.grille[Math.trunc(start/10)][start%10].force) > parseInt(this.grille[Math.trunc(e/10)][e%10].force)){
+            if(player == 1){
+                this.joueur2.tableOfPawns = this.joueur2.decrNombreRestantDuType(this.grille[Math.trunc(e/10)][e%10].force)
+            }
+            else{
+                this.joueur1.tableOfPawns = this.joueur1.decrNombreRestantDuType(this.grille[Math.trunc(s/10)][s%10].force)
+            }
+            this.grille[Math.trunc(e/10)][e%10] = this.grille[Math.trunc(s/10)][s%10];
+            this.grille[Math.trunc(e/10)][e%10].discovered = true;
+            this.grille[Math.trunc(s/10)][s%10] = null;
+            return 1;
+        }
+
     }
 
     move(start,end,player){
-        this.grille[Math.trunc(end/10)][end%10] = this.grille[Math.trunc(start/10)][start%10];
-        this.grille[Math.trunc(start/10)][start%10] = undefined;
+        let s = parseInt(start)
+        let e = parseInt(end)
+        this.turn = this.turn %2 +1;
+        this.grille[Math.trunc(e/10)][e%10] = this.grille[Math.trunc(s/10)][s%10];
+        this.grille[Math.trunc(s/10)][s%10] = null;
     }
 
 
     verifMove(player,start,end){
-        console.log(start)
-        console.log(this.grille)
-        console.log(Math.trunc(start/10))
-        console.log(start%10)
-        if(this.grille[Math.trunc(start/10)][start%10].force === 0 ||this.grille[Math.trunc(start/10)][start%10].force === 100){
+
+        let s = parseInt(start)
+        let e = parseInt(end)
+        if(this.grille[Math.trunc(s/10)][(s%10)].force == 0 ||this.grille[Math.trunc(s/10)][(s%10)].force == 100){
+            console.log("erreur1")
             return false;
         }
         /*if(this.grille[Math.trunc(start/10)][start%10].force === 2){
             if(!(Math.trunc(start/10) === Math.trunc(end/10) || start%10 === end%10) ){
                 return false
             }
-        }*/
+        }
         else{
-            if(end !== start + 1 || end !== start -1 || end !== start -10 || end !== start + 10){
+            if(e != s + 1 || e != s -1 || e != s -10 || e != s + 10){
                 return false;
             }
         }
-        /*if(this.grille[Math.trunc(end/10)][end%10].player === player){
+        if(this.grille[Math.trunc(end/10)][end%10].player === player){
             return false;
         }*/
         return true;
 
     }
     isFinished(){
-        if(!this.joueur1.tableOfPawnsView()[12].nombreRestant){
+        console.log(this.joueur1.tableOfPawnsView())
+        console.table(this.joueur1.tableOfPawnsView())
+        console.log(this.joueur2.tableOfPawnsView())
+        console.table(this.joueur2.tableOfPawnsView())
+        if(this.joueur1.tableOfPawnsView()[11].nombreRestant =='0'){
             this.winner = 2;
+            console.log("victoire type 1")
             return true;
         }
-        if(!this.joueur2.tableOfPawnsView()[12].nombreRestant){
+        if(this.joueur2.tableOfPawnsView()[11].nombreRestant == '0'){
             this.winner = 1;
+            console.log("victoire type 1")
             return true;
         }
         let nbr = 10;
         for(let i of this.joueur1.tableOfPawnsView()){
             if(!(i == this.joueur1.tableOfPawnsView()[0] || i == this.joueur1.tableOfPawnsView()[11])){
-                if(i.nombreRestant === 0)
+                if(i.nombreRestant == 0)
                     nbr--;
             }
         }
         if(!nbr) {
             this.winner = 2;
+            console.log("victoire type 2")
             return true;
+
         }
         nbr = 10;
         for(let i of this.joueur2.tableOfPawnsView()){
             if(!(i == this.joueur2.tableOfPawnsView()[0] || i == this.joueur2.tableOfPawnsView()[11])){
-                if(i.nombreRestant === 0)
+                if(i.nombreRestant == 0)
                     nbr--;
             }
         }
         if(!nbr){
             this.winner = 1;
+            console.log("victoire type 3")
             return true;
         }
-
+        console.log(this.joueur1.tableOfPawnsView())
+        console.table(this.joueur1.tableOfPawnsView())
+        console.log(this.joueur2.tableOfPawnsView())
+        console.table(this.joueur2.tableOfPawnsView())
         return false;
     }
 

@@ -1,47 +1,64 @@
-table {
-	border-collapse: collapse;
-}
-
 td {
-	border: solid 1px black;				
+	border: solid 1px black;
 	display: table-cell;
-	width: 50px;
-	height: 50px;
 	text-align: center;
-}
 
-#pions{
-	margin:20px;
-}
-
-table{
+	width: 70px;
+	height: 70px;
 	border-collapse: collapse;
 }
 
-td{
-
-	width: 100px;
-	height: 100px;
-	border : 1px solid black;
-	border-collapse: collapse;
-	padding: 0px;
-}
 .hide {
 	display: none;
 }
 
-.drag-over{
+.drag-over {
 	background: #339933;
 	opacity: 70%;
 }
 
-
-img{
-
+im{
 	-webkit-touch-callout: none; /* iOS Safari */
 	-webkit-user-select: none; /* Safari */
 	-moz-user-select: none; /* Old versions of Firefox */
 	-ms-user-select: none; /* Internet Explorer/Edge */
 	user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
+}
+
+#tableauStratego {
+	/*background: no-repeat url(../Images/board.png);*/
+	background : center / contain no-repeat url(../Images/board.svg),
+			#eee 100% url(../Images/board-no-trees.svg);
+}
+
+#pions {
+	margin:20px;
+}
+
+#tableauPionsJ1 {
+	height:100%;
+	display:inline-block;
+}
+
+#tableauPionsJ2 {
+	height:100%;
+	display:inline-block;
+}
+
+#annonceur p {
+	align-items:center;
+}
+
+#voirTableauDesPieces:hover {
+	background:green;
+}
+
+#grilleCommune:hover {
+	background:red;
+}
+
+#ready {
+	height:40px;
+	width:100px;
 }

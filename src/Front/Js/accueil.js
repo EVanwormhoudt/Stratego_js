@@ -10,6 +10,6 @@ socket.on("onSession", data=>{
         reg.style.pointerEvents = "none";
     }
     else{
-        game.style.pointerEvents = "none";
+        //game.style.pointerEvents = "none";
     }
 })

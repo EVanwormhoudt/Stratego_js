@@ -1,29 +1,69 @@
-#conteneurDuJeu{
-    height:auto;
-    width:100%;
+.conteneurDuJeu {
+    position: relative;
+    width: 100%;
 }
-#plateauStratego{
-    height:100%;
-    display:inline-block;
+
+.ratio {
+    padding-bottom: 100%;
 }
+
+.content{
+    position: absolute;
+}
+
+#tableauStratego {
+    background: no-repeat url(../Images/board-no-trees.svg);
+    background-size: cover;
+}
+/*
+div.stretchy-wrapper {
+    width: 100%;
+    padding-bottom: 75%;
+}
+div.stretchy-wrapper {
+    position: relative;
+}
+div.stretchy-wrapper > div {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.content {
+    position: absolute;
+    top: 0;  bottom: 0;  left: 0;  right: 0;
+}*/
+
 #tableauPionsJ1{
     height:100%;
     display:inline-block;
 }
+
 #tableauPionsJ2{
     height:100%;
     display:inline-block;
 }
+
 #annonceur p{
     align-items:center;
 }
+
 #voirTableauDesPieces:hover{
     background:green;
 }
+
 #grilleCommune:hover{
     background:red;
 }
+
 #ready{
     height:100px;
     width:100px;
+}
+
+td{
+    height: 100px;
+    width: 100px;
 }
