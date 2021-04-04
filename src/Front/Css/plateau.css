@@ -1,5 +1,5 @@
 td {
-	border: solid 1px black;
+	border: solid palegoldenrod 2px;
 	display: table-cell;
 	text-align: center;
 
@@ -27,9 +27,8 @@ im{
 }
 
 .plateauStratego {
-	/*background: no-repeat url(../Images/board.png);*/
 	background : center / contain no-repeat url(../Images/board.svg),
-			#eee 100% url(../Images/board-no-trees.svg);
+				100% url(../Images/board-no-trees.svg);
 }
 
 #pions {

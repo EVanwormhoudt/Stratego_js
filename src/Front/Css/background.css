@@ -30,7 +30,7 @@ nav {
 /* fin header */
 
 /* body */
-.main {
+body {
     background: no-repeat url(../Images/background.png);
     background-size: cover;
     background-position: center;
@@ -42,6 +42,7 @@ nav {
 
 .bg-black {
     background-color: black;
+    min-height: 100vh;
 }
 
 .row {
