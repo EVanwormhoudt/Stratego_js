@@ -48,6 +48,12 @@ class Player{
             }
         }
     }
+    typeDeLaPiece(indice){
+        return this.tableOfPawns[indice].name;
+    }
+    nombreRestantIndice(indice){
+        return this.tableOfPawns[indice].nombreRestant;
+    }
     forceDuType(type){
         for(const element of this.tableOfPawns){
             if(element.name==type){

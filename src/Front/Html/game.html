@@ -15,6 +15,10 @@
     <link rel="stylesheet" type="text/css" href="../Css/background.css"/>
     <link rel="stylesheet" type="text/css" href="../Css/plateau.css"/>
 
+    <!-- CSS Sheron, voir si ca marche correctement avec le reste -->
+    <link rel="stylesheet" type="text/css" href="../Css/plateau.css"/>
+	<link rel="stylesheet" type="text/css" href="../Css/game.css"/>
+
     <!-- modules -->
     <script src="../Js/modules/EventHandler.js"></script>
 
@@ -73,20 +77,13 @@
 
                 <div class="row">
                     <!-- MESSAGE -->
-                    <div style="font-size: 20px;">
+                    <div style="font-size:40px;">
                         <div id="message"></div>
-                        <!-- Effacer ou faire une fonction qui crée dynamiquement ces phrases
-                         ATTENTION : le contenu de 'id="pieceActuelleRouge"' et 'id="pieceActuelleBleue"' est utilisé dans la socket "preparationListenersClientJ1"
-                         si ces phrases sont suppr, variable globale à faire
-                        -->
-                        <div>Pièce actuellement séléctionnée par les rouges: <span id="pieceActuelleRouge">Aucun</span></div>
-                        <div>Pièce actuellement séléctionnée par les bleus: <span id="pieceActuelleBleue">Aucun</span></div>
                         <div id="voirTableauDesPieces" onclick="socket.emit('tableauPiecesJoueurServer');">Voir le tableau des pièces du joueur</div>
                         <div id="grilleCommune" onclick="socket.emit('grilleCommuneServer');">Voir plateau en données.</div>
-
-                        <div>
-                            <button type="button" id='ready' onclick="socket.emit('readyButtonServer')">Pret</button>
-                        </div>
+                        <div><button type="button" id='ready' onclick="socket.emit('readyButtonServer')">Pret</button></div>
+                        <!-- Mettre un bouton qui permet de supprimer une pièce déjà posée sur le plateau (réarrangement après toutes les pièces mises) -->
+                        <div><button type="button" id='aleatoire' onclick="socket.emit('pieceAleatoireServer')">Mise en place des pièces aléatoires</button></div>
                     </div>
                 </div>
             </div>

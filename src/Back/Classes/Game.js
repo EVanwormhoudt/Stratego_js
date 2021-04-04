@@ -118,58 +118,58 @@ class Game{
 
     verifMove(player,start,end){
 
-        let s = parseInt(start)
-        let e = parseInt(end)
-        if(this.grille[Math.trunc(s/10)][(s%10)].force == 0 ||this.grille[Math.trunc(s/10)][(s%10)].force == 100){
-            return false;
-        }
-        if(this.grille[Math.trunc(start/10)][start%10].force === 2){
-            if(!(Math.trunc(start/10) === Math.trunc(end/10) || start%10 === end%10) ){
-                return false
-            }
-        }
-        else{
-            if(e != s + 1 || e != s -1 || e != s -10 || e != s + 10){
-                return false;
-            }
-        }
+        // let s = parseInt(start)
+        // let e = parseInt(end)
+        // if(this.grille[Math.trunc(s/10)][(s%10)].force == 0 ||this.grille[Math.trunc(s/10)][(s%10)].force == 100){
+        //     return false;
+        // }
+        // if(this.grille[Math.trunc(start/10)][start%10].force === 2){
+        //     if(!(Math.trunc(start/10) === Math.trunc(end/10) || start%10 === end%10) ){
+        //         return false
+        //     }
+        // }
+        // else{
+        //     if(e != s + 1 || e != s -1 || e != s -10 || e != s + 10){
+        //         return false;
+        //     }
+        // }
 
         return true;
 
     }
     isFinished(){
 
-        if(this.joueur1.tableOfPawnsView()[11].nombreRestant =='0'){
+        if(this.joueur1.tableOfPawns[11].nombreRestant =='0'){
             this.winner = 2;
             return true;
         }
-        if(this.joueur2.tableOfPawnsView()[11].nombreRestant == '0'){
+        if(this.joueur2.tableOfPawns[11].nombreRestant == '0'){
             this.winner = 1;
             return true;
         }
-        let nbr = 10;
-        for(let i of this.joueur1.tableOfPawnsView()){
-            if(!(i == this.joueur1.tableOfPawnsView()[0] || i == this.joueur1.tableOfPawnsView()[11])){
-                if(i.nombreRestant == 0)
-                    nbr--;
-            }
-        }
-        if(!nbr) {
-            this.winner = 2;
-            return true;
+        // let nbr = 10;
+        // for(let i of this.joueur1.tableOfPawnsView()){
+        //     if(!(i == this.joueur1.tableOfPawnsView()[0] || i == this.joueur1.tableOfPawnsView()[11])){
+        //         if(i.nombreRestant == 0)
+        //             nbr--;
+        //     }
+        // }
+        // if(!nbr) {
+        //     this.winner = 2;
+        //     return true;
 
-        }
-        nbr = 10;
-        for(let i of this.joueur2.tableOfPawnsView()){
-            if(!(i == this.joueur2.tableOfPawnsView()[0] || i == this.joueur2.tableOfPawnsView()[11])){
-                if(i.nombreRestant == 0)
-                    nbr--;
-            }
-        }
-        if(!nbr){
-            this.winner = 1;
-            return true;
-        }
+        // }
+        // nbr = 10;
+        // for(let i of this.joueur2.tableOfPawnsView()){
+        //     if(!(i == this.joueur2.tableOfPawnsView()[0] || i == this.joueur2.tableOfPawnsView()[11])){
+        //         if(i.nombreRestant == 0)
+        //             nbr--;
+        //     }
+        // }
+        // if(!nbr){
+        //     this.winner = 1;
+        //     return true;
+        // }
         return false;
     }
     setTime(){
