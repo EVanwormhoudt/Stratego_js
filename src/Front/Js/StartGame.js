@@ -4,6 +4,9 @@
     /*socket.emit("emitInfo");
     socket.on("getInfo",(socketEntiere,roomEntiere,currentUser,currentUserPlayerNbr,roomNbr,games)=>{
         
+
+    socket.emit("emitInfo");
+    socket.on("getInfo",(socketEntiere,roomEntiere,currentUser,currentUserPlayerNbr,roomNbr,games)=>{
         console.log("La socket du joueur : ",socketEntiere)
         console.log("La room du joueur : ",roomEntiere)
         console.log("currentUser : ",currentUser)
@@ -13,6 +16,24 @@
     })*/
 
     tableauStratego = () => {
+
+        tableauStratego();
+
+        socket.emit("game");
+
+        socket.emit("introductionServer"); // Phrases d'introduction en fonction des 2 joueurs de la room
+
+        socket.emit("tableauPionsServerBuild"); // Crée dynamiquement le tableau des pions du joueur
+
+        socket.emit("tableauPionsServerContent"); // Affiche les valeurs pour le tableau des pions
+
+        socket.emit("preparationListenersServer"); // Applique les listeners sur le tableau des pions et le plateau
+
+        socket.emit("grilleCommuneClient");
+    }
+
+    tableauStratego = ()=> {
+
         let conteneurJeu = document.getElementById("conteneurDuJeu");
         let tbl = document.createElement('table')
         let tblTbody = document.createElement('tbody')
@@ -105,6 +126,7 @@
         tbl.appendChild(tblcaption);
         tbl.appendChild(tblThead);
         tbl.appendChild(tblTbody);
+        console.log(tbl)
         conteneurDuJeu.appendChild(tbl);
     })
 
@@ -121,9 +143,11 @@
     })
 
     // Applique un listener sur les cases du tableau des pions du joueur ET du plateau Stratego
+
+    // Applique un listener sur les cases du tableau des pions du joueur ET du plateau Stratego
     socket.on('preparationListenersClient',(playerNbr)=>{
         console.log("Appel de la fonction 'preparationListenersClient' coté client pour le joueur",playerNbr,".");
-        
+
         let tbodyPion = (playerNbr==1) ? document.getElementById("tableauPionsJ1").children[2] : document.getElementById("tableauPionsJ2").children[2];
         // let pieceActuelle = (playerNbr==1) ? document.getElementById("pieceActuelleRouge") : document.getElementById("pieceActuelleBleue");
         let pieceActuelle;
@@ -137,7 +161,7 @@
         // ---------------- Evenements sur le tableau des pions ----------------
         let playerColor = (playerNbr==1) ? "red" : "lightblue";
         for(let i=0;i<12;i++){
-            tbodyPion.children[i].addEventListener("click",()=>{    
+            tbodyPion.children[i].addEventListener("click",()=>{
                 // On demande au serveur si le type de pion de la case cliquée est encore disponible pour le joueur
                 socket.emit("TypePionsDispoDemandeServer",tbodyPion.children[i].children[0].textContent,i);
                 socket.on("TypePionsDispoReponseServer",(reponse,indice)=>{
@@ -151,8 +175,8 @@
                                 precedentIndice=i;
                             }
                             tbodyPion.children[i].style.background=playerColor; // On selectionne la case cliquée
-                            pieceActuelle=tbodyPion.children[i].children[0].textContent; // On actualise 
-                            //console.log("Piece actuelle :",pieceActuelle)
+                            pieceActuelle=tbodyPion.children[i].children[0].textContent; // On actualise
+                            console.log("Piece actuelle :",pieceActuelle)
                         } else { // Sinon, on ne fait rien.
                             message.textContent="Vous ne pouvez pas selectionné un pion de type '"+tbodyPion.children[i].children[0].textContent+"' car le nombre restant de cette pièce est nul.";
                             console.log("Vous ne pouvez plus selectionné cette pièce : nombre restant épuisé.");
@@ -166,12 +190,14 @@
         for(let idCaseStratego=caseDispo;idCaseStratego<(caseDispo+40);idCaseStratego++){
             document.getElementById(idCaseStratego).addEventListener("click",()=>{
                 if(pieceActuelle!=undefined){ // Un type de pions a été préalablement selectionné
-                    // On envoie la pièce actuellement selectionnée, l'id (0-99) de la case cliqué et le nombre de fois qu'on a cliqué sur cette case
-                   socket.emit("decrementationTypePionJoueurServer",pieceActuelle,idCaseStratego,nbrClicsCase[idCaseStratego]);
-                   // On reçoie si on peut poser la pièce, son image si oui, confirmation de l'id de la case, type de pièce selectionné,
-                   // id du type de la pièce qu'il y avait avant sur cette case (joueur1.tableOfPawns) pour incrémentation vu qu'on l'a enlevée
-                   // Ainsi que le nombre de clics sur la case cliquée
-                   socket.on("decrementationTypePionJoueurClient",(possible,image,idCase,indiceDuTypePion,idPiecePop,nbrDeClicsServeur)=>{
+
+                    // On envoie la pièce actuellement selectionnée, l'id (1-100) de la case cliqué et le nombre de fois qu'on a cliqué sur cette case
+                    socket.emit("decrementationTypePionJoueurServer",pieceActuelle,idCaseStratego,nbrClicsCase[idCaseStratego]);
+                    // On reçoie si on peut poser la pièce, son image si oui, confirmation de l'id de la case, type de pièce selectionné,
+                    // id du type de la pièce qu'il y avait avant sur cette case (joueur1.tableOfPawns) pour incrémentation vu qu'on l'a enlevée
+                    // Ainsi que le nombre de clics sur la case cliquée
+                    socket.on("decrementationTypePionJoueurClient",(possible,image,idCase,indiceDuTypePion,idPiecePop,nbrDeClicsServeur)=>{
+
                         if(idCaseStratego==idCase){ // Permet d'empecher l'interconnexion des sockets 'decrementationTypePionJoueur1Client' des cases différentes
                             if(nbrClicsCase[idCase]==nbrDeClicsServeur){ // Permet d'empecher l'interconnexion des sockets 'decrementationTypePionJoueur1Client' lorsqu'on clique plus d'une fois sur la MEME case
                                 nbrClicsCase[idCase]++;
@@ -179,11 +205,15 @@
                                     let img = document.createElement("img")
                                     img.src  = (playerNbr ===1) ? "../Images/icons/"+image+"r.svg":"../Images/icons/"+image+"b.svg";
                                     img.classList.add(image + "strength")
-                                    img.style.height = "100px";
-                                    img.style.width = "80px";
+                                    img.style.height = "65px";
+                                    img.style.width = "55px";
+                                    console.log(document.getElementById(idCaseStratego).children)
+
                                     if(!document.getElementById(idCaseStratego).children.length){
                                         document.getElementById(idCaseStratego).appendChild(img) // On affiche l'image dans la case du plateau Stratego
-                                    } else { 
+
+                                    } else {
+                                        console.log("On remplace l'ancienne pièce");
                                         document.getElementById(idCaseStratego).replaceChild(img,document.getElementById(idCaseStratego).firstChild)
                                     }
                                     tbodyPion.children[indiceDuTypePion].children[1].textContent--;
@@ -217,15 +247,9 @@
     /* ---------------- Boutons cliquables ---------------- */
 
     socket.on("readyButtonClient",(ready)=>{
-        console.log(testReady)
-        testReady = testReady + 1;
-        if(testReady === 3) {
-            socket.emit("testgameBegin")
-            ready = true;
-        }
         if (ready) {
             document.getElementById("ready").style.background = "green";
-
+            console.log("yes")
             for (let i = 0; i < 100; i++) {
                 let el = document.getElementById(i.toString()),
                     elClone = el.cloneNode(true);
@@ -252,8 +276,8 @@
                 let img = document.createElement("img")
                 img.src  = "../Images/icons/"+tableauPiece[indice]+color+".svg";
                 img.classList.add(tableauPiece[indice++] + "strength")
-                img.style.height = "100px";
-                img.style.width = "80px";
+                img.style.height = "65px";
+                img.style.width = "55px";
                 document.getElementById(i).appendChild(img)
             }
         }
@@ -301,7 +325,7 @@
         
         for(let i=deb;i<(deb+60);i++){
             document.getElementById(i).style.background="";
-            document.getElementById(i).style.opacity=0;
+            document.getElementById(i).style.opacity='';
         }
     });
     socket.on("PieceMoved",(start,end)=>{

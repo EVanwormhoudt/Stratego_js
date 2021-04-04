@@ -311,8 +311,10 @@ io.on('connection', (socket) => {
         socket.on('readyButtonServer',()=>{
             if(!socket.handshake.session.ready){ // Pour empecher games[roomNbr].ready==2 à partir d'une seule fenetre
                 let joueurGrille = (socket.handshake.session.player==1) ? games[socket.handshake.session.room].joueur1.tableOfPawns : games[socket.handshake.session.room].joueur2.tableOfPawns;
-                let joueurReady = joueurGrille.every(elem=>{elem.nombreRestant==0;});
-
+                let joueurReady = joueurGrille.every(elem=>elem.nombreRestant==0);
+                console.log(joueurGrille)
+                console.log("bah jsuis la")
+                console.log(joueurReady)
                 if(joueurReady){
                     games[socket.handshake.session.room].ready++;
                     socket.handshake.session.ready=true;
@@ -402,8 +404,8 @@ io.on('connection', (socket) => {
         }
         if(games[socket.handshake.session.room].isFinished()){
             games[socket.handshake.session.room].setTime();
-            scoreHandler.writePersonnalScore(games[socket.handshake.session.room].getData())
-            scoreHandler.writeScore(games[socket.handshake.session.room].getData())
+            //scoreHandler.writePersonnalScore(games[socket.handshake.session.room].getData())
+            //scoreHandler.writeScore(games[socket.handshake.session.room].getData())
             if(socket.handshake.session.player == games[socket.handshake.session.room].winner){
                 socket.emit("Victory")
                 socket.broadcast.to("room"+socket.handshake.session.room).emit("Defeat");
