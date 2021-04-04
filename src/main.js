@@ -96,11 +96,14 @@ app.get('/logout', (req,res) => {
 
 // redirige vers la page d'attente si l'URL contient '/waitingRoom'
 app.get('/waitingRoom', (req,res) => {
+    console.log(req.session.username)
     if(req.session.username) {
         res.sendFile(__dirname + '/Front/Html/salleAttente.html');
     }
-    else
-        res.redirect('/');
+    else {
+        req.session.username = "test";
+        res.sendFile(__dirname + '/Front/Html/salleAttente.html');
+    }
 });
 
 // redirige vers la page de jeu si l'URL contient '/game'
@@ -216,16 +219,27 @@ io.on('connection', (socket) => {
     socket.on("game",()=>{
         socket.join("room"+socket.handshake.session.room);
 
+        // Affiche les informations générales (joueur adverse,room, phase de préparation)
         socket.on("introductionServer",()=>{
             console.log("Appel de la fonction 'introduction' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
             let enemyID = (socket.handshake.session.player==1) ? 2 : 1;
             socket.emit("introductionClient",socket.handshake.session.username,socket.handshake.session.player,rooms[socket.handshake.session.room][enemyID],enemyID,socket.handshake.session.room ); // NomDuJoueur,idDuJoueur,NomJoueurEnnemi,IdJoueurEnnemi,idRoom
         })
+
+        // Grise les cases adverses, question d'intuitivité 
+        socket.on("caseGriseServer",()=>{
+            console.log("Appel de la fonction 'caseGriseServer' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
+            let deb = (socket.handshake.session.player==1) ? 0 : 40;
+            let fin = (socket.handshake.session.player==1) ? 59 : 99;
+            socket.emit("caseGriseClientON",deb,fin),socket.handshake.session.player;
+        })
+
         // Appelle la socket coté client qui crée dynamiquement le tableau des pions du joueur, en fonction de 'playerNbr' (J1 ou J2)
         socket.on("tableauPionsServerBuild",()=>{
             console.log("Appel de la fonction 'tableauPionsServerBuild' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
             socket.emit("tableauPionsClientBuild",socket.handshake.session.player);
         })
+
         // Appelle la socket coté client qui remplit le tableau des pions des 2 joueurs
         socket.on("tableauPionsServerContent",()=>{
             console.log("Appel de la fonction 'tableauPionsServerContent' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
@@ -286,12 +300,14 @@ io.on('connection', (socket) => {
             socket.emit("grilleCommuneClient", games[socket.handshake.session.room].grille);
         })
 
-        /* ---------------------------------------------------------------- */
+        /* -------------------------------- Effets des boutons cliquables -------------------------------- */
 
         socket.on("testgameBegin",()=>{
             socket.emit("gameBegin",(socket.handshake.session.player))
             socket.broadcast.to("room"+socket.handshake.session.room).emit("gameBegin",((socket.handshake.session.player)%2 +1));
         })
+
+        // Bouton 'Pret' 
         socket.on('readyButtonServer',()=>{
             if(!socket.handshake.session.ready){ // Pour empecher games[roomNbr].ready==2 à partir d'une seule fenetre
                 let joueurGrille = (socket.handshake.session.player==1) ? games[socket.handshake.session.room].joueur1.tableOfPawns : games[socket.handshake.session.room].joueur2.tableOfPawns;
@@ -308,6 +324,36 @@ io.on('connection', (socket) => {
                     socket.broadcast.to("room"+socket.handshake.session.room).emit("gameBegin",((socket.handshake.session.player)%2 +1));
                 }
             }else{console.log("Vous ne pouvez pas etre ready 2 fois.")}
+        })
+
+        // Bouton 'Mise en place des pièces aléatoires' : place aléatoirement les pièces non posées du joueur
+        socket.on('pieceAleatoireServer',()=>{
+            console.log("Appel de 'pieceAleatoireServer' coté serveur.")
+            let joueur = (socket.handshake.session.player==1) ? games[socket.handshake.session.room].joueur1 : games[socket.handshake.session.room].joueur2;
+            let start = (socket.handshake.session.player==1) ? 60 : 0;
+            let start2 = start;
+            let pieceArray=new Array;
+
+            function getRandomArbitrary(min, max) { // Renvoie une valeur pseudo-aléatoire entre min compris et max exclu
+                return Math.floor( (Math.random() * (max - min) + min) ) ;
+            }
+
+            while(!joueur.tableOfPawns.every(element=>element.nombreRestant==0)){
+                let x = Math.floor((start)/10);
+                let y = start%10;
+                let indice=getRandomArbitrary(0,12);
+
+                if(games[socket.handshake.session.room].grille[x][y]==undefined){
+                    if(joueur.nombreRestantIndice(indice)==0){
+                        do{indice=getRandomArbitrary(0,12)}while(joueur.nombreRestantIndice(indice)==0);
+                    }
+                    games[socket.handshake.session.room].grille[x][y] = new Pion(joueur.typeDeLaPiece(indice),joueur.forceDuType(joueur.typeDeLaPiece(indice)),joueur.getName(),x,y);
+                    pieceArray.push(joueur.forceDuType(joueur.typeDeLaPiece(indice)));
+                    joueur.tableOfPawns[indice].nombreRestant--;
+                }
+                start++;
+            }
+            socket.emit("pieceAleatoireClient",pieceArray,start2,socket.handshake.session.player);
         })
     })
 
@@ -376,5 +422,3 @@ app.post('/login', body('login').isLength({ min: 3 }).trim().escape(), (req, res
     }
 
 });
-
-

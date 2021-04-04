@@ -15,7 +15,7 @@ class Player{
             {name:"Démineurs",nombreRestant:"5",force:"3"},
             {name:"Eclaireurs",nombreRestant:"8",force:"2"},
             {name:"Espion",nombreRestant:"1",force:"1"},
-            {name:"Drapeau",nombreRestant:"0",force:"0"},
+            {name:"Drapeau",nombreRestant:"1",force:"0"},
 
         ];
     }
@@ -41,12 +41,18 @@ class Player{
             }
         }
     }
+    typeDeLaPiece(indice){
+        return this.tableOfPawns[indice].name;
+    }
     nombreRestantDuType(type){
         for(const element of this.tableOfPawns){
             if(element.name==type){
                 return element.nombreRestant;
             }
         }
+    }
+    nombreRestantIndice(indice){
+        return this.tableOfPawns[indice].nombreRestant;
     }
     forceDuType(type){
         for(const element of this.tableOfPawns){

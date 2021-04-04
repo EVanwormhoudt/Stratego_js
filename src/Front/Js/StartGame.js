@@ -1,10 +1,7 @@
-//import { isObject } from "util";
-
 (function(){
-    // Ne pas oublier le 'socket.emit("startGame");'
 
     console.log("Le script 'StartGame.js' est lancé.")
-    socket.emit("emitInfo");
+    /*socket.emit("emitInfo");
     socket.on("getInfo",(socketEntiere,roomEntiere,currentUser,currentUserPlayerNbr,roomNbr,games)=>{
         
         console.log("La socket du joueur : ",socketEntiere)
@@ -13,45 +10,15 @@
         console.log("currentUserPlayerNbr: ",currentUserPlayerNbr)
         console.log("Numero de la room : ",roomNbr)
         console.log("games[room] :",games)
+    })*/
 
-        tableauStratego();
-
-        socket.emit("game");
-
-        socket.emit("introductionServer"); // Phrases d'introduction en fonction des 2 joueurs de la room
-
-        socket.emit("tableauPionsServerBuild"); // Crée dynamiquement le tableau des pions du joueur
-
-        socket.emit("tableauPionsServerContent"); // Affiche les valeurs pour le tableau des pions
-
-        socket.emit("preparationListenersServer"); // Applique les listeners sur le tableau des pions et le plateau
-
-        socket.emit("grilleCommuneClient");
-    })
-
-    tableauStratego = ()=> {
+    tableauStratego = () => {
         let conteneurJeu = document.getElementById("conteneurDuJeu");
         let tbl = document.createElement('table')
-        let tblThead = document.createElement('thead')
         let tblTbody = document.createElement('tbody')
-        
-        let rowThead = document.createElement('tr');
-        let caseVide = document.createElement('td');
-        rowThead.appendChild(caseVide);
-
-        for(let i=0;i<10;i++){
-            let ligne = document.createElement('td');
-            ligne.textContent=i;
-            rowThead.appendChild(ligne);
-        }
-        tblThead.appendChild(rowThead);
-
+    
         for(let i=0;i<10;i++){
             let rowTbody = document.createElement('tr');
-            let firstTD = document.createElement('td');
-            firstTD.textContent=i;
-
-            rowTbody.appendChild(firstTD);
             for(let a=0;a<10;a++){
                 let contentTD = document.createElement('td');
                 contentTD.id=a+(i*10);
@@ -60,12 +27,29 @@
             }
             tblTbody.appendChild(rowTbody);
         }
-        tbl.appendChild(tblThead);
         tbl.appendChild(tblTbody);
         tbl.id="tableauStratego";
         conteneurJeu.appendChild(tbl);
-
     }
+    tableauStratego();
+
+    socket.emit("game");
+
+    socket.emit("introductionServer"); // Phrases d'introduction en fonction des 2 joueurs de la room
+
+    socket.emit("caseGriseServer")
+
+    socket.emit("tableauPionsServerBuild"); // Crée dynamiquement le tableau des pions du joueur
+
+    socket.emit("tableauPionsServerContent"); // Affiche les valeurs pour le tableau des pions
+
+    socket.emit("preparationListenersServer"); // Applique les listeners sur le tableau des pions et le plateau
+
+    /* -------------------------------- Boutons cliquables -------------------------------- */
+    
+    socket.emit("grilleCommuneClient");
+
+    /* -------------------------------- Définitions des sockets coté client -------------------------------- */
 
     // Affiche correctement les données au dessus du plateau
     socket.on("introductionClient",(userName,userNumber,enemyName,enemyNumber,roomID)=>{
@@ -75,6 +59,22 @@
         document.getElementById('enemyID').textContent=enemyNumber;
         document.getElementById("roomNbr").textContent=roomID;
     });
+
+    // Grise les cases adverses et non cliquables
+    socket.on("caseGriseClientON",(deb,fin,playerNbr)=>{
+        console.log("Appel de la fonction 'caseGriseClient' coté client pour le joueur",playerNbr,".");
+        for(let i=deb;i<=fin;i++){
+            document.getElementById(i).style.background="silver";
+            document.getElementById(i).style.opacity=0.5;
+        }
+    })
+    socket.on("caseGriseClientOFF",(deb,fin,playerNbr)=>{
+        console.log("Appel de la fonction 'caseGriseClient' coté client pour le joueur",playerNbr,".");
+        for(let i=deb;i<=fin;i++){
+            document.getElementById(i).style.background="white";
+            document.getElementById(i).style.opacity=0;
+        }
+    })
 
     // Crée dynamiquement le tableau des pions du joueur en question
     socket.on("tableauPionsClientBuild",(playerNbr)=>{
@@ -88,8 +88,8 @@
         let tblThead = document.createElement("thead");
         let tblTbody = document.createElement("tbody");
 
-        tblcaption.textContent = "" // Sans caption
-        tblThead.innerHTML="<tr><td>Type</td><td>Nombre restant</td><td>Force</td></tr>"; // Mode barbare t'as vu
+        tblcaption.textContent = "" // Sans caption NE PAS ENLEVER
+        tblThead.innerHTML="<tr><td>Type</td><td>Nombre restant</td><td>Force</td></tr>"; // Mode barbare
 
         for(let i=0;i<12;i++){
             let row = document.createElement("tr");
@@ -106,8 +106,6 @@
         tbl.appendChild(tblTbody);
         conteneurDuJeu.appendChild(tbl);
     })
-
-    /* ---------------------- Implémentation des sockets coté client ---------------------- */
 
     // Remplit d'après les informations du server (game.joueurX.tableOfPawns()) les informations dans le tableau des pions
     socket.on("tableauPionsClientContent",(tableOfPawns,playerNbr)=>{
@@ -153,7 +151,7 @@
                             }
                             tbodyPion.children[i].style.background=playerColor; // On selectionne la case cliquée
                             pieceActuelle=tbodyPion.children[i].children[0].textContent; // On actualise 
-                            console.log("Piece actuelle :",pieceActuelle)
+                            //console.log("Piece actuelle :",pieceActuelle)
                         } else { // Sinon, on ne fait rien.
                             message.textContent="Vous ne pouvez pas selectionné un pion de type '"+tbodyPion.children[i].children[0].textContent+"' car le nombre restant de cette pièce est nul.";
                             console.log("Vous ne pouvez plus selectionné cette pièce : nombre restant épuisé.");
@@ -167,8 +165,7 @@
         for(let idCaseStratego=caseDispo;idCaseStratego<(caseDispo+40);idCaseStratego++){
             document.getElementById(idCaseStratego).addEventListener("click",()=>{
                 if(pieceActuelle!=undefined){ // Un type de pions a été préalablement selectionné
-
-                    // On envoie la pièce actuellement selectionnée, l'id (1-100) de la case cliqué et le nombre de fois qu'on a cliqué sur cette case
+                    // On envoie la pièce actuellement selectionnée, l'id (0-99) de la case cliqué et le nombre de fois qu'on a cliqué sur cette case
                    socket.emit("decrementationTypePionJoueurServer",pieceActuelle,idCaseStratego,nbrClicsCase[idCaseStratego]);
                    // On reçoie si on peut poser la pièce, son image si oui, confirmation de l'id de la case, type de pièce selectionné,
                    // id du type de la pièce qu'il y avait avant sur cette case (joueur1.tableOfPawns) pour incrémentation vu qu'on l'a enlevée
@@ -178,20 +175,14 @@
                             if(nbrClicsCase[idCase]==nbrDeClicsServeur){ // Permet d'empecher l'interconnexion des sockets 'decrementationTypePionJoueur1Client' lorsqu'on clique plus d'une fois sur la MEME case
                                 nbrClicsCase[idCase]++;
                                 if(possible==true){ // Si (possible == true) ==> type.nbrRestant > 0, la decrementation en données a déjà été faite, on affiche donc l'image au client
-                                    /*console.log("Le nombre de pièce restant est supérieur à 0.");
-                                    console.log("La case "+idCase+" change de contenu et prend la valeur : ",image)
-                                    console.log("indicedutype : ",indiceDuTypePion);*/
                                     let img = document.createElement("img")
                                     img.src  = (playerNbr ===1) ? "../Images/icons/"+image+"r.svg":"../Images/icons/"+image+"b.svg";
                                     img.classList.add(image + "strength")
                                     img.style.height = "100px";
                                     img.style.width = "80px";
-                                    console.log(document.getElementById(idCaseStratego).children)
                                     if(!document.getElementById(idCaseStratego).children.length){
-                                        console.log("Il n'y avait pas d'ancienne pièce")
                                         document.getElementById(idCaseStratego).appendChild(img) // On affiche l'image dans la case du plateau Stratego
                                     } else { 
-                                        console.log("On remplace l'ancienne pièce");
                                         document.getElementById(idCaseStratego).replaceChild(img,document.getElementById(idCaseStratego).firstChild)
                                     }
                                     tbodyPion.children[indiceDuTypePion].children[1].textContent--;
@@ -222,6 +213,8 @@
         console.table(grille);
     })
 
+    /* ---------------- Boutons cliquables ---------------- */
+
     socket.on("readyButtonClient",(ready)=>{
         console.log(testReady)
         testReady = testReady + 1;
@@ -246,6 +239,29 @@
         }
 
     });
+
+    socket.on("pieceAleatoireClient",(tableauPiece,caseIdDebut,playerID)=>{
+        console.log("Appel de 'pieceAleatoireClient' coté client.")
+        let color = (playerID==1) ? "r" : "b";
+        let indice=0;
+        // Affichage des images sur le plateau Stratego
+        for(let i=caseIdDebut;i<(caseIdDebut+40);i++){
+            if(!document.getElementById(i).children.length){
+                let img = document.createElement("img")
+                img.src  = "../Images/icons/"+tableauPiece[indice]+color+".svg";
+                img.classList.add(tableauPiece[indice++] + "strength")
+                img.style.height = "100px";
+                img.style.width = "80px";
+                document.getElementById(i).appendChild(img)
+            }
+        }
+        // Mise à 0 de tous les pions dans le tableau des pions
+        let tbodyPions = (playerID==1) ? document.getElementById("tableauPionsJ1") : document.getElementById("tableauPionsJ2")
+        for(let i=0;i<12;i++){
+            tbodyPions.children[2].children[i].children[1].textContent=0;
+            tbodyPions.children[2].children[i].style.background="white";
+        }
+    })
 
     socket.on("gameBegin",(player)=> {
         console.log(player)
