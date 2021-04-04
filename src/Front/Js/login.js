@@ -12,6 +12,7 @@ form.addEventListener('submit', event => {
             socket.on("resultDecrypt", result => {
                 if(result){
                     logger.sendLogin(inputUser.value);
+                    window.location.href = "/";
                 }
                 else {
                     alert('Mot de passe incorrect.')

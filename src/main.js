@@ -90,7 +90,8 @@ app.get("/register", (req, res) => {
 
 // redirige vers la page d'accueil si l'URL contient '/logout'
 app.get('/logout', (req,res) => {
-    req.session = null;
+    //req.session = null;
+    req.session.destroy();
     res.redirect('/');
 });
 
@@ -116,6 +117,23 @@ app.get('/game',(req,res)=>{
 
 /******************/
 
+app.post('/login', body('login').isLength({ min: 3 }).trim().escape(), (req, res) => {
+    const login = req.body.login
+    // Error management
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        console.log(errors);
+        //return res.status(400).json({ errors: errors.array() });
+    } else {
+        // Store login
+        req.session.username = login;
+        console.log(req.session.username);
+        req.session.save()
+        res.redirect('/');
+    }
+
+});
+
 // Directement après la connexion d'un socket au serveur
 io.on('connection', (socket) => {
 
@@ -128,8 +146,16 @@ io.on('connection', (socket) => {
         });
     });
 
+    socket.on("login",(info)=>{
+        let sql = "SELECT id, username FROM users WHERE username = ? and password = ?";
+        con.query(sql, [info[0], info[1]], (err, res) => {
+            if(err) throw err;
+            socket.emit("resultLogin",res)
+        });
+    });
+
     socket.on("isSession",()=>{
-        socket.emit("onSession",socket.handshake.session.username)
+        socket.emit("onSession",socket.handshake.session.username);
     });
 
     socket.on("username", (info) => {
@@ -183,7 +209,7 @@ io.on('connection', (socket) => {
         }
     });
     socket.on("emitInfo",()=>{
-        socket.emit("getInfo",socket.handshake.session,rooms[socket.handshake.session.room],socket.handshake.session.username,socket.handshake.session.player,socket.handshake.session.room)
+        socket.emit("getInfo",socket.handshake.session,rooms[socket.handshake.session.room],socket.handshake.session.username,socket.handshake.session.player,socket.handshake.session.room,games[socket.handshake.session.room])
     })
 
 
@@ -213,84 +239,80 @@ io.on('connection', (socket) => {
 
     // --------------- Socket pour la page game.html ---------------
 
-    socket.on("game",(playerNbr,room)=>{
-        let joueur = new Player(socket.handshake.session.username); // Sert uniquement à appelé des fonctions de l'instance Player
-
-        console.log("Le plateau en données :",games[socket.handshake.session.room].grille);
+    socket.on("game",()=>{
         socket.join("room"+socket.handshake.session.room);
 
-        socket.on("introductionServer",(userSocket,userRoom)=>{
-            console.log("Appel de la fonction 'introduction' dans la room '"+room+"' coté serveur pour le joueur ",userSocket.player,".")
-            socket.emit("introductionClient",userSocket,userRoom);
+        socket.on("introductionServer",()=>{
+            console.log("Appel de la fonction 'introduction' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
+            let enemyID = (socket.handshake.session.player==1) ? 2 : 1;
+            socket.emit("introductionClient",socket.handshake.session.username,socket.handshake.session.player,rooms[socket.handshake.session.room][enemyID],enemyID,socket.handshake.session.room ); // NomDuJoueur,idDuJoueur,NomJoueurEnnemi,IdJoueurEnnemi,idRoom
         })
         // Appelle la socket coté client qui crée dynamiquement le tableau des pions du joueur, en fonction de 'playerNbr' (J1 ou J2)
-        socket.on("tableauPionsServerBuild",(playerNbr)=>{
-            console.log("tableauPionsServerBuild appelé coté Serveur.")
-            socket.emit("tableauPionsClientBuild",playerNbr);
+        socket.on("tableauPionsServerBuild",()=>{
+            console.log("Appel de la fonction 'tableauPionsServerBuild' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
+            socket.emit("tableauPionsClientBuild",socket.handshake.session.player);
         })
         // Appelle la socket coté client qui remplit le tableau des pions des 2 joueurs
-        socket.on("tableauPionsServerContent",(playerNbr)=>{
-            //console.log("Appel de la fonction 'tableauPionsServer' dans la room"+room+" coté serveur.");
-            // AVANT : let sendContent = (playerNbr==1) ? game.joueur1.tableOfPawnsView() : game.joueur2.tableOfPawnsView() ; 
-            //io.emit('tableauPionsClient',game.joueur1.tableOfPawnsView(),game.joueur2.tableOfPawnsView());
-            let sendContent = (playerNbr==1) ? games[socket.handshake.session.room].joueur1.tableOfPawns : games[socket.handshake.session.room].joueur2.tableOfPawns;
-            socket.emit('tableauPionsClientContent',sendContent,playerNbr);
+        socket.on("tableauPionsServerContent",()=>{
+            console.log("Appel de la fonction 'tableauPionsServerContent' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
+            let tableauDesPionsJoueur = (socket.handshake.session.player==1) ? games[socket.handshake.session.room].joueur1.tableOfPawns : games[socket.handshake.session.room].joueur2.tableOfPawns;
+            socket.emit('tableauPionsClientContent',tableauDesPionsJoueur,socket.handshake.session.player);
        })
 
         // Appelle la socket coté client qui applique des listeners sur le tableau des pions du joueur
-        socket.on('preparationListenersServer',(playerNbr)=>{
-            console.log("Appel de la fonction 'preparationListenersServerJ1' dans la room '"+room+"' coté serveur pour le joueur ",playerNbr,".")
-            socket.emit('preparationListenersClient',playerNbr);
+        socket.on('preparationListenersServer',()=>{
+            console.log("Appel de la fonction 'preparationListenersServer' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
+            socket.emit('preparationListenersClient',socket.handshake.session.player);
         })
         
         // Reçois le type de la pièce actuellement selectionnée par le joueur et renvoie le nombre restant du type de cette pièce dispo
-        socket.on("TypePionsDispoDemandeServer",typePions=>{
-            socket.emit("TypePionsDispoReponseServer",(joueur.nombreRestantDuType(typePions)));
-            
+        socket.on("TypePionsDispoDemandeServer",(typePions,i)=>{
+            if(socket.handshake.session.player == 1){
+            socket.emit("TypePionsDispoReponseServer",games[socket.handshake.session.room].joueur1.nombreRestantDuType(typePions),i);
+            }else{socket.emit("TypePionsDispoReponseServer",games[socket.handshake.session.room].joueur2.nombreRestantDuType(typePions),i);
+        }
         });
 
-        // Lors du clic sur une case, on vérifie si 'nbrRestant' de la pièce est > 0 (possible), s'il y avait déjà une pièce auquel cas on la suppr du plateau en données 
+        // Lors du clic sur une case, on vérifie si 'nbrRestant' de la pièce est > 0 (possible), s'il y avait déjà une pièce sur la case auquel cas on la suppr du plateau en données 
         // et incrémente nbrRestant de cette pièce, etc...
         socket.on("decrementationTypePionJoueurServer",(typePiece,idCaseStratego,nbrDeClics)=>{
             let possible;
-            let x = Math.floor((idCaseStratego-1)/10);
-            let y = (idCaseStratego-1)%10;
+            let x = Math.floor((idCaseStratego)/10);
+            let y = (idCaseStratego)%10;
             let idPiecePop = undefined;
-            console.log("Nbr de clics : ",nbrDeClics)
             let gameJoueur = (socket.handshake.session.player == 1) ? games[socket.handshake.session.room].joueur1 : games[socket.handshake.session.room].joueur2;
-            // gameJoueur est l'accès au joueur via la socket gloable games[numeroDeLaRoom]
-            
-            if(gameJoueur.tableOfPawns[joueur.indiceDuType(typePiece)].nombreRestant>0){
-                if(games[socket.handshake.session.room].grille[x][y]!=null){
-                    let typePrecedentePiece=games[socket.handshake.session.room].grille[x][y].typeDeLaPiece();
-                    console.log("On enlève la pièce précedente !");
-                    joueur.tableOfPawns[joueur.indiceDuType(typePrecedentePiece)].nombreRestant++;
-                    gameJoueur.tableOfPawns[joueur.indiceDuType(typePiece)].nombreRestant++;
-                    idPiecePop=joueur.indiceDuType(typePrecedentePiece);
-                    
+           
+            if(gameJoueur.tableOfPawns[gameJoueur.indiceDuType(typePiece)].nombreRestant>0){
+                if(games[socket.handshake.session.room].grille[x][y]!=null){ // S'il y a déjà une pièce là où on clique
+                    let typePrecedentePiece = games[socket.handshake.session.room].grille[x][y].typeDeLaPiece(); // On recupère le type de cette pièce
+                    gameJoueur.tableOfPawns[gameJoueur.indiceDuType(typePrecedentePiece)].nombreRestant++; // On incrémente en données le nbr restant de cette pièce
+                    idPiecePop = gameJoueur.indiceDuType(typePrecedentePiece);
                 }
-                joueur.tableOfPawns[joueur.indiceDuType(typePiece)].nombreRestant--;
-                gameJoueur.tableOfPawns[joueur.indiceDuType(typePiece)].nombreRestant--;
+                gameJoueur.tableOfPawns[gameJoueur.indiceDuType(typePiece)].nombreRestant--;
                 // Transmission en données de la case où mettre la pièce
-                let piece = new Pion(typePiece,joueur.forceDuType(typePiece),joueur.getName(),Math.floor((idCaseStratego-1)/10),(idCaseStratego-1)%10);
-                //game.setCase(x,y,piece);
+                let piece = new Pion(typePiece,gameJoueur.forceDuType(typePiece),gameJoueur.getName(),x,y);
                 games[socket.handshake.session.room].grille[x][y]=piece;
                 possible=true;
             } else { 
                 possible=false;
-                console.log("Le joueur "+socket.handshake.session.username+"ne peut plus poser de pièce du type "+typePiece)
+                //console.log("Le joueur "+socket.handshake.session.username+" ne peut plus poser de pièce du type "+typePiece)
             }
-            socket.emit("decrementationTypePionJoueurClient",possible,joueur.forceDuType(typePiece),idCaseStratego,joueur.indiceDuType(typePiece),idPiecePop,nbrDeClics);
+            socket.emit("decrementationTypePionJoueurClient",possible,gameJoueur.forceDuType(typePiece),idCaseStratego,gameJoueur.indiceDuType(typePiece),idPiecePop,nbrDeClics);
         });
 
-        /* ---------------- Information pour débuger ---------------- */
+        /* -------------------------------- Informations pour débuger ---------------- ----------------*/
 
         socket.on("tableauPiecesJoueurServer",()=>{
-            socket.emit("tableauPiecesJoueurClient",joueur.tableOfPawnsView())
+            if(socket.handshake.session.player==1){
+            socket.emit("tableauPiecesJoueurClient",games[socket.handshake.session.room].joueur1.tableOfPawns)
+            }else{socket.emit("tableauPiecesJoueurClient",games[socket.handshake.session.room].joueur2.tableOfPawns)
+        }
         })
         socket.on("grilleCommuneServer",()=>{
             socket.emit("grilleCommuneClient", games[socket.handshake.session.room].grille);
         })
+
+        /* ---------------------------------------------------------------- */
 
         socket.on("testgameBegin",()=>{
             socket.emit("gameBegin",(socket.handshake.session.player))
@@ -298,26 +320,24 @@ io.on('connection', (socket) => {
         })
         socket.on('readyButtonServer',()=>{
             if(!socket.handshake.session.ready){ // Pour empecher games[roomNbr].ready==2 à partir d'une seule fenetre
-                let joueurReady=true;
-                for(element of joueur.tableOfPawns){
-                    if(element.nombreRestant!=0){
-                        joueurReady=false;
-                    }
-                }
+                let joueurGrille = (socket.handshake.session.player==1) ? games[socket.handshake.session.room].joueur1.tableOfPawns : games[socket.handshake.session.room].joueur2.tableOfPawns;
+                let joueurReady = joueurGrille.every(elem=>{elem.nombreRestant==0;});
+
                 if(joueurReady){
                     games[socket.handshake.session.room].ready++;
                     socket.handshake.session.ready=true;
                 }
                 socket.emit("readyButtonClient",joueurReady);
-                console.log(games[socket.handshake.session.room].ready)
+                
                 if(games[socket.handshake.session.room].ready === 2){
-
                     socket.emit("gameBegin",(socket.handshake.session.player))
                     socket.broadcast.to("room"+socket.handshake.session.room).emit("gameBegin",((socket.handshake.session.player)%2 +1));
                 }
             }else{console.log("Vous ne pouvez pas etre ready 2 fois.")}
         })
-    }) // Fin de la socket "newgame"
+    })
+
+    // ------------------------------ Sockets pour la phase de jeu ------------------------------
 
     socket.on("move",(start,end)=>{
         console.log("Move")
@@ -365,22 +385,6 @@ io.on('connection', (socket) => {
         }
 
     });
-});
-
-app.post('/login', body('login').isLength({ min: 3 }).trim().escape(), (req, res) => {
-    const login = req.body.login
-
-    // Error management
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        //return res.status(400).json({ errors: errors.array() });
-    } else {
-        // Store login
-        req.session.username = login;
-        req.session.save()
-        res.redirect('/');
-    }
-
 });
 
 

@@ -1,10 +1,28 @@
+<!--Remplace tout-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>loginpage</title>
+
+    <!--    ajout du logo du site-->
+    <link rel="icon" type="image/x-icon" href="../Images/icon.png"/>
+
+    <!-- bootstrap-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+          integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+
+    <!-- include css-->
+    <link rel="stylesheet" type="text/css" href="../Css/styleLog.css"/>
+
+    <!-- include js-->
+    <script src="../Js/barreAccueil.js"></script>
+
+    <!-- socket io-->
     <script src="/socket.io/socket.io.js"></script>
-    <link rel="stylesheet" href="../css/styleLog.css">
+    <!-------------->
+    <script src="/socket.io/socket.io.js"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!----Ajouts pour form bootstrap--->
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
@@ -13,26 +31,50 @@
     <!------ Fin ajouts bootstrap ---------->
 </head>
 <body>
-
-<section class="get-in-touch">
-    <h1 class="title">Login</h1>
-    <form id="log-form" action="" class="contact-form row">
-        <div class="form-field col-lg-6">
-            <input id="username" class="input-text js-input" autocomplete="off" type="text" required>
-            <label class="label" for="username">Username</label>
+<header>
+    <nav>
+        <nav class="navbar navbar-expand-sm navbar-dark">
+            <a class="logo mr-3" href="/"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav">
+                    <li class="nav-item" id="accueil">
+                        <a class="nav-link text-left" href="/">Accueil</a>
+                    </li>
+                    <li class="nav-item" id="lienReg">
+                        <a class="nav-link text-left" href="/register">Créer un compte</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </nav>
+    <!-- lancer les événements de scroll et de resize -->
+    <script>event.addEvent()</script>
+</header>
+<div class="get-in-touch">
+    <div id="rect">
+        <h1 class="title">Connexion</h1>
+        <form id="log-form" action="" class="contact-form row">
+            <div class="form-field col-lg-6">
+                <input id="username" class="input-text js-input" autocomplete="off" type="text" required>
+                <label class="label" for="username">Nom d'utilisateur</label>
+            </div>
+            <div class="form-field col-lg-6 ">
+                <input id="password" class="input-text js-input" autocomplete="off" type="password" required>
+                <label class="label" for="password">Mot de passe</label>
+            </div>
+            <div class="form-field col-lg-12">
+                <input class="submit-btn" type="submit" value="Connexion !">
+            </div>
+        </form>
+        <div class="directionsButton">
+            <li style="display: inline"><a href="/register"> <div class="directionsReg">Inscription</div></a></li><br>
+            <li style="display: inline"><a href="/"> <div class="directionsLog">Page d'accueil</div></a></li>
         </div>
-        <div class="form-field col-lg-6 ">
-            <input id="password" class="input-text js-input" autocomplete="off" type="password" required>
-            <label class="label" for="password">Password</label>
-        </div>
-        <div class="form-field col-lg-12">
-            <input class="submit-btn" type="submit" value="Connexion !">
-        </div>
-    </form>
-</section>
-
-<br> <a href="/register">Don't have an account ? Sign up !</a>
-
+    </div>
+</div>
 </body>
 <script>
     let socket = io();

@@ -1,7 +1,78 @@
-.get-in-touch {
-    max-width: 800px;
-    margin: 50px auto;
+/*Pareil*/
+
+html {
     position: relative;
+    min-height: 100%;
+}
+
+body {
+    background-image: url(../Images/ban.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: top;
+}
+
+
+.bg-black {
+    background-color: black;
+}
+
+.logo {
+    background-image: url(../Images/logo.png);
+    background-size: cover;
+    width: 120px;
+    height: 35px;
+}
+
+.icon {
+    width: 28px;
+    height: 28px;
+}
+
+nav {
+    margin-top: 0%;
+    position: fixed;
+    width: 100%;
+    transition: 1s;
+}
+
+nav.black {
+    z-index: 10;
+    background: black;
+    display: inline-block;
+    padding: 0 25px;
+}
+
+.container {
+    text-align: justify;
+}
+
+
+/* body */
+
+/* fin body */
+
+
+/*formulaire*/
+
+#rect{
+    max-width: 200%;
+    margin-inside: 30px;
+    max-height: 50%;
+    border-radius: 20px;
+    /*background-color: transparent;*/
+    padding: 20px;
+    background-color: rgba(0, 0, 0, 0.8);
+
+}
+
+.get-in-touch {
+    padding-top: 12%;
+    padding-bottom: 15%;
+    max-width: 90%;
+    position: absolute;
+    top: 45%; left: 50%;
+    transform: translate(-50%, -50%);
 }
 .get-in-touch .title {
     text-align: center;
@@ -10,27 +81,30 @@
     font-size: 3.2em;
     line-height: 48px;
     padding-bottom: 48px;
-    color: #5543ca;
-    background: #5543ca;
-    background: -moz-linear-gradient(left,#f4524d  0%,#5543ca 100%) !important;
-    background: -webkit-linear-gradient(left,#f4524d  0%,#5543ca 100%) !important;
-    background: linear-gradient(to right,#f4524d  0%,#5543ca  100%) !important;
+    color: #A91C29;
+    background: #A91C29;
+    background: -moz-linear-gradient(left, #0062c5 0%,#A91C29 100%) !important;
+    background: -webkit-linear-gradient(left, #0062c5 0%,#A91C29 100%) !important;
+    background: linear-gradient(to right, #0062c5 0%,#A91C29  100%) !important;
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
 }
 .contact-form .form-field {
     position: relative;
     margin: 32px 0;
+    background-color: transparent;
 }
 .contact-form .input-text {
+    background-color: transparent;
     display: block;
     width: 100%;
     height: 36px;
     border-width: 0 0 2px 0;
-    border-color: #5543ca;
+    border-color: #FFFFFF;
     font-size: 18px;
     line-height: 26px;
     font-weight: 400;
+    color: #FFFFFF;
 }
 .contact-form .input-text:focus {
     outline: none;
@@ -43,11 +117,11 @@
 .contact-form .label {
     position: absolute;
     left: 20px;
-    bottom: 11px;
+    bottom: 25px;
     font-size: 18px;
     line-height: 26px;
     font-weight: 400;
-    color: #5543ca;
+    color: #FFFFFF;
     cursor: text;
     transition: -webkit-transform .2s ease-in-out;
     transition: transform .2s ease-in-out;
@@ -57,7 +131,40 @@
 .contact-form .submit-btn {
     display: inline-block;
     background-color: #000;
-    background-image: linear-gradient(125deg,#a72879,#064497);
+    background-image: linear-gradient(125deg, #0062c5,#A91C29);
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 16px;
+    padding: 8px 16px;
+    border: none;
+    width:200px;
+    cursor: pointer;
+}
+
+.directionsReg {
+    position: absolute;
+    margin-left: 68%;
+    margin-top: -15px;
+    display: inline-block;
+    background-color: #000;
+    background-image: linear-gradient(125deg, #0062c5,#A91C29);
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 16px;
+    padding: 8px 16px;
+    border: none;
+    width:200px;
+    cursor: pointer;
+}
+.directionsLog {
+    position: absolute;
+    margin-left: 68%;
+    margin-top: -90px;
+    display: inline-block;
+    background-color: #000;
+    background-image: linear-gradient(125deg, #0062c5,#A91C29);
     color: #fff;
     text-transform: uppercase;
     letter-spacing: 2px;
