@@ -36,7 +36,7 @@
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item" id="jouer">
-                        <a class="nav-link text-left" href="/waitingRoom">ABANDONNER</a>
+                        <a class="nav-link text-left" onclick="socket.emit('giveUp')" href="/waitingRoom">ABANDONNER</a>
                     </li>
                 </ul>
             </div>

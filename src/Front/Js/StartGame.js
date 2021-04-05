@@ -335,10 +335,28 @@
 
     socket.on("Victory",()=>{
         alert("Victory!")
+        for (let i = 0; i < 100; i++) {
+            let el = document.getElementById(i.toString()),
+                elClone = el.cloneNode(true);
+            el.parentNode.replaceChild(elClone, el);
+        }
     })
 
     socket.on("Defeat",()=>{
         alert("Defeat!")
+        for (let i = 0; i < 100; i++) {
+            let el = document.getElementById(i.toString()),
+                elClone = el.cloneNode(true);
+            el.parentNode.replaceChild(elClone, el);
+        }
+    })
+    socket.on("winByFF",()=>{
+        alert("Your opponent gave up!")
+        for (let i = 0; i < 100; i++) {
+            let el = document.getElementById(i.toString()),
+                elClone = el.cloneNode(true);
+            el.parentNode.replaceChild(elClone, el);
+        }
     })
 
 
