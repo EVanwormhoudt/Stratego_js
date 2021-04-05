@@ -23,6 +23,81 @@
         conteneurJeu.appendChild(tbl);
     }
 
+    tableauPionsPris = () => {
+
+        let pieceName = ["Maréchal","Général","Colonels","Commandants","Capitaines","Lieutenants","Sergents","Démineurs","Eclaireurs","Espion","Drapeau","Bombes"];
+        let pieceMax = [1,1,2,3,4,4,4,5,8,1,1];
+        let conteneurJeu = document.getElementById("conteneurDuJeu");
+
+        let tbl = document.createElement('table')
+        tbl.id="tableauPionsPris";
+
+        let tblcaption = document.createElement('caption');
+        tblcaption.textContent="Tableau des pièces prises";
+
+        let tblThead= document.createElement('thead')
+        let rowThead = document.createElement('tr');
+        //rowThead.innerHTML="<td>Pièces Rouges prises</td><td>Pièces Bleues prises</td>";
+        tblThead.appendChild(rowThead);
+
+        let tblTbody= document.createElement('tbody');
+        let compteur=0;
+
+        for(let i=10;i>=0;i--){
+            let rowTbody = document.createElement('tr');
+            let typePiece = document.createElement("td");
+            typePiece.textContent=pieceName[compteur];
+            rowTbody.appendChild(typePiece);
+
+            for(let a=0;a<2;a++){
+                let colonneTbody = document.createElement("td");
+
+                let img = document.createElement("img")
+                let color = (a==1) ? "r" : "b";
+                img.src  = "../Images/icons/"+i+color+".svg";
+                img.classList.add(i + "strength")
+                img.style.height = "65px";
+                img.style.width = "55px";
+
+                colonneTbody.appendChild(img);
+                let txt = document.createElement("span");
+                txt.innerHTML="<span id="+i+color+">0</span>/"+pieceMax[compteur];
+                colonneTbody.appendChild(txt);
+
+                rowTbody.appendChild(colonneTbody);
+            }
+            if(compteur!=pieceName.length)compteur++;
+            tblTbody.appendChild(rowTbody);
+        }
+
+        let bombeRow = document.createElement('tr');
+        let bomdeTd1 = document.createElement('td');
+        bomdeTd1.textContent="Bombes";
+        bombeRow.appendChild(bomdeTd1);
+
+        for(let a=0;a<2;a++){
+            let bombeTDnext = document.createElement("td");
+            let img = document.createElement("img")
+            let color = (a==1) ? "r" : "b";
+            img.src  = "../Images/icons/100"+color+".svg";
+            img.classList.add(100 + "strength")
+            img.style.height = "65px";
+            img.style.width = "55px";
+            bombeTDnext.appendChild(img);
+            let txt = document.createElement("span");
+            txt.innerHTML="<span id="+100+color+">0</span>/6";
+            bombeTDnext.appendChild(txt);
+            bombeRow.appendChild(bombeTDnext);
+        }
+        tblTbody.appendChild(bombeRow);
+
+        tbl.appendChild(tblcaption);
+        tbl.appendChild(tblThead);
+        tbl.appendChild(tblTbody);
+
+        conteneurJeu.appendChild(tbl);
+    }
+
     tableauStratego();
 
     socket.emit("game");
@@ -252,12 +327,14 @@
     })
 
     socket.on("gameBegin",(player)=> {
+        let conteneurDuJeu = document.getElementById("conteneurDuJeu");
+        conteneurDuJeu.removeChild(document.getElementById("tableauPionsJ"+player)); // Supprimer le tableau des pions
+
+        tableauPionsPris();
+
         document.getElementById("ready").parentNode.removeChild(document.getElementById("ready")); // Supprime le bouton "Prêt"
         document.getElementById("aleatoire").parentNode.removeChild(document.getElementById("aleatoire")); // Supprime le bouton "Pièces aléatoires"
-        let tableID = (player === 1) ? "tableauPionsJ1" : "tableauPionsJ2";
-
-        let tab = document.getElementById(tableID);
-        tab.children = null;
+        
         let caseDispo = (player === 1) ? 0 : 60;
 
         for (let i = caseDispo; i < caseDispo + 40; i++) {
@@ -313,37 +390,59 @@
         newLocation.appendChild(previousLocation);
     });
 
-    socket.on("attackLost",(start,end,piece,player)=>{
+    socket.on("attackLost",(start,end,piece,player,looser)=>{
+        let playerColor = (player==1) ? "r" : "b";
+        document.getElementById(looser+playerColor).textContent++;
+        console.log("attackLost : La piece de couleur ",playerColor," et de force ",looser," meurt.")
+
         document.getElementById(start).removeChild(document.getElementById(start).firstChild)
         let newLocation = document.getElementById(end.toString())
         newLocation.firstChild.src = (player === 1) ? "../Images/icons/"+piece+"b.svg" : "../Images/icons/"+ piece+"r.svg";
         newLocation.firstChild.style.height = "65px";
         newLocation.firstChild.style.width = "55px";
+
     })
 
-    socket.on("attackWon",(start,end)=>{
+    socket.on("attackWon",(start,end,looser,player)=>{
+        let ennemyColor = (player==1) ? "b" : "r";
+        document.getElementById(looser+ennemyColor).textContent++;
+        console.log("attackWon : La piece de couleur ",ennemyColor," et de force ",looser," meurt.")
+
         let previousLocation = document.getElementById(start.toString()).firstChild
         let newLocation = document.getElementById(end.toString())
         newLocation.removeChild(newLocation.firstChild)
         newLocation.appendChild(previousLocation);
     });
 
-    socket.on("attackEven",(start,end)=>{
+    socket.on("attackEven",(start,end,looser,player)=>{
+        document.getElementById(looser+"b").textContent++;
+        document.getElementById(looser+"r").textContent++;
+        console.log("attackEven : La piece de couleur rouge et de force ",looser," meurt.")
+        console.log("attackEven : La piece de couleur bleue et de force ",looser," meurt.")
+
         document.getElementById(start).removeChild(document.getElementById(start).firstChild)
         document.getElementById(end).removeChild(document.getElementById(end).firstChild)
     });
 
-    socket.on("defenseWon",(start)=>{
+    socket.on("defenseWon",(start,looser,ennemyPlayer)=>{
+        let ennemyColor = (ennemyPlayer==1) ? "r" : "b";
+        document.getElementById(looser+ennemyColor).textContent++;
+        console.log("defenseWon : La piece de couleur ",ennemyColor," et de force ",looser," meurt.")
+
         document.getElementById(start).removeChild(document.getElementById(start).firstChild)
     })
 
-    socket.on("defenseLost",(start,end,piece,player)=>{
+    socket.on("defenseLost",(start,end,piece,ennemyPlayer,looser)=>{
+        let playerColor = (ennemyPlayer==1) ? "b" : "r";
+        document.getElementById(looser+playerColor).textContent++;
+        console.log(" defenseLost : La piece de couleur ",playerColor," et de force ",looser," meurt.")
+
         let previousLocation = document.getElementById(start.toString()).firstChild
 
         let newLocation = document.getElementById(end.toString())
         newLocation.removeChild(newLocation.firstChild)
         newLocation.appendChild(previousLocation);
-        newLocation.firstChild.src = (player === 1) ?  "../Images/icons/"+piece+"r.svg" : "../Images/icons/"+ piece+"b.svg";
+        newLocation.firstChild.src = (ennemyPlayer === 1) ?  "../Images/icons/"+piece+"r.svg" : "../Images/icons/"+ piece+"b.svg";
         newLocation.firstChild.style.height = "65px";
         newLocation.firstChild.style.width = "55px";
     });

@@ -3,12 +3,12 @@ let EventHandler = (function(){
     //Event for when the drag start, that store the data and id of what's moving, and add the position where it can be moved
     function dragStart(obj) {
 
-        console.log(obj)
+        //console.log(obj)
         obj.dataTransfer.setData('text', obj.target.parentElement.id);
         let data = obj.dataTransfer.getData("text");
-        console.log( obj.dataTransfer)
-        console.log(data)
-        console.log(document.getElementById(data))
+        // console.log( obj.dataTransfer)
+        // console.log(data)
+        // console.log(document.getElementById(data))
         let cell = document.getElementById(data);
         id = parseInt(cell.id);
         addDot(obj);
@@ -28,14 +28,14 @@ let EventHandler = (function(){
     function drop(obj) {
         if (obj.target.parentElement.id !== id && ((obj.target.parentElement.style.backgroundImage !== "" && obj.target.nodeName === "IMG") ||
             (obj.target.style.backgroundImage !== "" && obj.target.nodeName === "TD"))) {      //check if the place to drop is a valid place
-            console.log(obj.target.nodeName)
+            //console.log(obj.target.nodeName)
             if (obj.target.nodeName === "IMG") {
 
                 let i = 0
-                console.log(i)
+                //console.log(i)
                 socket.emit("getTurn")
                 socket.on("sendTurn", (canPlay) => {
-                    console.log("j'attaque")
+                    //console.log("j'attaque")
                     if (canPlay && i === 0) {
                         socket.emit("attack", id, obj.target.parentElement.id);      //same as drop()
                     }
@@ -46,10 +46,10 @@ let EventHandler = (function(){
                 socket.emit("getTurn")
 
                 socket.on("sendTurn", (canPlay) => {
-                    console.log("i : " +i)
+                    // console.log("i : " +i)
 
-                    console.log("target id " + obj.target.id)
-                    console.log("id : " +id)
+                    // console.log("target id " + obj.target.id)
+                    // console.log("id : " +id)
                     if (canPlay && i === 0) {
                         console.log(i)
                         socket.emit("move", id, obj.target.id); //same as drop()
@@ -67,7 +67,7 @@ let EventHandler = (function(){
             obj.preventDefault();
             removeDot();//and then remove the indicators of moves possibles
             let tmp =  document.getElementById(obj.target.parentElement.id)
-            console.log(obj)
+            //console.log(obj)
             tmp.style.backgroundColor = "";
             tmp.style.opacity = "";
 
@@ -88,11 +88,11 @@ let EventHandler = (function(){
             if(obj.target.nodeName === "IMG"){
 
                 let i = 0
-                console.log(i)
+                // console.log(i)
                 socket.emit("getTurn")
                 socket.on("sendTurn", (canPlay) => {
                         if (canPlay && i === 0){
-                            console.log("attack")
+                            // console.log("attack")
                             socket.emit("attack", id, obj.target.parentElement.id);      //same as drop()
                         }
                         i++
@@ -104,8 +104,8 @@ let EventHandler = (function(){
                     socket.emit("getTurn")
 
                     socket.on("sendTurn", (canPlay) => {
-                        console.log(i)
-                        console.log("sending")
+                        // console.log(i)
+                        // console.log("sending")
                         if (canPlay && i === 0)
                             socket.emit("move", id, obj.target.id); //same as drop()
                         i++
