@@ -20,7 +20,6 @@
     <!-- socket io-->
     <script src="/socket.io/socket.io.js"></script>
 </head>
-
 <!-- header -->
 <header>
     <nav>
@@ -31,6 +30,10 @@
             </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
+                    <!---Judith Ajout bonjour pseudo-->
+                    <li class="nav-item" id="bonjour">
+                        <p class="nav-link text-left">Bonjour <span id="nomUtilisateur"></span> ! </p>
+                    </li>
                     <li class="nav-item" id="jouer">
                         <a class="nav-link text-left" href="/waitingRoom">Jouer</a>
                     </li>
@@ -39,6 +42,10 @@
                     </li>
                     <li class="nav-item" id="lienReg">
                         <a class="nav-link text-left" href="/register">Créer un compte</a>
+                    </li>
+                    <!---Judith Ajout déconnexion-->
+                    <li class="nav-item" id="deconnexion">
+                        <a class="nav-link text-left" href="/logout" >Déconnexion</a>
                     </li>
                 </ul>
             </div>
@@ -55,14 +62,14 @@
     <script>event.addEvent()</script>
 </header>
 
-<body>
+<body >
 <div class="main">
     <div class="container">
         <div class="row">
             <div class="col-sm-1"></div>
             <div class="col-md-7 bg-black text-secondary">
                 <h2><img src="../Images/icon.png" class="icon mb-2 mr-1"/>Bienvenue sur Stratego</h2>
-                <a class="logo mr-3" href="accueil.html"></a>
+                <a class="logo mr-3" href="/"></a>
                 <p>Bonjour à tous,</p>
                 <p>Bienvenue sur Stratego, nous sommes ravie de vous recevoir sur notre champs de bataille et espérons que vous êtes prêts pour la guerre!</p>
                 <p>Description du jeu:</p>
@@ -103,10 +110,10 @@
     </div>
 </div>
 
-    <!-- footer -->
-    <div id="footer">
-        <p>&copy; Stratego game - Nom Prénom - Association CIR2 - Année 2020/2021</p>
-    </div>
+<!-- footer -->
+<div id="footer">
+    <p>&copy; Stratego game - Nom Prénom - Association CIR2 - Année 2020/2021</p>
+</div>
 </body>
 
 <script>let socket = io()</script>
