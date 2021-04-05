@@ -1,16 +1,16 @@
 html{
     background-image: url("../Images/logo.jpg");
-    background-size: 100%; 
+    background-size: 100%;
     background-repeat: no-repeat;
-} 
-    
-    body {
+}
+
+body {
 
     display: grid;
     grid-template-areas: "baniere baniere"
                          "texte aside"
-                         "footer footer" ; 
-   padding-left: 115px;
+                         "footer footer" ;
+    padding-left: 115px;
 }
 
 #bloc_page
@@ -35,8 +35,8 @@ header
 }
 
 .separateur{
-    width:99%; 
-    height:200px;  
+    width:99%;
+    height:200px;
 
 }
 
@@ -126,13 +126,13 @@ article
 }
 
 article{
-    grid-area: texte; 
+    grid-area: texte;
 }
 
 article p
 {
     font-size: 0.8em;
-    
+
 }
 
 article p {
@@ -140,19 +140,19 @@ article p {
     animation-name: slidein;
     animation-iteration-count: 1;
     animation-direction: alternate;
-  }
-  
-  /*@keyframes slidein {*/
-  /*  from {*/
-  /*    margin-left:100%;*/
-  /*    width:300%*/
-  /*  }*/
-  
-  /*  to {*/
-  /*    margin-left:0%;*/
-  /*    width:100%;*/
-  /*  }*/
-  /*}*/
+}
+
+/*@keyframes slidein {*/
+/*  from {*/
+/*    margin-left:100%;*/
+/*    width:300%*/
+/*  }*/
+
+/*  to {*/
+/*    margin-left:0%;*/
+/*    width:100%;*/
+/*  }*/
+/*}*/
 
 aside
 {
@@ -162,61 +162,61 @@ aside
     padding: 10px;
     color: whitesmoke;
     font-size: 0.9em;
-    grid-area: aside; 
+    grid-area: aside;
 }
 .text{
-    grid-area:texte; 
+    grid-area:texte;
 }
 
 
 .hp{
     padding: 20px;
 
-    border-color: black; 
+    border-color: black;
 }
 
 footer{
-    grid-area: footer ; 
-    text-align: center; 
-    margin-right: 100px; 
+    grid-area: footer ;
+    text-align: center;
+    margin-right: 100px;
     bottom:0;
 }
 
 @media screen and (max-width: 1024px) {
-   
+
     body{
-        margin-right:10px; 
-        padding-left:10px; 
+        margin-right:10px;
+        padding-left:10px;
         background:url('../Images/logo.jpg')no-repeat center center fixed;
         background-size: 100%;
 
     }
     .separateur{
-        width:650px; 
-        padding-left:10px; 
+        width:650px;
+        padding-left:10px;
     }
 
     .banniere{
-        width:600px; 
-        height:200px;  
+        width:600px;
+        height:200px;
         margin-left: 10%;
     }
 
     header{
-        padding-left: 5px; 
-        margin-right: 50px; 
-      
+        padding-left: 5px;
+        margin-right: 50px;
+
     }
     section h, footer h, nav a{
-        text-transform: none; 
+        text-transform: none;
     }
     article{
-        padding-left:10%; 
+        padding-left:10%;
     }
-    
+
     aside{
-        margin-left:5px; 
-        height:10%; 
+        margin-left:5px;
+        height:10%;
     }
 
     #bloc_page{
@@ -224,7 +224,7 @@ footer{
         max-width:900px;
         margin:auto;
         min-width:320px;
-        
+
     }
 
     footer{

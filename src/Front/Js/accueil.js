@@ -3,14 +3,13 @@ let reg = document.getElementById("lienReg")
 let game = document.getElementById("jouer")
 let deco = document.getElementById("deconnexion")
 let wel = document.getElementById("bonjour")
-//let hidden = false;
+
 socket.emit("isSession","");
 
 
 socket.on("onSession", data=>{
     console.log(data);
     if(data){
-        //judith ajout affichage des liens selon si on est connecté ou non
         log.style.display = "none";
         reg.style.display = "none";
         deco.style.display = "block";
