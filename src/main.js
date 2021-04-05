@@ -45,6 +45,7 @@ for(let i = 0;i<roomnbr;i++){
     rooms[i] = new Array(3);
     rooms[i][0] = 0;
 }
+scoreHandler.readScore()
 
 // Le serveur ecoute sur ce port
 http.listen(8880, () => {
@@ -90,17 +91,20 @@ app.get("/register", (req, res) => {
 
 // redirige vers la page d'accueil si l'URL contient '/logout'
 app.get('/logout', (req,res) => {
-    req.session = null;
+    req.session.destroy();
     res.redirect('/');
 });
 
 // redirige vers la page d'attente si l'URL contient '/waitingRoom'
 app.get('/waitingRoom', (req,res) => {
+
     if(req.session.username) {
         res.sendFile(__dirname + '/Front/Html/salleAttente.html');
     }
-    else
-        res.redirect('/');
+    else{
+        res.username = "cquetuveux"
+        res.sendFile(__dirname + '/Front/Html/salleAttente.html');
+    }
 });
 
 // redirige vers la page de jeu si l'URL contient '/game'
@@ -197,14 +201,22 @@ io.on('connection', (socket) => {
                 games[socket.handshake.session.room].winner = socket.handshake.session.player % 2 + 1;
                 scoreHandler.writePersonnalScore(games[socket.handshake.session.room].exportData());
                 scoreHandler.writeScore(games[socket.handshake.session.room].exportData());
-                games[socket.handshake.session.room][0] = 0
-                games[socket.handshake.session.room][1] = null;
-                games[socket.handshake.session.room][2] = null;
             }
-            socket.broadcast.to("room"+socket.handshake.session.room).emit("winByFF")
             games[socket.handshake.session.room][0] = 0
             games[socket.handshake.session.room][1] = null;
             games[socket.handshake.session.room][2] = null;
+            let srvSockets = io.to[socket.handshake.session.room].sockets.sockets;
+            srvSockets.forEach(user => {
+                if (user.handshake.session.room === socket.handshake.session.room){
+                    user.handshake.session.player = undefined;
+                    user.handshake.session.room = undefined;
+                    user.handshake.session.ready = undefined;
+                }
+            });
+            socket.handshake.session.player = undefined;
+            socket.handshake.session.room = undefined;
+            socket.handshake.session.ready = undefined;
+
         }
     });
 
@@ -361,6 +373,18 @@ io.on('connection', (socket) => {
         games[socket.handshake.session.room][0] = 0
         games[socket.handshake.session.room][1] = null;
         games[socket.handshake.session.room][2] = null;
+        let srvSockets = io.to[socket.handshake.session.room].sockets.sockets;
+        srvSockets.forEach(user => {
+            if (user.handshake.session.room === socket.handshake.session.room){
+                user.handshake.session.player = undefined;
+                user.handshake.session.room = undefined;
+                user.handshake.session.ready = undefined;
+            }
+        });
+        socket.handshake.session.player = undefined;
+        socket.handshake.session.room = undefined;
+        socket.handshake.session.ready = undefined;
+
     })
 
     socket.on("getTurn",()=>{
@@ -419,6 +443,19 @@ io.on('connection', (socket) => {
             games[socket.handshake.session.room][0] = 0
             games[socket.handshake.session.room][1] = null;
             games[socket.handshake.session.room][2] = null;
+
+            let srvSockets = io.to[socket.handshake.session.room].sockets.sockets;
+            srvSockets.forEach(user => {
+                if (user.handshake.session.room === socket.handshake.session.room){
+                    user.handshake.session.player = undefined;
+                    user.handshake.session.room = undefined;
+                    user.handshake.session.ready = undefined;
+                }
+            });
+            socket.handshake.session.player = undefined;
+            socket.handshake.session.room = undefined;
+            socket.handshake.session.ready = undefined;
+
         }
 
     });

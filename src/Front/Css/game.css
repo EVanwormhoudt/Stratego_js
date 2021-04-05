@@ -67,3 +67,8 @@ td{
     height: 100px;
     width: 100px;
 }
+
+/****Ajout Manon - visibilité du texte en jeu*****/
+#body{
+    color:white;
+}

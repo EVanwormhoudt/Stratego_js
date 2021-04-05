@@ -19,6 +19,8 @@
 
     <!-- socket io-->
     <script src="/socket.io/socket.io.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <!-- header -->
 <header>
@@ -102,6 +104,14 @@
                 <p>Il est possible de jouer en tant que 'inviter'. Pour cela il vous suffit de rentrer un pseudo.</p>
                 <p>Une fois que vous êtes enregistré, vous n'avez plus qu'à cliquer sur "Jouer"</p>
                 <p>Vous vous retrouvrez alors dans la salle d'attente en attendant un autre joueur.</p>
+                <br>
+                <p> Jouer en tant qu'invité : </p>
+                <form id="loginForm" action="" class="logForm">
+                    <div class="form-field">
+                        <input id="invite" class="input-text" autocomplete="off" type="text" placeholder="Nom d'utilisateur" required/>
+                        <input class="submit-btn" type="submit" value=" Jouer !">
+                    </div>
+                </form>
             </div>
             <div class="col-sm-1"></div>
 
@@ -118,4 +128,5 @@
 
 <script>let socket = io()</script>
 <script src="../Js/accueil.js"></script>
+<script src="../Js/modules/logger.js"></script>
 </html>

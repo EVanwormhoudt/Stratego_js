@@ -36,21 +36,20 @@ let scoreHandler = (function (){
         readScore(index){
             fs.readFile('./Back/Data/Scores.json', (err, data) => {
                 if (err) throw err;
-                const scores = JSON.parse(data);
-                return scores.scores[index];
+                const scoresJson = JSON.parse(data);
+                scores = scoresJson
             });
-
         },
         writePersonnalScore(newScore) {
             let sql = "INSERT INTO scores VALUES (default,?,?,?)";
             let winner,looser;
             if (newScore.winner === 1){
-                winner = newScore.joueur1.name;
-                looser = newScore.joueur2.name;
+                winner = newScore.joueur1;
+                looser = newScore.joueur2;
             }
             else{
-                winner = newScore.joueur2.name;
-                looser = newScore.joueur1.name;
+                winner = newScore.joueur2;
+                looser = newScore.joueur1;
             }
 
             con.query(sql, [winner,looser,newScore.time], (err, result) => {
@@ -64,7 +63,7 @@ let scoreHandler = (function (){
                     });
                 }
                 for(let i in newScore.tabj2){
-                    con.query(sql, [result.insertId,i+12,newScore.tabj1[i].nombreRestant], (err, result2) => {
+                    con.query(sql, [result.insertId,(parseInt(i)+12),newScore.tabj1[i].nombreRestant], (err, result2) => {
                         if (err) throw err;
                     });
                 }
@@ -83,7 +82,6 @@ let scoreHandler = (function (){
                             let tab = []
                             for(let i of result2){
                                 tab.push(i.quantity);
-
                             }
                             let Data = {
                                 winner: i.winner,

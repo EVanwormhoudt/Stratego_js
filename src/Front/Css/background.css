@@ -49,3 +49,35 @@ body {
     margin: 0 1%;
 }
 /* fin body */
+.modal {
+    display: none;
+    position: center;
+    z-index: 1;
+    padding-top: 10%;
+    overflow: auto;
+}
+
+.modal-content {
+    text-align: center;
+    font-size: 20px;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.modal-button {
+    position: center;
+    display: inline-block;
+    background-color: #000;
+    color: #fff;
+    letter-spacing: 2px;
+    font-size: 16px;
+    padding: 8px 16px;
+    border: none;
+    width: 100px;
+    cursor: pointer;
+    margin-bottom: 2px;
+    margin-left: 45%;
+}
