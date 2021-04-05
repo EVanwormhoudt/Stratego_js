@@ -9,7 +9,12 @@ let logger = (function(){
                 login: username,
             },
             success: () => {
-                window.location.href = "/";
+                if(window.location.pathname === '/'){
+                    window.location.href="/waitingRoom";
+                }
+                else if(window.location.pathname === '/login' || window.location.pathname === '/register'){
+                    window.location.href="/";
+                }
             },
         });
     }

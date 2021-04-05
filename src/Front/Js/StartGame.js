@@ -333,8 +333,12 @@
         newLocation.firstChild.style.width = "55px";
     });
 
+    /**Judith - modal window victory/defeat/ff**/
     socket.on("Victory",()=>{
-        alert("Victory!")
+        //alert("Victory!")
+        let modal = document.getElementById("modal");
+        modal.style.display = "block";
+        document.getElementById("modalText").innerHTML = 'Félicitations, vous avez gagné !';
         for (let i = 0; i < 100; i++) {
             let el = document.getElementById(i.toString()),
                 elClone = el.cloneNode(true);
@@ -343,15 +347,22 @@
     })
 
     socket.on("Defeat",()=>{
-        alert("Defeat!")
+        //alert("Defeat!")
+        let modal = document.getElementById("modal");
+        modal.style.display = "block";
+        document.getElementById("modalText").innerHTML = 'Dommage, vous avez perdu !';
         for (let i = 0; i < 100; i++) {
             let el = document.getElementById(i.toString()),
                 elClone = el.cloneNode(true);
             el.parentNode.replaceChild(elClone, el);
         }
     })
+
     socket.on("winByFF",()=>{
-        alert("Your opponent gave up!")
+        //alert("Your opponent gave up!")
+        let modal = document.getElementById("modal");
+        modal.style.display = "block";
+        document.getElementById("modalText").innerHTML = "Votre adversaire s'est rendu.";
         for (let i = 0; i < 100; i++) {
             let el = document.getElementById(i.toString()),
                 elClone = el.cloneNode(true);

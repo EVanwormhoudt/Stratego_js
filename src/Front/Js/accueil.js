@@ -25,3 +25,14 @@ socket.on("onSession", data=>{
         wel.style.display = "none";
     }
 })
+
+/**Judith - Connexion invité depuis l'accueil**/
+let formInvit = document.getElementById("loginForm");
+let input = document.getElementById("invite");
+
+formInvit.addEventListener('submit', event => {
+    event.preventDefault();
+    console.log('Invité connecté :', input.value);
+    logger.sendLogin(input.value);
+
+});
