@@ -56,10 +56,10 @@
                     <!-- PLATEAU -->
                     <div id="conteneurDuJeu" style="--aspect-ratio: 1/1;"></div>
 
-                <!--
-                <script> let socket = io(); </script>
-                <script src="../Js/StartGame.js"></script>
-                -->
+                    <!--
+                    <script> let socket = io(); </script>
+                    <script src="../Js/StartGame.js"></script>
+                    -->
                 </div>
             </div>
 
@@ -78,8 +78,8 @@
                     <!-- MESSAGE -->
                     <div style="font-size:20px;">
                         <div id="message"></div>
-                        <div id="voirTableauDesPieces" onclick="socket.emit('tableauPiecesJoueurServer');">Voir le tableau des pièces du joueur</div>
-                        <div id="grilleCommune" onclick="socket.emit('grilleCommuneServer');">Voir plateau en données.</div>
+                        <!-- <div id="voirTableauDesPieces" onclick="socket.emit('tableauPiecesJoueurServer');">Voir le tableau des pièces du joueur</div>
+                        <div id="grilleCommune" onclick="socket.emit('grilleCommuneServer');">Voir plateau en données.</div> -->
                         <div><button type="button" id='ready' onclick="socket.emit('readyButtonServer')">Pret</button></div>
                         <!-- Mettre un bouton qui permet de supprimer une pièce déjà posée sur le plateau (réarrangement après toutes les pièces mises) -->
                         <div><button type="button" id='aleatoire' onclick="socket.emit('pieceAleatoireServer')">Mise en place des pièces aléatoires</button></div>

@@ -20,17 +20,20 @@
     <!-- socket io-->
     <script src="/socket.io/socket.io.js"></script>
 </head>
-
 <!-- header -->
 <header>
     <nav>
         <nav class="navbar navbar-expand-sm navbar-dark">
-            <a class="logo mr-3" href="/"></a>
+            <a class="logo mr-3" href="accueil.html"></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
+                    <!---Judith Ajout bonjour pseudo-->
+                    <li class="nav-item" id="bonjour">
+                        <p class="nav-link text-left">Bonjour <span id="nomUtilisateur"></span> ! </p>
+                    </li>
                     <li class="nav-item" id="jouer">
                         <a class="nav-link text-left" href="/waitingRoom">Jouer</a>
                     </li>
@@ -39,6 +42,10 @@
                     </li>
                     <li class="nav-item" id="lienReg">
                         <a class="nav-link text-left" href="/register">Créer un compte</a>
+                    </li>
+                    <!---Judith Ajout déconnexion-->
+                    <li class="nav-item" id="deconnexion">
+                        <a class="nav-link text-left" href="/logout" onClick="action()">Déconnexion</a>
                     </li>
                 </ul>
             </div>
@@ -55,14 +62,14 @@
     <script>event.addEvent()</script>
 </header>
 
-<body>
+<body >
 <div class="main">
     <div class="container">
-        <!-- Corp entre les bannière -->
         <div class="row">
-            <!-- DIV de gauche [description du jeu] -->
-            <div class="col-md-8 bg-black text-secondary">
+            <div class="col-sm-1"></div>
+            <div class="col-md-7 bg-black text-secondary">
                 <h2><img src="../Images/icon.png" class="icon mb-2 mr-1"/>Bienvenue sur Stratego</h2>
+                <a class="logo mr-3" href="/"></a>
                 <p>Bonjour à tous,</p>
                 <p>Bienvenue sur Stratego, nous sommes ravie de vous recevoir sur notre champs de bataille et espérons que vous êtes prêts pour la guerre!</p>
                 <p>Description du jeu:</p>
@@ -87,8 +94,7 @@
                 <p>Le but du jeu est de capturer le Drapeau de l'adversaire ou d'éliminer assez de pièces adverses afin que l'adversaire ne puisse plus faire de déplacements.</p>
             </div>
 
-            <!-- DIV de groite [explication de connexion] -->
-            <div class="col-md-4 bg-black text-secondary">
+            <div class="col-md-3 bg-black text-secondary">
                 <h2><img src="../Images/icon.png" class="icon mb-2 mr-1"/>Informations</h2>
                 <p>Jouer à Stratego: c'est facile !</p>
                 <p>Vous trouverez sur votre gauche la description du jeu.</p>
@@ -97,15 +103,17 @@
                 <p>Une fois que vous êtes enregistré, vous n'avez plus qu'à cliquer sur "Jouer"</p>
                 <p>Vous vous retrouvrez alors dans la salle d'attente en attendant un autre joueur.</p>
             </div>
+            <div class="col-sm-1"></div>
+
 
         </div>
     </div>
 </div>
 
-    <!-- footer -->
-    <div id="footer">
-        <p>&copy; Stratego game - Nom Prénom - Association CIR2 - Année 2020/2021</p>
-    </div>
+<!-- footer -->
+<div id="footer">
+    <p>&copy; Stratego game - Nom Prénom - Association CIR2 - Année 2020/2021</p>
+</div>
 </body>
 
 <script>let socket = io()</script>

@@ -97,7 +97,7 @@ class Game{
                 this.joueur2.tableOfPawns = this.joueur2.decrNombreRestantDuType(this.grille[Math.trunc(e/10)][e%10].force)
             }
             else{
-                this.joueur1.tableOfPawns = this.joueur1.decrNombreRestantDuType(this.grille[Math.trunc(s/10)][s%10].force)
+                this.joueur1.tableOfPawns = this.joueur1.decrNombreRestantDuType(this.grille[Math.trunc(e/10)][e%10].force)
             }
             this.grille[Math.trunc(e/10)][e%10] = this.grille[Math.trunc(s/10)][s%10];
             this.grille[Math.trunc(e/10)][e%10].discovered = true;
@@ -138,7 +138,8 @@ class Game{
 
     }
     isFinished(){
-
+        console.log(this.joueur1.tableOfPawns)
+        console.log(this.joueur2.tableOfPawns)
         if(this.joueur1.tableOfPawns[11].nombreRestant =='0'){
             this.winner = 2;
             return true;
@@ -147,29 +148,29 @@ class Game{
             this.winner = 1;
             return true;
         }
-        // let nbr = 10;
-        // for(let i of this.joueur1.tableOfPawnsView()){
-        //     if(!(i == this.joueur1.tableOfPawnsView()[0] || i == this.joueur1.tableOfPawnsView()[11])){
-        //         if(i.nombreRestant == 0)
-        //             nbr--;
-        //     }
-        // }
-        // if(!nbr) {
-        //     this.winner = 2;
-        //     return true;
+        let nbr = 10;
+        for(let i of this.joueur1.tableOfPawns){
+            if(!(i == this.joueur1.tableOfPawns[0] || i == this.joueur1.tableOfPawns[11])){
+                if(i.nombreRestant == 0)
+                    nbr--;
+            }
+        }
+        if(!nbr) {
+            this.winner = 2;
+            return true;
 
-        // }
-        // nbr = 10;
-        // for(let i of this.joueur2.tableOfPawnsView()){
-        //     if(!(i == this.joueur2.tableOfPawnsView()[0] || i == this.joueur2.tableOfPawnsView()[11])){
-        //         if(i.nombreRestant == 0)
-        //             nbr--;
-        //     }
-        // }
-        // if(!nbr){
-        //     this.winner = 1;
-        //     return true;
-        // }
+        }
+        nbr = 10;
+        for(let i of this.joueur2.tableOfPawns){
+            if(!(i == this.joueur2.tableOfPawns[0] || i == this.joueur2.tableOfPawnsView[11])){
+                if(i.nombreRestant == 0)
+                    nbr--;
+            }
+        }
+        if(!nbr){
+            this.winner = 1;
+            return true;
+        }
         return false;
     }
     setTime(){
@@ -192,6 +193,7 @@ class Game{
             time : this.time,
             winner : this.winner
         }
+        return data;
     }
 }
 

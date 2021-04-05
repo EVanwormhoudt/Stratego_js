@@ -100,10 +100,8 @@ app.get('/waitingRoom', (req,res) => {
     if(req.session.username) {
         res.sendFile(__dirname + '/Front/Html/salleAttente.html');
     }
-    else {
-        req.session.username = "test";
-        res.sendFile(__dirname + '/Front/Html/salleAttente.html');
-    }
+    else
+        res.redirect('/');
 });
 
 // redirige vers la page de jeu si l'URL contient '/game'
@@ -305,13 +303,12 @@ io.on('connection', (socket) => {
             if(!socket.handshake.session.ready){ // Pour empecher games[roomNbr].ready==2 à partir d'une seule fenetre
                 let joueurGrille = (socket.handshake.session.player==1) ? games[socket.handshake.session.room].joueur1.tableOfPawns : games[socket.handshake.session.room].joueur2.tableOfPawns;
                 let joueurReady = joueurGrille.every(elem=>elem.nombreRestant==0);
-                console.log(joueurGrille)
-                console.log("bah jsuis la")
-                console.log(joueurReady)
+
                 if(joueurReady){
                     games[socket.handshake.session.room].ready++;
                     socket.handshake.session.ready=true;
                 }
+
                 socket.emit("readyButtonClient",joueurReady);
 
                 if(games[socket.handshake.session.room].ready === 2){
@@ -320,7 +317,7 @@ io.on('connection', (socket) => {
                     socket.emit("gameBegin",(socket.handshake.session.player))
                     socket.broadcast.to("room"+socket.handshake.session.room).emit("gameBegin",((socket.handshake.session.player)%2 +1));
                 }
-            }else{console.log("Vous ne pouvez pas etre ready 2 fois.")}
+            }
         })
 
         // Bouton 'Mise en place des pièces aléatoires' : place aléatoirement les pièces non posées du joueur
@@ -399,8 +396,8 @@ io.on('connection', (socket) => {
         }
         if(games[socket.handshake.session.room].isFinished()){
             games[socket.handshake.session.room].setTime();
-            //scoreHandler.writePersonnalScore(games[socket.handshake.session.room].getData())
-            //scoreHandler.writeScore(games[socket.handshake.session.room].getData())
+            scoreHandler.writePersonnalScore(games[socket.handshake.session.room].exportData())
+            scoreHandler.writeScore(games[socket.handshake.session.room].exportData())
             if(socket.handshake.session.player == games[socket.handshake.session.room].winner){
                 socket.emit("Victory")
                 socket.broadcast.to("room"+socket.handshake.session.room).emit("Defeat");

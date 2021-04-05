@@ -1,49 +1,19 @@
 (function(){
 
     console.log("Le script 'StartGame.js' est lancé.")
-    /*socket.emit("emitInfo");
-    socket.on("getInfo",(socketEntiere,roomEntiere,currentUser,currentUserPlayerNbr,roomNbr,games)=>{
-        
-
-    socket.emit("emitInfo");
-    socket.on("getInfo",(socketEntiere,roomEntiere,currentUser,currentUserPlayerNbr,roomNbr,games)=>{
-        console.log("La socket du joueur : ",socketEntiere)
-        console.log("La room du joueur : ",roomEntiere)
-        console.log("currentUser : ",currentUser)
-        console.log("currentUserPlayerNbr: ",currentUserPlayerNbr)
-        console.log("Numero de la room : ",roomNbr)
-        console.log("games[room] :",games)
-    })*/
-
-    tableauStratego = () => {
-
-        tableauStratego();
-
-        socket.emit("game");
-
-        socket.emit("introductionServer"); // Phrases d'introduction en fonction des 2 joueurs de la room
-
-        socket.emit("tableauPionsServerBuild"); // Crée dynamiquement le tableau des pions du joueur
-
-        socket.emit("tableauPionsServerContent"); // Affiche les valeurs pour le tableau des pions
-
-        socket.emit("preparationListenersServer"); // Applique les listeners sur le tableau des pions et le plateau
-
-        socket.emit("grilleCommuneClient");
-    }
 
     tableauStratego = ()=> {
 
         let conteneurJeu = document.getElementById("conteneurDuJeu");
         let tbl = document.createElement('table')
         let tblTbody = document.createElement('tbody')
-    
+
         for(let i=0;i<10;i++){
             let rowTbody = document.createElement('tr');
             for(let a=0;a<10;a++){
                 let contentTD = document.createElement('td');
                 contentTD.id=a+(i*10);
-                
+
                 rowTbody.appendChild(contentTD);
             }
             tblTbody.appendChild(rowTbody);
@@ -52,6 +22,7 @@
         tbl.id="tableauStratego";
         conteneurJeu.appendChild(tbl);
     }
+
     tableauStratego();
 
     socket.emit("game");
@@ -66,14 +37,11 @@
 
     socket.emit("preparationListenersServer"); // Applique les listeners sur le tableau des pions et le plateau
 
-    /* -------------------------------- Boutons cliquables -------------------------------- */
-    
-    socket.emit("grilleCommuneClient");
-
     /* -------------------------------- Définitions des sockets coté client -------------------------------- */
 
     // Affiche correctement les données au dessus du plateau
     socket.on("introductionClient",(userName,userNumber,enemyName,enemyNumber,roomID)=>{
+        console.log("Appel de la fonction 'introductionClient' coté client.");
         document.getElementById("currentPlayer").textContent=userName;
         document.getElementById('playerID').textContent=userNumber;
         document.getElementById('enemy').textContent=enemyName;
@@ -126,7 +94,6 @@
         tbl.appendChild(tblcaption);
         tbl.appendChild(tblThead);
         tbl.appendChild(tblTbody);
-        console.log(tbl)
         conteneurDuJeu.appendChild(tbl);
     })
 
@@ -176,10 +143,9 @@
                             }
                             tbodyPion.children[i].style.background=playerColor; // On selectionne la case cliquée
                             pieceActuelle=tbodyPion.children[i].children[0].textContent; // On actualise
-                            console.log("Piece actuelle :",pieceActuelle)
                         } else { // Sinon, on ne fait rien.
                             message.textContent="Vous ne pouvez pas selectionné un pion de type '"+tbodyPion.children[i].children[0].textContent+"' car le nombre restant de cette pièce est nul.";
-                            console.log("Vous ne pouvez plus selectionné cette pièce : nombre restant épuisé.");
+                            //console.log("Vous ne pouvez plus selectionné cette pièce : nombre restant épuisé.");
                         }
                     }
                 })
@@ -190,7 +156,6 @@
         for(let idCaseStratego=caseDispo;idCaseStratego<(caseDispo+40);idCaseStratego++){
             document.getElementById(idCaseStratego).addEventListener("click",()=>{
                 if(pieceActuelle!=undefined){ // Un type de pions a été préalablement selectionné
-
                     // On envoie la pièce actuellement selectionnée, l'id (1-100) de la case cliqué et le nombre de fois qu'on a cliqué sur cette case
                     socket.emit("decrementationTypePionJoueurServer",pieceActuelle,idCaseStratego,nbrClicsCase[idCaseStratego]);
                     // On reçoie si on peut poser la pièce, son image si oui, confirmation de l'id de la case, type de pièce selectionné,
@@ -207,13 +172,10 @@
                                     img.classList.add(image + "strength")
                                     img.style.height = "65px";
                                     img.style.width = "55px";
-                                    console.log(document.getElementById(idCaseStratego).children)
 
                                     if(!document.getElementById(idCaseStratego).children.length){
                                         document.getElementById(idCaseStratego).appendChild(img) // On affiche l'image dans la case du plateau Stratego
-
                                     } else {
-                                        console.log("On remplace l'ancienne pièce");
                                         document.getElementById(idCaseStratego).replaceChild(img,document.getElementById(idCaseStratego).firstChild)
                                     }
                                     tbodyPion.children[indiceDuTypePion].children[1].textContent--;
@@ -221,35 +183,34 @@
                                         tbodyPion.children[idPiecePop].children[1].textContent++; //
                                     }
                                 }else{
-                                    console.log("Vous ne pouvez plus poser de pièce du type '"+pieceActuelle+"'.")
+                                    //console.log("Vous ne pouvez plus poser de pièce du type '"+pieceActuelle+"'.")
                                     document.getElementById("message").textContent="Vous ne pouvez plus poser de pièce du type '"+pieceActuelle+"'.";
                                 }
                             }
-
                         }
                     });
-
-                } else { console.log("Pas de pièce selectionnée.")}
+                }
             })
         }
     });
-    
+
     /* ---------------- Information pour débuger ---------------- */
     // Evenements sur les phrases 'Voir le tableau des pièces du joueur1' et 'Voir plateau Stratego en données.'
-    
+
+    /*
     socket.on("tableauPiecesJoueurClient",grille=>{
         console.table(grille);
     })
     socket.on("grilleCommuneClient",(grille)=>{
         console.table(grille);
     })
+    */
 
     /* ---------------- Boutons cliquables ---------------- */
 
     socket.on("readyButtonClient",(ready)=>{
         if (ready) {
             document.getElementById("ready").style.background = "green";
-            console.log("yes")
             for (let i = 0; i < 100; i++) {
                 let el = document.getElementById(i.toString()),
                     elClone = el.cloneNode(true);
@@ -262,11 +223,12 @@
                     document.getElementById(i.toString()).style.color = "pink"
                 }
             }
-        }
+        }else{document.getElementById("message").textContent="Veuillez poser toutes vos pièces avant d'appuyer sur le bouton 'Prêt'."}
 
     });
 
     socket.on("pieceAleatoireClient",(tableauPiece,caseIdDebut,playerID)=>{
+        document.getElementById("message").textContent="";
         console.log("Appel de 'pieceAleatoireClient' coté client.")
         let color = (playerID==1) ? "r" : "b";
         let indice=0;
@@ -290,7 +252,8 @@
     })
 
     socket.on("gameBegin",(player)=> {
-        console.log(player)
+        document.getElementById("ready").parentNode.removeChild(document.getElementById("ready")); // Supprime le bouton "Prêt"
+        document.getElementById("aleatoire").parentNode.removeChild(document.getElementById("aleatoire")); // Supprime le bouton "Pièces aléatoires"
         let tableID = (player === 1) ? "tableauPionsJ1" : "tableauPionsJ2";
 
         let tab = document.getElementById(tableID);
@@ -319,6 +282,7 @@
             if(document.getElementById(i.toString()).firstChild) {
                 let td = document.getElementById(i.toString())
                 EventHandler.addEvent(td.firstChild);
+                td.firstChild.draggable = 'true';
             }
         }
         let deb = (player==1) ? 0 : 40;
