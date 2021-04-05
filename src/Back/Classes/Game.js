@@ -121,16 +121,16 @@ class Game{
 
     verifMove(player,start,end){
 
-        // let s = parseInt(start)
-        // let e = parseInt(end)
-        // if(this.grille[Math.trunc(s/10)][(s%10)].force == 0 ||this.grille[Math.trunc(s/10)][(s%10)].force == 100){
-        //     return false;
-        // }
-        // if(this.grille[Math.trunc(start/10)][start%10].force === 2){
-        //     if(!(Math.trunc(start/10) === Math.trunc(end/10) || start%10 === end%10) ){
-        //         return false
-        //     }
-        // }
+        let s = parseInt(start)
+        let e = parseInt(end)
+        if(this.grille[Math.trunc(s/10)][(s%10)].force == 0 ||this.grille[Math.trunc(s/10)][(s%10)].force == 100){
+            return false;
+        }
+        if(this.grille[Math.trunc(start/10)][start%10].force === 2){
+            if(!(Math.trunc(start/10) === Math.trunc(end/10) || start%10 === end%10) ){
+                return false
+            }
+        }
         // else{
         //     if(e != s + 1 || e != s -1 || e != s -10 || e != s + 10){
         //         return false;
@@ -141,8 +141,8 @@ class Game{
 
     }
     isFinished(){
-        console.log(this.joueur1.tableOfPawns)
-        console.log(this.joueur2.tableOfPawns)
+        // console.log(this.joueur1.tableOfPawns)
+        // console.log(this.joueur2.tableOfPawns)
         if(this.joueur1.tableOfPawns[11].nombreRestant =='0'){
             this.winner = 2;
             return true;

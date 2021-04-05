@@ -1,6 +1,6 @@
 (function(){
 
-    console.log("Le script 'StartGame.js' est lancé.")
+    //console.log("Le script 'StartGame.js' est lancé.")
 
     tableauStratego = ()=> {
 
@@ -98,17 +98,19 @@
         conteneurJeu.appendChild(tbl);
     }
 
-    tableauStratego();
+    /* -------------------------------- Ce qui s'exécute lors de l'arrivée sur game.html -------------------------------- */
+
+    tableauStratego(); // Affichage du plateau Stratego
 
     socket.emit("game");
 
     socket.emit("introductionServer"); // Phrases d'introduction en fonction des 2 joueurs de la room
 
-    socket.emit("caseGriseServer")
+    socket.emit("caseGriseServer") // Grise les cases sur lesquelles le joueur ne peut cliquer
 
     socket.emit("tableauPionsServerBuild"); // Crée dynamiquement le tableau des pions du joueur
 
-    socket.emit("tableauPionsServerContent"); // Affiche les valeurs pour le tableau des pions
+    socket.emit("tableauPionsServerContent"); // Affiche les valeurs pour le tableau des pions du joueur
 
     socket.emit("preparationListenersServer"); // Applique les listeners sur le tableau des pions et le plateau
 
@@ -116,7 +118,7 @@
 
     // Affiche correctement les données au dessus du plateau
     socket.on("introductionClient",(userName,userNumber,enemyName,enemyNumber,roomID)=>{
-        console.log("Appel de la fonction 'introductionClient' coté client.");
+        //console.log("Appel de la fonction 'introductionClient' coté client.");
         document.getElementById("currentPlayer").textContent=userName;
         document.getElementById('playerID').textContent=userNumber;
         document.getElementById('enemy').textContent=enemyName;
@@ -126,7 +128,7 @@
 
     // Grise les cases adverses et non cliquables
     socket.on("caseGriseClientON",(deb,fin,playerNbr)=>{
-        console.log("Appel de la fonction 'caseGriseClient' coté client pour le joueur",playerNbr,".");
+        //console.log("Appel de la fonction 'caseGriseClient' coté client pour le joueur",playerNbr,".");
         for(let i=deb;i<=fin;i++){
             document.getElementById(i).style.background="silver";
             document.getElementById(i).style.opacity=0.5;
@@ -134,7 +136,7 @@
     })
 
     socket.on("caseGriseClientOFF",(deb,fin,playerNbr)=>{
-        console.log("Appel de la fonction 'caseGriseClient' coté client pour le joueur",playerNbr,".");
+        //console.log("Appel de la fonction 'caseGriseClient' coté client pour le joueur",playerNbr,".");
         for(let i=deb;i<=fin;i++){
             document.getElementById(i).style.background="white";
             document.getElementById(i).style.opacity=0;
@@ -143,7 +145,7 @@
 
     // Crée dynamiquement le tableau des pions du joueur en question
     socket.on("tableauPionsClientBuild",(playerNbr)=>{
-        console.log("Appel de la fonction 'tableauPionsClientBuild' coté client pour le joueur",playerNbr,".");
+        //console.log("Appel de la fonction 'tableauPionsClientBuild' coté client pour le joueur",playerNbr,".");
         let tableID = (playerNbr==1) ? "tableauPionsJ1" : "tableauPionsJ2";
         let conteneurDuJeu = document.getElementById('conteneurDuJeu');
 
@@ -174,7 +176,7 @@
 
     // Remplit d'après les informations du server (game.joueurX.tableOfPawns()) les informations dans le tableau des pions
     socket.on("tableauPionsClientContent",(tableOfPawns,playerNbr)=>{
-        console.log("Appel de la fonction 'tableauPionsClientContent' coté client pour le joueur",playerNbr,".");
+        //console.log("Appel de la fonction 'tableauPionsClientContent' coté client pour le joueur",playerNbr,".");
         let tbodyPion = (playerNbr==1) ? document.getElementById("tableauPionsJ1").children[2] : document.getElementById("tableauPionsJ2").children[2] ;
         let i=0;
         for(element of tableOfPawns){
@@ -188,7 +190,7 @@
 
     // Applique un listener sur les cases du tableau des pions du joueur ET du plateau Stratego
     socket.on('preparationListenersClient',(playerNbr)=>{
-        console.log("Appel de la fonction 'preparationListenersClient' coté client pour le joueur",playerNbr,".");
+        //console.log("Appel de la fonction 'preparationListenersClient' coté client pour le joueur",playerNbr,".");
 
         let tbodyPion = (playerNbr==1) ? document.getElementById("tableauPionsJ1").children[2] : document.getElementById("tableauPionsJ2").children[2];
         // let pieceActuelle = (playerNbr==1) ? document.getElementById("pieceActuelleRouge") : document.getElementById("pieceActuelleBleue");
@@ -269,18 +271,6 @@
         }
     });
 
-    /* ---------------- Information pour débuger ---------------- */
-    // Evenements sur les phrases 'Voir le tableau des pièces du joueur1' et 'Voir plateau Stratego en données.'
-
-    /*
-    socket.on("tableauPiecesJoueurClient",grille=>{
-        console.table(grille);
-    })
-    socket.on("grilleCommuneClient",(grille)=>{
-        console.table(grille);
-    })
-    */
-
     /* ---------------- Boutons cliquables ---------------- */
 
     socket.on("readyButtonClient",(ready)=>{
@@ -304,7 +294,7 @@
 
     socket.on("pieceAleatoireClient",(tableauPiece,caseIdDebut,playerID)=>{
         document.getElementById("message").textContent="";
-        console.log("Appel de 'pieceAleatoireClient' coté client.")
+        //console.log("Appel de 'pieceAleatoireClient' coté client.")
         let color = (playerID==1) ? "r" : "b";
         let indice=0;
         // Affichage des images sur le plateau Stratego
@@ -328,9 +318,9 @@
 
     socket.on("gameBegin",(player)=> {
         let conteneurDuJeu = document.getElementById("conteneurDuJeu");
-        conteneurDuJeu.removeChild(document.getElementById("tableauPionsJ"+player)); // Supprimer le tableau des pions
+        conteneurDuJeu.removeChild(document.getElementById("tableauPionsJ"+player)); // Supprime le tableau des pions à poser
 
-        tableauPionsPris();
+        tableauPionsPris(); // Affichage du tableau des pions pris
 
         document.getElementById("ready").parentNode.removeChild(document.getElementById("ready")); // Supprime le bouton "Prêt"
         document.getElementById("aleatoire").parentNode.removeChild(document.getElementById("aleatoire")); // Supprime le bouton "Pièces aléatoires"
@@ -393,7 +383,7 @@
     socket.on("attackLost",(start,end,piece,player,looser)=>{
         let playerColor = (player==1) ? "r" : "b";
         document.getElementById(looser+playerColor).textContent++;
-        console.log("attackLost : La piece de couleur ",playerColor," et de force ",looser," meurt.")
+        //console.log("attackLost : La piece de couleur ",playerColor," et de force ",looser," meurt.")
 
         document.getElementById(start).removeChild(document.getElementById(start).firstChild)
         let newLocation = document.getElementById(end.toString())
@@ -406,7 +396,7 @@
     socket.on("attackWon",(start,end,looser,player)=>{
         let ennemyColor = (player==1) ? "b" : "r";
         document.getElementById(looser+ennemyColor).textContent++;
-        console.log("attackWon : La piece de couleur ",ennemyColor," et de force ",looser," meurt.")
+        //console.log("attackWon : La piece de couleur ",ennemyColor," et de force ",looser," meurt.")
 
         let previousLocation = document.getElementById(start.toString()).firstChild
         let newLocation = document.getElementById(end.toString())
@@ -417,8 +407,8 @@
     socket.on("attackEven",(start,end,looser,player)=>{
         document.getElementById(looser+"b").textContent++;
         document.getElementById(looser+"r").textContent++;
-        console.log("attackEven : La piece de couleur rouge et de force ",looser," meurt.")
-        console.log("attackEven : La piece de couleur bleue et de force ",looser," meurt.")
+        // console.log("attackEven : La piece de couleur rouge et de force ",looser," meurt.")
+        // console.log("attackEven : La piece de couleur bleue et de force ",looser," meurt.")
 
         document.getElementById(start).removeChild(document.getElementById(start).firstChild)
         document.getElementById(end).removeChild(document.getElementById(end).firstChild)
@@ -427,7 +417,7 @@
     socket.on("defenseWon",(start,looser,ennemyPlayer)=>{
         let ennemyColor = (ennemyPlayer==1) ? "r" : "b";
         document.getElementById(looser+ennemyColor).textContent++;
-        console.log("defenseWon : La piece de couleur ",ennemyColor," et de force ",looser," meurt.")
+        //console.log("defenseWon : La piece de couleur ",ennemyColor," et de force ",looser," meurt.")
 
         document.getElementById(start).removeChild(document.getElementById(start).firstChild)
     })
@@ -435,7 +425,7 @@
     socket.on("defenseLost",(start,end,piece,ennemyPlayer,looser)=>{
         let playerColor = (ennemyPlayer==1) ? "b" : "r";
         document.getElementById(looser+playerColor).textContent++;
-        console.log(" defenseLost : La piece de couleur ",playerColor," et de force ",looser," meurt.")
+        //console.log(" defenseLost : La piece de couleur ",playerColor," et de force ",looser," meurt.")
 
         let previousLocation = document.getElementById(start.toString()).firstChild
 
