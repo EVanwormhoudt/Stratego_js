@@ -19,7 +19,6 @@ let EventHandler = (function(){
         obj.target.classList.remove('drag-over');
     }
     function enterImage(obj){
-        console.log(obj.target)
         if(obj.target.parentElement.style.backgroundImage !== ""){
             obj.target.classList.add('drag-over');
         }
@@ -42,7 +41,6 @@ let EventHandler = (function(){
                     }
                     i++
                 })
-
             } else {
                 let i = 0
                 socket.emit("getTurn")
@@ -67,7 +65,11 @@ let EventHandler = (function(){
 
             obj.target.classList.remove('drag-over');    //remove the background, because the move is finished
             obj.preventDefault();
-            removeDot();                                       //and then remove the indicators of moves possibles
+            removeDot();//and then remove the indicators of moves possibles
+            let tmp =  document.getElementById(obj.target.parentElement.id)
+            console.log(obj)
+            tmp.style.backgroundColor = "";
+            tmp.style.opacity = "";
 
         }
     }
@@ -234,7 +236,6 @@ let EventHandler = (function(){
 
     //Event that add a background that show where you can put your piece depending on the position of the mouse
     function mouseEnter(obj){
-        console.log(obj)
         if(obj.target.style.backgroundImage !==""){
             obj.target.classList.add('drag-over');
         }
@@ -256,7 +257,6 @@ let EventHandler = (function(){
         addCaseDrop(obj){
             obj.addEventListener('dragover', e=>{
                 e.preventDefault();
-
                 if(e.target.style.backgroundImage !== "") {
                     e.target.classList.add('drag-over');
                 }

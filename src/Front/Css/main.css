@@ -73,3 +73,40 @@ nav.black {
     font-weight: normal;
 }
 /*fin footer*/
+.logForm.form-field {
+    position: relative;
+    background-color: transparent;
+    font-max-size: 15px;
+}
+.logForm .input-text {
+    background-color: transparent;
+    display: block;
+    width: 80%;
+    padding-bottom: 3%;
+    height: 25px;
+    border-width: 0 0 2px 0;
+    border-color: #6C757D;
+    font-size: 18px;
+    line-height: 26px;
+    font-weight: 400;
+    color: #6C757D;
+}
+.logForm .input-text:focus {
+    outline: none;
+}
+
+.logForm .submit-btn {
+    display: inline-block;
+    background-color: #000;
+    background-image: linear-gradient(125deg, #A91C29,#0062c5);
+    color: #b7b7b7;
+    text-transform: uppercase;
+    letter-spacing: .2px;
+    font-size: 12px;
+    padding: 8px 2px;
+    border: none;
+    width:80px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 50%;
+}

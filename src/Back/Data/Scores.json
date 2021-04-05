@@ -1,137 +1,7 @@
 {
   "scores": [
     {
-      "joueur1": "elliott",
-      "joueur2": "test",
-      "tabj1": [
-        {
-          "name": "Bombes",
-          "nombreRestant": 6,
-          "force": "100"
-        },
-        {
-          "name": "Maréchal",
-          "nombreRestant": 1,
-          "force": "10"
-        },
-        {
-          "name": "Général",
-          "nombreRestant": 1,
-          "force": "9"
-        },
-        {
-          "name": "Colonels",
-          "nombreRestant": 2,
-          "force": "8"
-        },
-        {
-          "name": "Commandants",
-          "nombreRestant": 2,
-          "force": "7"
-        },
-        {
-          "name": "Capitaines",
-          "nombreRestant": 3,
-          "force": "6"
-        },
-        {
-          "name": "Lieutenants",
-          "nombreRestant": 4,
-          "force": "5"
-        },
-        {
-          "name": "Sergents",
-          "nombreRestant": 4,
-          "force": "4"
-        },
-        {
-          "name": "Démineurs",
-          "nombreRestant": 4,
-          "force": "3"
-        },
-        {
-          "name": "Eclaireurs",
-          "nombreRestant": 8,
-          "force": "2"
-        },
-        {
-          "name": "Espion",
-          "nombreRestant": 1,
-          "force": "1"
-        },
-        {
-          "name": "Drapeau",
-          "nombreRestant": 0,
-          "force": "0"
-        }
-      ],
-      "tabj2": [
-        {
-          "name": "Bombes",
-          "nombreRestant": 6,
-          "force": "100"
-        },
-        {
-          "name": "Maréchal",
-          "nombreRestant": 1,
-          "force": "10"
-        },
-        {
-          "name": "Général",
-          "nombreRestant": 1,
-          "force": "9"
-        },
-        {
-          "name": "Colonels",
-          "nombreRestant": 2,
-          "force": "8"
-        },
-        {
-          "name": "Commandants",
-          "nombreRestant": 2,
-          "force": "7"
-        },
-        {
-          "name": "Capitaines",
-          "nombreRestant": 4,
-          "force": "6"
-        },
-        {
-          "name": "Lieutenants",
-          "nombreRestant": 3,
-          "force": "5"
-        },
-        {
-          "name": "Sergents",
-          "nombreRestant": 4,
-          "force": "4"
-        },
-        {
-          "name": "Démineurs",
-          "nombreRestant": 5,
-          "force": "3"
-        },
-        {
-          "name": "Eclaireurs",
-          "nombreRestant": 7,
-          "force": "2"
-        },
-        {
-          "name": "Espion",
-          "nombreRestant": 1,
-          "force": "1"
-        },
-        {
-          "name": "Drapeau",
-          "nombreRestant": 1,
-          "force": "0"
-        }
-      ],
-      "time": 44,
-      "winner": 2
-    },
-    {
-      "joueur1": "elliott",
+      "joueur1": "test",
       "joueur2": "test",
       "tabj1": [
         {
@@ -257,12 +127,12 @@
           "force": "0"
         }
       ],
-      "time": 9,
+      "time": 118,
       "winner": 1
     },
     {
-      "joueur1": "elliott",
-      "joueur2": "test",
+      "joueur1": "test",
+      "joueur2": "elliott",
       "tabj1": [
         {
           "name": "Bombes",
@@ -387,12 +257,12 @@
           "force": "0"
         }
       ],
-      "time": 8,
+      "time": 85,
       "winner": 1
     },
     {
-      "joueur1": "sheron3",
-      "joueur2": "sheron4",
+      "joueur1": "test",
+      "joueur2": "elliott",
       "tabj1": [
         {
           "name": "Bombes",
@@ -503,7 +373,7 @@
         },
         {
           "name": "Eclaireurs",
-          "nombreRestant": 7,
+          "nombreRestant": 8,
           "force": "2"
         },
         {
@@ -517,12 +387,12 @@
           "force": "0"
         }
       ],
-      "time": 62076,
+      "time": 68801,
       "winner": 2
     },
     {
-      "joueur1": "sheron3",
-      "joueur2": "sheron4",
+      "joueur1": "test",
+      "joueur2": "elliott",
       "tabj1": [
         {
           "name": "Bombes",
@@ -633,7 +503,7 @@
         },
         {
           "name": "Eclaireurs",
-          "nombreRestant": 7,
+          "nombreRestant": 8,
           "force": "2"
         },
         {
@@ -647,7 +517,137 @@
           "force": "0"
         }
       ],
-      "time": 51,
+      "time": 87,
+      "winner": 2
+    },
+    {
+      "joueur1": "test",
+      "joueur2": "elliott",
+      "tabj1": [
+        {
+          "name": "Bombes",
+          "nombreRestant": 6,
+          "force": "100"
+        },
+        {
+          "name": "Maréchal",
+          "nombreRestant": 1,
+          "force": "10"
+        },
+        {
+          "name": "Général",
+          "nombreRestant": 1,
+          "force": "9"
+        },
+        {
+          "name": "Colonels",
+          "nombreRestant": 2,
+          "force": "8"
+        },
+        {
+          "name": "Commandants",
+          "nombreRestant": 3,
+          "force": "7"
+        },
+        {
+          "name": "Capitaines",
+          "nombreRestant": 4,
+          "force": "6"
+        },
+        {
+          "name": "Lieutenants",
+          "nombreRestant": 4,
+          "force": "5"
+        },
+        {
+          "name": "Sergents",
+          "nombreRestant": 4,
+          "force": "4"
+        },
+        {
+          "name": "Démineurs",
+          "nombreRestant": 5,
+          "force": "3"
+        },
+        {
+          "name": "Eclaireurs",
+          "nombreRestant": 8,
+          "force": "2"
+        },
+        {
+          "name": "Espion",
+          "nombreRestant": 1,
+          "force": "1"
+        },
+        {
+          "name": "Drapeau",
+          "nombreRestant": 1,
+          "force": "0"
+        }
+      ],
+      "tabj2": [
+        {
+          "name": "Bombes",
+          "nombreRestant": 6,
+          "force": "100"
+        },
+        {
+          "name": "Maréchal",
+          "nombreRestant": 1,
+          "force": "10"
+        },
+        {
+          "name": "Général",
+          "nombreRestant": 1,
+          "force": "9"
+        },
+        {
+          "name": "Colonels",
+          "nombreRestant": 2,
+          "force": "8"
+        },
+        {
+          "name": "Commandants",
+          "nombreRestant": 3,
+          "force": "7"
+        },
+        {
+          "name": "Capitaines",
+          "nombreRestant": 4,
+          "force": "6"
+        },
+        {
+          "name": "Lieutenants",
+          "nombreRestant": 4,
+          "force": "5"
+        },
+        {
+          "name": "Sergents",
+          "nombreRestant": 4,
+          "force": "4"
+        },
+        {
+          "name": "Démineurs",
+          "nombreRestant": 5,
+          "force": "3"
+        },
+        {
+          "name": "Eclaireurs",
+          "nombreRestant": 8,
+          "force": "2"
+        },
+        {
+          "name": "Espion",
+          "nombreRestant": 1,
+          "force": "1"
+        },
+        {
+          "name": "Drapeau",
+          "nombreRestant": 1,
+          "force": "0"
+        }
+      ],
+      "time": 68810,
       "winner": 1
     }
   ]
