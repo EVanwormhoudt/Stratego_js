@@ -149,7 +149,7 @@
         let color = (playerNbr==1) ? "red" : "blue";
         tableauDuJeu.style.border="1px solid "+color;
         tableauDuJeu.style.padding="10px";
-        
+
         let tbl = document.createElement("table");
         tbl.id=tableID;
         let tblcaption = document.createElement("caption")
@@ -333,7 +333,7 @@
 
         document.getElementById("ready").parentNode.removeChild(document.getElementById("ready")); // Supprime le bouton "Prêt"
         document.getElementById("aleatoire").parentNode.removeChild(document.getElementById("aleatoire")); // Supprime le bouton "Pièces aléatoires"
-        
+
         let tourDeQui = (player==1) ? "C'est à votre tour de jouer" : "C'est au tour du joueur adverse";
         document.getElementById("phase").textContent=tourDeQui;
 
@@ -380,7 +380,7 @@
             }
         }
         let deb = (player==1) ? 0 : 40;
-        
+
         for(let i=deb;i<(deb+60);i++){
             document.getElementById(i).style.background="";
             document.getElementById(i).style.opacity='';
