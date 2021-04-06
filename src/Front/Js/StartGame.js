@@ -326,11 +326,15 @@
         let tableauDuJeu = document.getElementById("tableauDuJeu");
         tableauDuJeu.removeChild(document.getElementById("tableauPionsJ"+player)); // Supprime le tableau des pions à poser
         document.getElementById("message").textContent="";
+
         tableauPionsPris(); // Affichage du tableau des pions pris
 
         document.getElementById("ready").parentNode.removeChild(document.getElementById("ready")); // Supprime le bouton "Prêt"
         document.getElementById("aleatoire").parentNode.removeChild(document.getElementById("aleatoire")); // Supprime le bouton "Pièces aléatoires"
         
+        let tourDeQui = (player==1) ? "C'est à votre tour de jouer" : "C'est au tour du joueur adverse";
+        document.getElementById("phase").textContent=tourDeQui;
+
         let caseDispo = (player === 1) ? 0 : 60;
 
         for (let i = caseDispo; i < caseDispo + 40; i++) {
@@ -382,10 +386,11 @@
     });
 
     //Reception coté client du déplacement
-    socket.on("PieceMoved",(start,end)=>{
+    socket.on("PieceMoved",(start,end,turnOf)=>{
         let previousLocation = document.getElementById(start.toString()).firstChild
         let newLocation = document.getElementById(end.toString())
         newLocation.appendChild(previousLocation);
+        let message = (turnOf=="you") ? document.getElementById("phase").textContent="C'est à votre tour de jouer" : document.getElementById("phase").textContent="C'est au tour du joueur adverse";
     });
     //lorsque le joueur a attaqué et qu'il a perdu
     socket.on("attackLost",(start,end,piece,player,looser)=>{
@@ -398,7 +403,7 @@
         newLocation.firstChild.src = (player === 1) ? "../Images/icons/"+piece+"b.svg" : "../Images/icons/"+ piece+"r.svg";
         newLocation.firstChild.style.height = "65px";
         newLocation.firstChild.style.width = "55px";
-
+        document.getElementById("phase").textContent="C'est au tour du joueur adverse";
     })
 
     //lorsque le joueur a attaqué et qu'il a gagné
@@ -411,6 +416,7 @@
         let newLocation = document.getElementById(end.toString())
         newLocation.removeChild(newLocation.firstChild)
         newLocation.appendChild(previousLocation);
+        document.getElementById("phase").textContent="C'est au tour du joueur adverse";
     });
 
     //lorsqu'un des deux joueurs a attaqué et que c'était la même pièce
@@ -421,6 +427,7 @@
 
         document.getElementById(start).removeChild(document.getElementById(start).firstChild)
         document.getElementById(end).removeChild(document.getElementById(end).firstChild)
+        document.getElementById("phase").textContent="C'est au tour du joueur adverse";
     });
 
     //Evenement quand l'adversaire à attaquer une pièce et le joueur a gagné
@@ -430,6 +437,7 @@
         console.log("defenseWon : La piece de couleur ",ennemyColor," et de force ",looser," meurt.")
 
         document.getElementById(start).removeChild(document.getElementById(start).firstChild)
+        document.getElementById("phase").textContent="C'est à votre tour de jouer";
     })
 
     //Evenement quand l'adversaire à attaquer une pièce et le joueur a perdu
@@ -446,6 +454,8 @@
         newLocation.firstChild.src = (ennemyPlayer === 1) ?  "../Images/icons/"+piece+"r.svg" : "../Images/icons/"+ piece+"b.svg";
         newLocation.firstChild.style.height = "65px";
         newLocation.firstChild.style.width = "55px";
+        document.getElementById("phase").textContent="C'est à votre tour de jouer";
+
     });
 
     //Evenement quand le joueur a gagné la partie

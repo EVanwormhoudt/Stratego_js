@@ -396,8 +396,8 @@ io.on('connection', (socket) => {
             return
         }
         games[socket.handshake.session.room].move(start,end,socket.handshake.session.player);
-        socket.broadcast.to("room"+socket.handshake.session.room).emit("PieceMoved",start,end);
-        socket.emit("PieceMoved",start,end);
+        socket.broadcast.to("room"+socket.handshake.session.room).emit("PieceMoved",start,end,"you");
+        socket.emit("PieceMoved",start,end,"notYou");
     });
     //gère l'attaque, et renvoie au deux joueurs les résultats
     socket.on("attack",(start,end)=>{
