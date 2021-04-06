@@ -27,7 +27,7 @@
 
         let pieceName = ["Maréchal","Général","Colonels","Commandants","Capitaines","Lieutenants","Sergents","Démineurs","Eclaireurs","Espion","Drapeau","Bombes"];
         let pieceMax = [1,1,2,3,4,4,4,5,8,1,1];
-        let conteneurJeu = document.getElementById("conteneurDuJeu");
+        let conteneurJeu = document.getElementById("tableauDuJeu");
 
         let tbl = document.createElement('table')
         tbl.id="tableauPionsPris";
