@@ -2,7 +2,6 @@ let EventHandler = (function(){
     let id;
     //Event for when the drag start, that store the data and id of what's moving, and add the position where it can be moved
     function dragStart(obj) {
-
         //console.log(obj)
         obj.dataTransfer.setData('text', obj.target.parentElement.id);
         let data = obj.dataTransfer.getData("text");
@@ -11,6 +10,7 @@ let EventHandler = (function(){
         // console.log(document.getElementById(data))
         let cell = document.getElementById(data);
         id = parseInt(cell.id);
+        removeDot()
         addDot(obj);
     }
 
@@ -68,9 +68,10 @@ let EventHandler = (function(){
             removeDot();//and then remove the indicators of moves possibles
             let tmp =  document.getElementById(obj.target.parentElement.id)
             //console.log(obj)
-            tmp.style.backgroundColor = "";
-            tmp.style.opacity = "";
-
+            if(tmp) {
+                tmp.style.backgroundColor = "";
+                tmp.style.opacity = "";
+            }
         }
     }
     //Event for when you click a piece, his id is stored and the possibles moves are added

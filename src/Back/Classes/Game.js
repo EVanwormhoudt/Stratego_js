@@ -13,7 +13,8 @@ class Game{
         this.grille=this.initGrille();
         this.ready = 0;
         let now = new Date();
-        this.time = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds() ;  //faut pas jouer a minuit lol
+        this.time = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds() ;
+        console.log(this.time)
         this.winner = undefined;
         this.turn = 1;
     }
@@ -131,12 +132,14 @@ class Game{
                 return false
             }
         }
-        // else{
-        //     if(e != s + 1 || e != s -1 || e != s -10 || e != s + 10){
-        //         return false;
-        //     }
-        // }
-
+        /*else {
+            console.log(e)
+            console.log(s)
+            if (e != s + 1 || e != s - 1 || e != s - 10 || e != s + 10) {
+                return false;
+            }
+        }
+*/
         return true;
 
     }

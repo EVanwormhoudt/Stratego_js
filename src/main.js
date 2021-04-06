@@ -108,7 +108,8 @@ app.get('/waitingRoom', (req,res) => {
 
 // redirige vers la page de jeu si l'URL contient '/game'
 app.get('/game',(req,res)=>{
-    if(req.session.username && req.session.player) {
+    if(req.session.username && req.session.player && req.session.ready == undefined) {
+        console.log(req.session)
         res.sendFile(__dirname + '/Front/Html/Game.html');
     }
     else
@@ -190,11 +191,14 @@ io.on('connection', (socket) => {
         }
         if(socket.handshake.session.room !== undefined && games[socket.handshake.session.room] && socket.handshake.session.ready !==undefined){
             if( games[socket.handshake.session.room].ready === 2){
-                socket.broadcast.to("room"+socket.handshake.session.room).emit("winByFF")
+
                 games[socket.handshake.session.room].setTime();
                 games[socket.handshake.session.room].winner = socket.handshake.session.player % 2 + 1;
                 scoreHandler.writePersonnalScore(games[socket.handshake.session.room].exportData());
                 scoreHandler.writeScore(games[socket.handshake.session.room].exportData());
+                socket.broadcast.to("room"+socket.handshake.session.room).emit("winByFF",games[socket.handshake.session.room].exportData())
+            }else{
+                socket.broadcast.to("room"+socket.handshake.session.room).emit("winByFF",undefined)
             }
             games[socket.handshake.session.room][0] = 0
             games[socket.handshake.session.room][1] = null;
@@ -210,7 +214,6 @@ io.on('connection', (socket) => {
             socket.handshake.session.player = undefined;
             socket.handshake.session.room = undefined;
             socket.handshake.session.ready = undefined;
-
         }
     });
 
@@ -378,7 +381,7 @@ io.on('connection', (socket) => {
 
         if(!games[socket.handshake.session.room].verifMove(socket.handshake.session.player,start,end)) {
             socket.emit("moveImpossible");
-            // console.log("moveImpossible")
+            console.log("moveImpossible")
             return
         }
         games[socket.handshake.session.room].move(start,end,socket.handshake.session.player);
@@ -411,17 +414,19 @@ io.on('connection', (socket) => {
                 ,games[socket.handshake.session.room].getCase(Math.trunc(end/10),end%10).force,socket.handshake.session.player,result[1]);
         }
         if(games[socket.handshake.session.room].isFinished()){
+            let data = games[socket.handshake.session.room].exportData()
             games[socket.handshake.session.room].setTime();
-            scoreHandler.writePersonnalScore(games[socket.handshake.session.room].exportData())
-            scoreHandler.writeScore(games[socket.handshake.session.room].exportData())
+            scoreHandler.writePersonnalScore(data)
+            scoreHandler.writeScore(data)
             if(socket.handshake.session.player == games[socket.handshake.session.room].winner){
-                socket.emit("Victory")
-                socket.broadcast.to("room"+socket.handshake.session.room).emit("Defeat");
+                socket.emit("Victory",data)
+                socket.broadcast.to("room"+socket.handshake.session.room).emit("Defeat",data);
             }
             else{
-                socket.emit("Defeat")
-                socket.broadcast.to("room"+socket.handshake.session.room).emit("Victory");
+                socket.emit("Defeat",data)
+                socket.broadcast.to("room"+socket.handshake.session.room).emit("Victory",data);
             }
+
             games[socket.handshake.session.room][0] = 0
             games[socket.handshake.session.room][1] = null;
             games[socket.handshake.session.room][2] = null;

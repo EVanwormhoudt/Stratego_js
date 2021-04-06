@@ -439,8 +439,20 @@
         newLocation.firstChild.style.width = "55px";
     });
 
-    socket.on("Victory",()=>{
+    socket.on("Victory",(data)=>{
         //alert("Victory!")
+        let winner,looser;
+        if (data.winner === 1){
+            winner = data.joueur1;
+            looser = data.joueur2;
+        }
+        else{
+            winner = data.joueur2;
+            looser = data.joueur1;
+        }
+        document.getElementById("winner").innerHTML ="Le gagnant est " +winner;
+        document.getElementById("looser").innerHTML = "Le perdant est " + looser;
+        document.getElementById("time").innerHTML = "temps : " + Math.trunc(data.time / 3600)+"h " + Math.trunc((data.time% 3600) / 60)+"m " +  data.time% 60+"s";
         let modal = document.getElementById("modal");
         modal.style.display = "block";
         document.getElementById("modalText").innerHTML = 'Félicitations, vous avez gagné !';
@@ -451,10 +463,23 @@
         }
     })
 
-    socket.on("Defeat",()=>{
+    socket.on("Defeat",(data)=>{
         //alert("Defeat!")
+        let winner,looser;
+        if (data.winner === 1){
+            winner = data.joueur1;
+            looser = data.joueur2;
+        }
+        else{
+            winner = data.joueur2;
+            looser = data.joueur1;
+        }
+        document.getElementById("winner").innerHTML ="Le gagnant est " +winner;
+        document.getElementById("looser").innerHTML = "Le perdant est " + looser;
+        document.getElementById("time").innerHTML = "temps : " + Math.trunc(data.time / 3600)+"h " + Math.trunc((data.time% 3600) / 60)+"m " +  data.time% 60+"s";
         let modal = document.getElementById("modal");
         modal.style.display = "block";
+
         document.getElementById("modalText").innerHTML = 'Dommage, vous avez perdu !';
         for (let i = 0; i < 100; i++) {
             let el = document.getElementById(i.toString()),
@@ -463,8 +488,21 @@
         }
     })
 
-    socket.on("winByFF",()=>{
+    socket.on("winByFF",(data)=>{
         //alert("Your opponent gave up!")
+        if(data) {
+            let winner, looser;
+            if (data.winner === 1) {
+                winner = data.joueur1;
+                looser = data.joueur2;
+            } else {
+                winner = data.joueur2;
+                looser = data.joueur1;
+            }
+            document.getElementById("winner").innerHTML = "Le gagnant est " + winner;
+            document.getElementById("looser").innerHTML = "Le perdant est " + looser;
+            document.getElementById("time").innerHTML = "temps : " + Math.trunc(data.time / 3600)+"h " + Math.trunc((data.time% 3600) / 60)+"m " +  data.time% 60+"s";
+        }
         let modal = document.getElementById("modal");
         modal.style.display = "block";
         document.getElementById("modalText").innerHTML = "Votre adversaire s'est rendu.";
