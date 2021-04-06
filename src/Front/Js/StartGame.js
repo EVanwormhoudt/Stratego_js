@@ -56,7 +56,7 @@
                 img.classList.add(i + "strength")
                 img.style.height = "65px";
                 img.style.width = "55px";
-                console.log("")
+                //console.log("")
                 colonneTbody.appendChild(img);
                 let txt = document.createElement("span");
                 txt.innerHTML="<span id="+i+color+">0</span>/"+pieceMax[compteur];

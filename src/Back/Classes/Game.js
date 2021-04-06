@@ -13,8 +13,7 @@ class Game{
         this.grille=this.initGrille();
         this.ready = 0;
         let now = new Date();
-        this.time = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds() ;
-        console.log(this.time)
+        this.time = now.getMinutes() * 60 + now.getSeconds() ;
         this.winner = undefined;
         this.turn = 1;
     }
@@ -180,6 +179,7 @@ class Game{
         return false;
     }
     setTime(){
+        
         let now = new Date();
         let gameTime = now.getMinutes() * 60 + now.getSeconds() ;
         if( gameTime - this.time < 0){

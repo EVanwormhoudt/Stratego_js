@@ -2,7 +2,7 @@ socket.on("sendScore" ,(scores) => {
     if(i == 0) {
         let tableauScr = document.getElementById("tableauScr");
         for (let i of scores.scores) {
-            console.log("jsuis al")
+            //console.log("jsuis al")
             let tr = document.createElement("tr");
             let winner, looser;
             if (i.winner === 1) {
