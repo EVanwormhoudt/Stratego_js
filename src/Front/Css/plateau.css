@@ -32,8 +32,13 @@ img{
 			#eee 100% url(../Images/board-no-trees.svg);
 }
 
+#tableauDuJeu, td {
+	width: 340px;
+}
+
 #pions {
 	margin:20px;
+	color: yellowgreen;
 }
 
 #tableauPionsJ1 {
@@ -60,5 +65,30 @@ img{
 
 #ready {
 	height:40px;
-	width:100px;
+	width:130px;
+}
+
+#aleatoire {
+	height:60px;
+	width:130px;
+}
+
+.submit-btn {
+	display: inline-block;
+	background-color: #000;
+	background-image: linear-gradient(125deg, #A91C29,#0062c5);
+	color: #b7b7b7;
+	text-transform: uppercase;
+	letter-spacing: .2px;
+	font-size: 12px;
+	padding: 8px 2px;
+	border: none;
+	cursor: pointer;
+	margin-top: 10px;
+}
+
+.center {
+	position: relative;
+	margin-left: 50%;
+	transform: translateX(-50%);
 }

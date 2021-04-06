@@ -277,7 +277,8 @@
         if (ready) {
             console.log("Vous êtes prêt. En attente de l'autre joueur.");
             document.getElementById("message").textContent="Vous êtes prêt. En attente de l'autre joueur.";
-            document.getElementById("ready").style.background = "green";
+            document.getElementById("ready").style.background = "yellowgreen";
+            document.getElementById("ready").style.color = "black";
             for (let i = 0; i < 100; i++) {
                 let el = document.getElementById(i.toString()),
                     elClone = el.cloneNode(true);

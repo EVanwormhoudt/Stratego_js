@@ -85,18 +85,23 @@
             <!-- DIV de droite [explication de connexion] -->
             <div class="col-md-4 bg-black text-secondary">
                 <div class="row">
-                    <div id="tableauDuJeu"></div>
+                    <div class="center">
+                        <div id="tableauDuJeu"></div>
+                    </div>
                 </div>
 
                 <div class="row">
                     <!-- MESSAGE -->
-                    <div style="font-size:20px;">
-                        
+                    <div class="center">
                         <!-- <div id="voirTableauDesPieces" onclick="socket.emit('tableauPiecesJoueurServer');">Voir le tableau des pièces du joueur</div>
                         <div id="grilleCommune" onclick="socket.emit('grilleCommuneServer');">Voir plateau en données.</div> -->
-                        <div><button type="button" id='ready' onclick="socket.emit('readyButtonServer')">Pret</button></div>
+                        <div>
+                            <button class="submit-btn" type="button" id='ready' onclick="socket.emit('readyButtonServer')">Prêt</button>
+                        </div>
                         <!-- Mettre un bouton qui permet de supprimer une pièce déjà posée sur le plateau (réarrangement après toutes les pièces mises) -->
-                        <div><button type="button" id='aleatoire' onclick="socket.emit('pieceAleatoireServer')">Mise en place des pièces aléatoires</button></div>
+                        <div>
+                            <button class="submit-btn" type="button" id='aleatoire' onclick="socket.emit('pieceAleatoireServer')">Mise en place des pièces aléatoires</button>
+                        </div>
                     </div>
                 </div>
             </div>
