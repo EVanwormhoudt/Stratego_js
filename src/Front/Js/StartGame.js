@@ -161,7 +161,6 @@
             let row = document.createElement("tr");
             for(let a=0;a<3;a++){
                 let column = document.createElement("td");
-                column.classList.add("tdTaille")
                 column.textContent="";
                 row.appendChild(column);
             }

@@ -108,6 +108,7 @@ app.get('/waitingRoom', (req,res) => {
 
 // redirige vers la page de jeu si l'URL contient '/game'
 app.get('/game',(req,res)=>{
+    console.log(req.session)
     if(req.session.username && req.session.player && req.session.ready == undefined) {
         console.log(req.session)
         res.sendFile(__dirname + '/Front/Html/Game.html');
@@ -133,6 +134,7 @@ io.on('connection', (socket) => {
 
     socket.on("getScore",()=>{
         socket.emit("sendScore",(scoreHandler.getScores()))
+        socket.handshake.session.ready = undefined;
     })
 
     socket.on("isSession",()=>{
@@ -191,8 +193,11 @@ io.on('connection', (socket) => {
     //gère les déconexions peut importe la page
     socket.on('disconnect', () => {
         if(socket.handshake.session.room !== undefined && !games[socket.handshake.session.room]){
-            rooms[socket.handshake.session.room][0] = 0;
-            rooms[socket.handshake.session.room][1] = null;
+            console.log(rooms[socket.handshake.session.room])
+            if(rooms[socket.handshake.session.room]) {
+                rooms[socket.handshake.session.room][0] = 0;
+                rooms[socket.handshake.session.room][1] = null;
+            }
         }
         if(socket.handshake.session.room !== undefined && games[socket.handshake.session.room] && socket.handshake.session.ready !==undefined){
             if( games[socket.handshake.session.room].ready === 2){
@@ -211,13 +216,13 @@ io.on('connection', (socket) => {
             let srvSockets = io.sockets.sockets;
             srvSockets.forEach(user => {
                 if (user.handshake.session.room === socket.handshake.session.room){
-                    user.handshake.session.player = undefined;
-                    user.handshake.session.room = undefined;
+                    user.handshake.session.player = null;
+                    user.handshake.session.room = null;
                     user.handshake.session.ready = undefined;
                 }
             });
-            socket.handshake.session.player = undefined;
-            socket.handshake.session.room = undefined;
+            socket.handshake.session.player = null;
+            socket.handshake.session.room = null;
             socket.handshake.session.ready = undefined;
         }
     });
@@ -372,13 +377,13 @@ io.on('connection', (socket) => {
         let srvSockets = io.sockets.sockets;
         srvSockets.forEach(user => {
             if (user.handshake.session.room === socket.handshake.session.room){
-                user.handshake.session.player = undefined;
-                user.handshake.session.room = undefined;
+                user.handshake.session.player = null;
+                user.handshake.session.room = null;
                 user.handshake.session.ready = undefined;
             }
         });
-        socket.handshake.session.player = undefined;
-        socket.handshake.session.room = undefined;
+        socket.handshake.session.player = null;
+        socket.handshake.session.room = null;
         socket.handshake.session.ready = undefined;
 
     })
@@ -445,13 +450,13 @@ io.on('connection', (socket) => {
             let srvSockets = io.sockets.sockets;
             srvSockets.forEach(user => {
                 if (user.handshake.session.room === socket.handshake.session.room){
-                    user.handshake.session.player = undefined;
-                    user.handshake.session.room = undefined;
+                    user.handshake.session.player = null;
+                    user.handshake.session.room = null;
                     user.handshake.session.ready = undefined;
                 }
             });
-            socket.handshake.session.player = undefined;
-            socket.handshake.session.room = undefined;
+            socket.handshake.session.player = null;
+            socket.handshake.session.room = null;
             socket.handshake.session.ready = undefined;
 
         }
