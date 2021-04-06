@@ -1,18 +1,7 @@
-/*Pareil*/
-
+/* header */
 html {
     position: relative;
     min-height: 100%;
-}
-
-body {
-    background-image: linear-gradient(to bottom, rgba(22, 22, 22, 0.3) 0%, rgba(22, 22, 22, 0.7) 75%, #000000 100%), url(../Images/ban.png);
-    background-size: cover;
-}
-
-
-.bg-black {
-    background-color: black;
 }
 
 .logo {
@@ -22,11 +11,6 @@ body {
     height: 35px;
 }
 
-.icon {
-    width: 28px;
-    height: 28px;
-}
-
 nav {
     z-index: 1;
     position: fixed;
@@ -34,21 +18,28 @@ nav {
     transition: 1s;
 }
 
+/* body */
+body {
+    background-image: linear-gradient(to bottom, rgba(22, 22, 22, 0.3) 0%, rgba(22, 22, 22, 0.7) 75%, #000000 100%), url(../Images/ban.png);
+    background-size: cover;
+}
+
+.bg-black {
+    background-color: black;
+}
+
+.icon {
+    width: 28px;
+    height: 28px;
+}
+
 .container {
     text-align: justify;
 }
-
-links {
-
-}
-
-/* body */
-
 /* fin body */
 
 
 /*formulaire*/
-
 #rect{
     max-width: 200%;
     margin-inside: 30px;
@@ -59,17 +50,18 @@ links {
     background-color: rgba(0, 0, 0, 0.8);
 
 }
+
 .center {
     position: relative;
     margin-left: 50%;
-    transform: translateX(-50%); /* tiré de la moitié de sa propre hauteur */
+    transform: translateX(-50%);
 }
 
 .get-in-touch {
     position: absolute;
     padding-top: 120px;
     margin-left: 50%;
-    transform: translateX(-50%); /* tiré de la moitié de sa propre hauteur */
+    transform: translateX(-50%);
 }
 
 .get-in-touch .title {
@@ -87,11 +79,13 @@ links {
     -webkit-background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
 }
+
 .contact-form .form-field {
     position: relative;
     margin: 32px 0;
     background-color: transparent;
 }
+
 .contact-form .input-text {
     background-color: transparent;
     display: block;
@@ -104,14 +98,17 @@ links {
     font-weight: 400;
     color: #FFFFFF;
 }
+
 .contact-form .input-text:focus {
     outline: none;
 }
+
 .contact-form .input-text:focus + .label,
 .contact-form .input-text.not-empty + .label {
     -webkit-transform: translateY(-24px);
     transform: translateY(-24px);
 }
+
 .contact-form .label {
     position: absolute;
     left: 20px;
@@ -126,6 +123,7 @@ links {
     transition: transform .2s ease-in-out,
     -webkit-transform .2s ease-in-out;
 }
+
 .contact-form .submit-btn {
     display: inline-block;
     background-color: #000;
@@ -156,6 +154,7 @@ links {
     width:200px;
     cursor: pointer;
 }
+
 .directionsLog {
     position: absolute;
     margin-left: 68%;

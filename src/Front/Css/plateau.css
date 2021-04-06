@@ -27,18 +27,17 @@ img{
 }
 
 #tableauStratego {
-	/*background: no-repeat url(../Images/board.png);*/
 	background : center / contain no-repeat url(../Images/board.svg),
 			#eee 100% url(../Images/board-no-trees.svg);
 }
 
 #tableauDuJeu, td {
 	width: 340px;
+
 }
 
 #pions {
 	margin:20px;
-	color: yellowgreen;
 }
 
 #tableauPionsJ1 {
