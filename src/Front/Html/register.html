@@ -15,13 +15,9 @@
     <!-- include css-->
     <link rel="stylesheet" type="text/css" href="../Css/styleLog.css"/>
 
-    <!-- include js-->
-    <script src="../Js/barreAccueil.js"></script>
-
     <!-- socket io-->
     <script src="/socket.io/socket.io.js"></script>
     <!-------->
-    <script src="/socket.io/socket.io.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     <!----Ajouts pour form bootstrap--->
@@ -30,7 +26,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!------ Fin ajouts bootstrap ---------->
 </head>
-<body style="background-color: black">
+
 <header>
     <nav>
         <nav class="navbar navbar-expand-sm navbar-dark">
@@ -50,9 +46,9 @@
             </div>
         </nav>
     </nav>
-    <!-- lancer les événements de scroll et de resize -->
-    <script>event.addEvent()</script>
 </header>
+
+<body>
 <div class="get-in-touch ">
     <div id="rect">
         <h1 class="title">Inscription</h1>
@@ -73,17 +69,18 @@
                 <input id="passwordConf" class="input-text js-input" autocomplete="off" type="password" required>
                 <label class="label" for="passwordConf">Confirmation du mot de passe</label>
             </div>
-            <div class="form-field col-lg-12">
-                <input class="submit-btn" type="submit" value="Je m'inscris !">
+            <div class="center">
+                <div class="form-field col-6">
+                    <input class="submit-btn" type="submit" value="Je m'inscris !">
+                </div>
+            </div>
+            <div class="col-12 card-footer center">
+                <div class="d-flex justify-content-center links">
+                    <p style="color: #0062c5; padding: 0 10px 0 0">Vous avez déjà un de compte?</p>
+                    <a href="/login" style="color: #A91C29"> Se connecter</a>
+                </div>
             </div>
         </form>
-        <li style="display: inline">
-            <a href="/login"><div class="directionsReg">Connexion</div></a>
-        </li>
-        <br>
-        <li style="display: inline">
-            <a href="/"><div class="directionsLog">Page d'accueil</div></a>
-        </li>
     </div>
 </div>
 </body>

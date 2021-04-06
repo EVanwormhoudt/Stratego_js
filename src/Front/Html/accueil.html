@@ -34,7 +34,7 @@
                 <ul class="navbar-nav">
                     <!---Judith Ajout bonjour pseudo-->
                     <li class="nav-item" id="bonjour">
-                        <p class="nav-link text-left">Bonjour <span id="nomUtilisateur"></span> ! </p>
+                        <a class="nav-link text-left">Bonjour <span id="nomUtilisateur"></span> ! </a>
                     </li>
                     <li class="nav-item" id="jouer">
                         <a class="nav-link text-left" href="/waitingRoom">Jouer</a>
@@ -67,55 +67,56 @@
 <body >
 <div class="main">
     <div class="container">
+        <!-- Corp entre les bannière -->
         <div class="row">
-            <div class="col-sm-1"></div>
-            <div class="col-md-7 bg-black text-secondary">
-                <h2><img src="../Images/icon.png" class="icon mb-2 mr-1"/>Bienvenue sur Stratego</h2>
+            <!-- DIV de gauche [description du jeu] -->
+            <div class="col-md-8 bg-black text-secondary">
+                <h3><img src="../Images/icon.png" class="icon mb-2 mr-1"/>Bienvenue sur Stratego</h3>
                 <a class="logo mr-3" href="/"></a>
                 <p>Bonjour à tous,</p>
                 <p>Bienvenue sur Stratego, nous sommes ravie de vous recevoir sur notre champs de bataille et espérons que vous êtes prêts pour la guerre!</p>
                 <p>Description du jeu:</p>
                 <p>Le Stratego se joue à 2 joueurs sur un plateau carré de 92 cases. Chaque joueur possède 30 pièces. Au début de la partie chaque joueur dispose ses pièces comme il l'entend sur ses quatre premières rangées. Cette pré-phase du jeu est stratégique et déterminante pour la suite de la partie donc réfléchissez bien où placer vos pièces.
                     Chaque joueur déplace une pièce d'une case: à gauche, à droite, en avant ou en arrière (pas en diagonale). Une attaque se produit quand le joueur déplace sa pièce sur une case déjà occupée par l'adversaire. La pièce la plus forte reste en jeu, l'autre est éliminée ; en cas d'égalité, les deux sont éliminées.</p>
-                <p>Voici les pièces classées de la plus forte à la plus faible (la force entre parenthèses) :</p>
+                <p>Voici les pièces classées de la plus forte à la plus faible :</p>
 
                 <ul>
-                    <img src="../Images/pion.svg" class="icon"/> 1 Maréchal de force 10<br>
-                    <li>1 Général de force 9</li>
-                    <li>2 Colonels de force 8</li>
-                    <li>3 Commandants de force 7</li>
-                    <li>4 Capitaines de force 6</li>
-                    <li>4 Lieutenants de force 5</li>
-                    <li>4 Sergents de force 4</li>
-                    <li>5 Démineurs de force 3</li>
-                    <li>8 Éclaireurs de force 2</li>
-                    <li>1 Espion de force 1</li>
-                    <li>1 Drapeau à capturer</li>
+                    <img src="../Images/icons/100r.svg" class="pion"/> 6 Bombes de force 10<br>
+                    <img src="../Images/icons/10b.svg" class="pion"/> 1 Maréchal de force 10<br>
+                    <img src="../Images/icons/9r.svg" class="pion"/> 1 Général de force 9<br>
+                    <img src="../Images/icons/8b.svg" class="pion"/> 2 Colonels de force 8<br>
+                    <img src="../Images/icons/7r.svg" class="pion"/> 3 Commandants de force 7<br>
+                    <img src="../Images/icons/6b.svg" class="pion"/> 4 Capitaines de force 6<br>
+                    <img src="../Images/icons/5r.svg" class="pion"/> 4 Lieutenants de force 5<br>
+                    <img src="../Images/icons/4b.svg" class="pion"/> 4 Sergents de force 4<br>
+                    <img src="../Images/icons/3r.svg" class="pion"/> 5 Démineurs de force 3<br>
+                    <img src="../Images/icons/2b.svg" class="pion"/> 8 Éclaireurs de force 2<br>
+                    <img src="../Images/icons/1r.svg" class="pion"/> 1 Espion de force 1<br>
+                    <img src="../Images/icons/0b.svg" class="pion"/> 1 Drapeau à capturer<br>
                 </ul>
 
                 <p>Le but du jeu est de capturer le Drapeau de l'adversaire ou d'éliminer assez de pièces adverses afin que l'adversaire ne puisse plus faire de déplacements.</p>
             </div>
 
-            <div class="col-md-3 bg-black text-secondary">
-                <h2><img src="../Images/icon.png" class="icon mb-2 mr-1"/>Informations</h2>
+            <!-- DIV de groite [explication de connexion] -->
+            <div class="col-md-4 bg-black text-secondary">
+                <h3><img src="../Images/icon.png" class="icon mb-2 mr-1"/>Informations</h3>
                 <p>Jouer à Stratego: c'est facile !</p>
                 <p>Vous trouverez sur votre gauche la description du jeu.</p>
                 <p>Dans un premier temps vous devrez vous créer un compte. Cliquez sur "Créer un compte" en haut à droite du site. Vous devrez alors remplir les informations du formulaire</p>
                 <p>Il est possible de jouer en tant que 'inviter'. Pour cela il vous suffit de rentrer un pseudo.</p>
                 <p>Une fois que vous êtes enregistré, vous n'avez plus qu'à cliquer sur "Jouer"</p>
                 <p>Vous vous retrouvrez alors dans la salle d'attente en attendant un autre joueur.</p>
-                <br>
-                <p> Jouer en tant qu'invité : </p>
+
+                <p style="margin-top: 8em"> Jouer en tant qu'invité : </p>
                 <form id="loginForm" action="" class="logForm">
                     <div class="form-field">
                         <input id="invite" class="input-text" autocomplete="off" type="text" placeholder="Nom d'utilisateur" required/>
-                        <input class="submit-btn" type="submit" value=" Jouer !">
+                        <input class="submit-btn mb-5" type="submit" value=" Jouer !">
                     </div>
                 </form>
             </div>
             <div class="col-sm-1"></div>
-
-
         </div>
     </div>
 </div>

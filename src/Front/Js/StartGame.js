@@ -147,7 +147,7 @@
     socket.on("tableauPionsClientBuild",(playerNbr)=>{
         //console.log("Appel de la fonction 'tableauPionsClientBuild' coté client pour le joueur",playerNbr,".");
         let tableID = (playerNbr==1) ? "tableauPionsJ1" : "tableauPionsJ2";
-        let conteneurDuJeu = document.getElementById('conteneurDuJeu');
+        let tableauDuJeu = document.getElementById('tableauDuJeu');
 
         let tbl = document.createElement("table");
         tbl.id=tableID;
@@ -171,7 +171,7 @@
         tbl.appendChild(tblcaption);
         tbl.appendChild(tblThead);
         tbl.appendChild(tblTbody);
-        conteneurDuJeu.appendChild(tbl);
+        tableauDuJeu.appendChild(tbl);
     })
 
     // Remplit d'après les informations du server (game.joueurX.tableOfPawns()) les informations dans le tableau des pions
@@ -203,7 +203,7 @@
         }
 
         // ---------------- Evenements sur le tableau des pions ----------------
-        let playerColor = (playerNbr==1) ? "red" : "lightblue";
+        let playerColor = (playerNbr==1) ? "#cc0011ff" : "#0000ccff";
         for(let i=0;i<12;i++){
             tbodyPion.children[i].addEventListener("click",()=>{
                 // On demande au serveur si le type de pion de la case cliquée est encore disponible pour le joueur
@@ -215,7 +215,7 @@
                             if(precedentIndice == undefined){
                                 precedentIndice = i;
                             } else {
-                                tbodyPion.children[precedentIndice].style.background="white"; // Si precedentIndice existe, on met en blanc la case précédement cliquée
+                                tbodyPion.children[precedentIndice].style.background="lightgrey"; // Si precedentIndice existe, on met en blanc la case précédement cliquée
                                 precedentIndice=i;
                             }
                             tbodyPion.children[i].style.background=playerColor; // On selectionne la case cliquée
@@ -317,8 +317,8 @@
     })
 
     socket.on("gameBegin",(player)=> {
-        let conteneurDuJeu = document.getElementById("conteneurDuJeu");
-        conteneurDuJeu.removeChild(document.getElementById("tableauPionsJ"+player)); // Supprime le tableau des pions à poser
+        let tableauDuJeu = document.getElementById("tableauDuJeu");
+        tableauDuJeu.removeChild(document.getElementById("tableauPionsJ"+player)); // Supprime le tableau des pions à poser
 
         tableauPionsPris(); // Affichage du tableau des pions pris
 

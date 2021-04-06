@@ -11,11 +11,18 @@ html {
 }
 
 .icon {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
+}
+
+.pion {
+    width: 30px;
+    height: 40px;
 }
 
 nav {
+    z-index: 1;
+
     position: fixed;
     width: 100%;
     transition: 1s;

@@ -69,17 +69,21 @@
                     <script src="../Js/StartGame.js"></script>
                     -->
                 </div>
+                <div class="row">
+                    <!-- ANNONCEUR -->
+                    <div id="annonceur" style="font-size:15px;">
+                        <h6>Binvenue dans le salon n°<span id="roomNbr"></span>.
+                            Vous êtes <span id="currentPlayer"></span> (player<span id="playerID"></span>)
+                            et affrontez <span id="enemy"></span> (player<span id="enemyID"></span>).
+                        </h6>
+                    </div>
+                </div>
             </div>
 
             <!-- DIV de droite [explication de connexion] -->
             <div class="col-md-4 bg-black text-secondary">
                 <div class="row">
-                    <!-- ANNONCEUR -->
-                    <div id="annonceur" style="font-size:15px;">
-                        <p>Vous êtes dans la room <span id="roomNbr"></span>.</p>
-                        <p>Vous êtes <span id="currentPlayer"></span> (player<span id="playerID"></span>) et affrontez <span id="enemy"></span> (player<span id="enemyID"></span>).</p>
-                        <p>Phase de préparation !</p>
-                    </div>
+                    <div id="tableauDuJeu"></div>
                 </div>
 
                 <div class="row">

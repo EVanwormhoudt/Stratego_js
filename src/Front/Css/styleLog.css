@@ -6,10 +6,8 @@ html {
 }
 
 body {
-    background-image: url(../Images/ban.png);
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: top;
+    background-image: linear-gradient(to bottom, rgba(22, 22, 22, 0.3) 0%, rgba(22, 22, 22, 0.7) 75%, #000000 100%), url(../Images/ban.png);
+    background-size: cover;
 }
 
 
@@ -30,23 +28,19 @@ body {
 }
 
 nav {
-    margin-top: 0%;
+    z-index: 1;
     position: fixed;
     width: 100%;
     transition: 1s;
-}
-
-nav.black {
-    z-index: 10;
-    background: black;
-    display: inline-block;
-    padding: 0 25px;
 }
 
 .container {
     text-align: justify;
 }
 
+links {
+
+}
 
 /* body */
 
@@ -65,15 +59,19 @@ nav.black {
     background-color: rgba(0, 0, 0, 0.8);
 
 }
+.center {
+    position: relative;
+    margin-left: 50%;
+    transform: translateX(-50%); /* tiré de la moitié de sa propre hauteur */
+}
 
 .get-in-touch {
-    padding-top: 12%;
-    padding-bottom: 15%;
-    max-width: 90%;
     position: absolute;
-    top: 45%; left: 50%;
-    transform: translate(-50%, -50%);
+    padding-top: 120px;
+    margin-left: 50%;
+    transform: translateX(-50%); /* tiré de la moitié de sa propre hauteur */
 }
+
 .get-in-touch .title {
     text-align: center;
     text-transform: uppercase;

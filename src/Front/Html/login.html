@@ -29,7 +29,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!------ Fin ajouts bootstrap ---------->
 </head>
-<body style="background-color: black">
+
 <header>
     <nav>
         <nav class="navbar navbar-expand-sm navbar-dark">
@@ -52,6 +52,8 @@
     <!-- lancer les événements de scroll et de resize -->
     <script>event.addEvent()</script>
 </header>
+
+<body>
 <div class="get-in-touch ">
     <div id="rect">
         <h1 class="title">Connexion</h1>
@@ -64,14 +66,21 @@
                 <input id="password" class="input-text js-input" autocomplete="off" type="password" required>
                 <label class="label" for="password">Mot de passe</label>
             </div>
-            <div class="form-field col-lg-12">
-                <input class="submit-btn" type="submit" value="Connexion !">
+
+
+            <div class="center">
+                <div class="form-field col-6">
+                    <input class="submit-btn" type="submit" value="Connexion !">
+                </div>
+            </div>
+
+            <div class="col-12 card-footer center">
+                <div class="d-flex justify-content-center links">
+                    <p style="color: #0062c5; padding: 0 10px 0 0">Vous n'avez pas encore de compte?</p>
+                    <a href="/register" style="color: #A91C29"> S'inscrire</a>
+                </div>
             </div>
         </form>
-        <div class="directionsButton">
-            <li style="display: inline"><a href="/register"> <div class="directionsReg">Inscription</div></a></li><br>
-            <li style="display: inline"><a href="/"> <div class="directionsLog">Page d'accueil</div></a></li>
-        </div>
     </div>
 </div>
 </body>
