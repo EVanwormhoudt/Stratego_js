@@ -41,12 +41,12 @@ app.use(session);
 const roomnbr = 10
 let rooms = new Array(roomnbr)
 let games =  new Array(roomnbr)
-
+scoreHandler.readScore()
 for(let i = 0;i<roomnbr;i++){
     rooms[i] = new Array(3);
     rooms[i][0] = 0;
 }
-scoreHandler.readScore()    // comme c'est pas instantané, et qu'on stocke autant le faire au début
+   // comme c'est pas instantané, et qu'on stocke autant le faire au début
 
 // Le serveur ecoute sur ce port
 http.listen(8880, () => {
@@ -98,7 +98,6 @@ app.get('/logout', (req,res) => {
 
 // redirige vers la page d'attente si l'URL contient '/waitingRoom'
 app.get('/waitingRoom', (req,res) => {
-
     if(req.session.username) {
         res.sendFile(__dirname + '/Front/Html/salleAttente.html');
     }
@@ -130,6 +129,11 @@ io.on('connection', (socket) => {
             console.log("personne ajouté")
         });
     });
+
+
+    socket.on("getScore",()=>{
+        socket.emit("sendScore",(scoreHandler.getScores()))
+    })
 
     socket.on("isSession",()=>{
         socket.emit("onSession",socket.handshake.session.username)
@@ -217,6 +221,10 @@ io.on('connection', (socket) => {
             socket.handshake.session.ready = undefined;
         }
     });
+
+    socket.on("getScore", ()=> {
+        socket.emit('sendScore',scoreHandler.getScores());
+    })
 
     // --------------- Socket pour la page game.html ---------------
 
@@ -315,6 +323,7 @@ io.on('connection', (socket) => {
                 }
             }
         })
+
 
         // Bouton 'Mise en place des pièces aléatoires' : place aléatoirement les pièces non posées du joueur
         socket.on('pieceAleatoireServer',()=>{
@@ -453,7 +462,6 @@ io.on('connection', (socket) => {
 
 app.post('/login', body('login').isLength({ min: 3 }).trim().escape(), (req, res) => {
     const login = req.body.login
-
     // Error management
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

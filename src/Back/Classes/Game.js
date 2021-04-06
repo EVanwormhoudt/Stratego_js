@@ -181,9 +181,9 @@ class Game{
     }
     setTime(){
         let now = new Date();
-        let gameTime = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds() ;
+        let gameTime = now.getMinutes() * 60 + now.getSeconds() ;
         if( gameTime - this.time < 0){
-            this.time = gameTime + 3600*24 - this.time;
+            this.time = gameTime + 3600 - this.time;
         }
         else {
             this.time = gameTime - this.time;

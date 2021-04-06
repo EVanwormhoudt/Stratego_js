@@ -72,31 +72,17 @@
                 <p>Vous trouverez ci-dessous le tableau des scores qui s'affiche</p>
 
 
-                <table align="center" width="250px" border="5">
+                <table align="center" width="400px" border="5">
                     <caption>Tableau des scores</caption>
                     <thead>
                     <tr>
-                        <th>Pseudo</th>
-                        <th>Scores</th>
+                        <th>Gagnant</th>
+                        <th>Perdant</th>
+                        <th>Temps</th>
+
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr>
-                        <td>Frédéric</td>
-                        <td>30</td>
-                    </tr>
-                    <tr>
-                        <td>Mathilde</td>
-                        <td>28</td>
-                    </tr>
-                    <tr>
-                        <td>Omar</td>
-                        <td>10</td>
-                    </tr>
-                    <tr>
-                        <td>Camille</td>
-                        <td>3</td>
-                    </tr>
+                    <tbody id="tableauScr">
                     </tbody>
                 </table>
                 <button onclick="window.location.href = '/game';" id="start" style="display: none">Commencer la Partie!</a></button>
@@ -121,6 +107,6 @@
         document.getElementById("start").style.display= "none";
     })
 </script>
-
+<script src="../Js/scoreViewer.js"></script>
 </body>
 </html>
