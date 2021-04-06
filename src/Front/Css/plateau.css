@@ -31,10 +31,7 @@ img{
 			#eee 100% url(../Images/board-no-trees.svg);
 }
 
-#tableauDuJeu, td {
-	width: 340px;
 
-}
 
 #pions {
 	margin:20px;
@@ -48,6 +45,15 @@ img{
 #tableauPionsJ2 {
 	height:100%;
 	display:inline-block;
+}
+
+#tableauPionsJ2 td {
+	width: 340px;
+
+}
+#tableauPionsJ1 td {
+	width: 340px;
+
 }
 
 #annonceur p {

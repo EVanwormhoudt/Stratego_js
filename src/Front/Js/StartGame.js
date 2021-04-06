@@ -11,7 +11,6 @@
             for(let a=0;a<10;a++){
                 let contentTD = document.createElement('td');
                 contentTD.id=a+(i*10);
-
                 rowTbody.appendChild(contentTD);
             }
             tblTbody.appendChild(rowTbody);
@@ -50,14 +49,13 @@
 
             for(let a=0;a<2;a++){
                 let colonneTbody = document.createElement("td");
-
                 let img = document.createElement("img")
                 let color = (a==1) ? "r" : "b";
                 img.src  = "../Images/icons/"+i+color+".svg";
                 img.classList.add(i + "strength")
                 img.style.height = "65px";
                 img.style.width = "55px";
-
+                console.log("")
                 colonneTbody.appendChild(img);
                 let txt = document.createElement("span");
                 txt.innerHTML="<span id="+i+color+">0</span>/"+pieceMax[compteur];
@@ -163,6 +161,7 @@
             let row = document.createElement("tr");
             for(let a=0;a<3;a++){
                 let column = document.createElement("td");
+                column.classList.add("tdTaille")
                 column.textContent="";
                 row.appendChild(column);
             }
