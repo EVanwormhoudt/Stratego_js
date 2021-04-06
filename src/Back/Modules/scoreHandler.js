@@ -10,7 +10,7 @@ const con = mysql.createConnection({
 
 
 let scoreHandler = (function (){
-    let scores = []
+    let datascores = []
 
     return{
         writeScore(newScore){
@@ -37,9 +37,8 @@ let scoreHandler = (function (){
             fs.readFile('./Back/Data/Scores.json', (err, data) => {
                 if (err) throw err;
                 const scores = JSON.parse(data);
-                return scores.scores[index];
+                datascores =  scores.scores[index];
             });
-
         },
         writePersonnalScore(newScore) {
             let sql = "INSERT INTO scores VALUES (default,?,?,?)";
@@ -91,7 +90,7 @@ let scoreHandler = (function (){
                                 time :i.time,
                                 pieces : tab
                             }
-                            scores.push(Data)
+                            datascores.push(Data)
                             if(i == result[result.length-1]){
                                 resolve(true)
                             }
@@ -101,7 +100,7 @@ let scoreHandler = (function (){
             });
         },
         getScores(){
-            return scores;
+            return datascores;
         }
     }
 

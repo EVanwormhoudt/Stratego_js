@@ -90,7 +90,7 @@ app.get("/register", (req, res) => {
 
 // redirige vers la page d'accueil si l'URL contient '/logout'
 app.get('/logout', (req,res) => {
-    req.session = null;
+    req.session.destroy();
     res.redirect('/');
 });
 
@@ -179,6 +179,10 @@ io.on('connection', (socket) => {
             }
         }
     });
+
+    socket.on("getScore", ()=> {
+        socket.emit('sendScore',scoreHandler.getScores());
+    })
 
     // A supprimer avant la mise en Production
     socket.on("emitInfo",()=>{
