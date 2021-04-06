@@ -249,6 +249,8 @@
                                     img.classList.add(image + "strength")
                                     img.style.height = "65px";
                                     img.style.width = "55px";
+                                    // a modifier pour que la taille de l'image soit régie par la taille de la case dans laquelle elle se trouve
+
 
                                     if(!document.getElementById(idCaseStratego).children.length){
                                         document.getElementById(idCaseStratego).appendChild(img) // On affiche l'image dans la case du plateau Stratego
