@@ -98,6 +98,7 @@ app.get('/logout', (req,res) => {
 
 // redirige vers la page d'attente si l'URL contient '/waitingRoom'
 app.get('/waitingRoom', (req,res) => {
+    req.session.ready = undefined;
     if(req.session.username) {
         res.sendFile(__dirname + '/Front/Html/salleAttente.html');
     }
