@@ -49,7 +49,7 @@ for(let i = 0;i<roomnbr;i++){
    // comme c'est pas instantané, et qu'on stocke autant le faire au début
 
 // Le serveur ecoute sur ce port
-http.listen(8880, () => {
+http.listen(8881, () => {
     console.log('Serveur lancé sur le port 8880');
 })
 
@@ -102,7 +102,7 @@ app.get('/waitingRoom', (req,res) => {
         res.sendFile(__dirname + '/Front/Html/salleAttente.html');
     }
     else{
-        res.sendFile(__dirname + '/Front/Html/accueil.html');
+        res.redirect('/');
     }
 });
 

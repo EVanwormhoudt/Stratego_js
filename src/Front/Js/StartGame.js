@@ -43,6 +43,7 @@
 
         for(let i=10;i>=0;i--){
             let rowTbody = document.createElement('tr');
+            rowTbody.style.padding="10px";
             let typePiece = document.createElement("td");
             typePiece.textContent=pieceName[compteur];
             rowTbody.appendChild(typePiece);
@@ -147,7 +148,8 @@
         let tableauDuJeu = document.getElementById('tableauDuJeu');
         let color = (playerNbr==1) ? "red" : "blue";
         tableauDuJeu.style.border="1px solid "+color;
-
+        tableauDuJeu.style.padding="10px";
+        
         let tbl = document.createElement("table");
         tbl.id=tableID;
         let tblcaption = document.createElement("caption")
@@ -161,6 +163,7 @@
             let row = document.createElement("tr");
             for(let a=0;a<3;a++){
                 let column = document.createElement("td");
+                column.style.width="300px";
                 column.classList.add("tdTaille")
                 column.textContent="";
                 row.appendChild(column);
