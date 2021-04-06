@@ -102,7 +102,7 @@ app.get('/waitingRoom', (req,res) => {
         res.sendFile(__dirname + '/Front/Html/salleAttente.html');
     }
     else{
-        res.sendFile(__dirname + '/Front/Html/accueil.html');
+        res.redirect('/');
     }
 });
 
