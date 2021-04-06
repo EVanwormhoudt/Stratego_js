@@ -1,7 +1,5 @@
 (function(){
 
-    //console.log("Le script 'StartGame.js' est lancé.")
-
     tableauStratego = ()=> {
 
         let conteneurJeu = document.getElementById("conteneurDuJeu");
@@ -28,12 +26,13 @@
         let pieceName = ["Maréchal","Général","Colonels","Commandants","Capitaines","Lieutenants","Sergents","Démineurs","Eclaireurs","Espion","Drapeau","Bombes"];
         let pieceMax = [1,1,2,3,4,4,4,5,8,1,1];
         let conteneurJeu = document.getElementById("tableauDuJeu");
+        conteneurJeu.style.padding="10px";
 
         let tbl = document.createElement('table')
         tbl.id="tableauPionsPris";
 
         let tblcaption = document.createElement('caption');
-        tblcaption.textContent="Tableau des pièces prises";
+        tblcaption.textContent="";
 
         let tblThead= document.createElement('thead')
         let rowThead = document.createElement('tr');
@@ -118,17 +117,17 @@
 
     // Affiche correctement les données au dessus du plateau
     socket.on("introductionClient",(userName,userNumber,enemyName,enemyNumber,roomID)=>{
-        //console.log("Appel de la fonction 'introductionClient' coté client.");
+        console.log("Appel de la fonction 'introductionClient' coté client.");
         document.getElementById("currentPlayer").textContent=userName;
-        document.getElementById('playerID').textContent=userNumber;
+        //document.getElementById('playerID').textContent=userNumber;
         document.getElementById('enemy').textContent=enemyName;
-        document.getElementById('enemyID').textContent=enemyNumber;
+        //document.getElementById('enemyID').textContent=enemyNumber;
         document.getElementById("roomNbr").textContent=roomID;
     });
 
     // Grise les cases adverses et non cliquables
     socket.on("caseGriseClientON",(deb,fin,playerNbr)=>{
-        //console.log("Appel de la fonction 'caseGriseClient' coté client pour le joueur",playerNbr,".");
+        console.log("Appel de la fonction 'caseGriseClient' coté client pour le joueur",playerNbr,".");
         for(let i=deb;i<=fin;i++){
             document.getElementById(i).style.background="silver";
             document.getElementById(i).style.opacity=0.5;
@@ -136,7 +135,7 @@
     })
 
     socket.on("caseGriseClientOFF",(deb,fin,playerNbr)=>{
-        //console.log("Appel de la fonction 'caseGriseClient' coté client pour le joueur",playerNbr,".");
+        console.log("Appel de la fonction 'caseGriseClient' coté client pour le joueur",playerNbr,".");
         for(let i=deb;i<=fin;i++){
             document.getElementById(i).style.background="white";
             document.getElementById(i).style.opacity=0;
@@ -145,9 +144,11 @@
 
     // Crée dynamiquement le tableau des pions du joueur en question
     socket.on("tableauPionsClientBuild",(playerNbr)=>{
-        //console.log("Appel de la fonction 'tableauPionsClientBuild' coté client pour le joueur",playerNbr,".");
+        console.log("Appel de la fonction 'tableauPionsClientBuild' coté client pour le joueur",playerNbr,".");
         let tableID = (playerNbr==1) ? "tableauPionsJ1" : "tableauPionsJ2";
         let tableauDuJeu = document.getElementById('tableauDuJeu');
+        let color = (playerNbr==1) ? "red" : "blue";
+        tableauDuJeu.style.border="1px solid "+color;
 
         let tbl = document.createElement("table");
         tbl.id=tableID;
@@ -176,7 +177,7 @@
 
     // Remplit d'après les informations du server (game.joueurX.tableOfPawns()) les informations dans le tableau des pions
     socket.on("tableauPionsClientContent",(tableOfPawns,playerNbr)=>{
-        //console.log("Appel de la fonction 'tableauPionsClientContent' coté client pour le joueur",playerNbr,".");
+        console.log("Appel de la fonction 'tableauPionsClientContent' coté client pour le joueur",playerNbr,".");
         let tbodyPion = (playerNbr==1) ? document.getElementById("tableauPionsJ1").children[2] : document.getElementById("tableauPionsJ2").children[2] ;
         let i=0;
         for(element of tableOfPawns){
@@ -187,17 +188,14 @@
     })
 
     // Applique un listener sur les cases du tableau des pions du joueur ET du plateau Stratego
-
-    // Applique un listener sur les cases du tableau des pions du joueur ET du plateau Stratego
     socket.on('preparationListenersClient',(playerNbr)=>{
-        //console.log("Appel de la fonction 'preparationListenersClient' coté client pour le joueur",playerNbr,".");
+        console.log("Appel de la fonction 'preparationListenersClient' coté client pour le joueur",playerNbr,".");
 
         let tbodyPion = (playerNbr==1) ? document.getElementById("tableauPionsJ1").children[2] : document.getElementById("tableauPionsJ2").children[2];
-        // let pieceActuelle = (playerNbr==1) ? document.getElementById("pieceActuelleRouge") : document.getElementById("pieceActuelleBleue");
         let pieceActuelle;
         let message=document.getElementById("message");
         let precedentIndice = undefined;
-        let nbrClicsCase = new Array(100); // Important pour gérer les sockets lorsqu'il y a plus d'un clic sur une même case.
+        let nbrClicsCase = new Array(150); // Important pour gérer les sockets lorsqu'il y a plus d'un clic sur une même case.
         for(let i=0;i<nbrClicsCase.length;i++){
             nbrClicsCase[i]=0;
         }
@@ -215,14 +213,14 @@
                             if(precedentIndice == undefined){
                                 precedentIndice = i;
                             } else {
-                                tbodyPion.children[precedentIndice].style.background="lightgrey"; // Si precedentIndice existe, on met en blanc la case précédement cliquée
+                                tbodyPion.children[precedentIndice].style.background="black"; // Si precedentIndice existe, on met en blanc la case précédement cliquée
                                 precedentIndice=i;
                             }
                             tbodyPion.children[i].style.background=playerColor; // On selectionne la case cliquée
                             pieceActuelle=tbodyPion.children[i].children[0].textContent; // On actualise
                         } else { // Sinon, on ne fait rien.
                             message.textContent="Vous ne pouvez pas selectionné un pion de type '"+tbodyPion.children[i].children[0].textContent+"' car le nombre restant de cette pièce est nul.";
-                            //console.log("Vous ne pouvez plus selectionné cette pièce : nombre restant épuisé.");
+                            console.log("Vous ne pouvez plus selectionné cette pièce : nombre restant épuisé.");
                         }
                     }
                 })
@@ -262,7 +260,7 @@
                                         tbodyPion.children[idPiecePop].children[1].textContent++; //
                                     }
                                 }else{
-                                    //console.log("Vous ne pouvez plus poser de pièce du type '"+pieceActuelle+"'.")
+                                    console.log("Vous ne pouvez plus poser de pièce du type '"+pieceActuelle+"'.")
                                     document.getElementById("message").textContent="Vous ne pouvez plus poser de pièce du type '"+pieceActuelle+"'.";
                                 }
                             }
@@ -277,6 +275,8 @@
 
     socket.on("readyButtonClient",(ready)=>{
         if (ready) {
+            console.log("Vous êtes prêt. En attente de l'autre joueur.");
+            document.getElementById("message").textContent="Vous êtes prêt. En attente de l'autre joueur.";
             document.getElementById("ready").style.background = "green";
             for (let i = 0; i < 100; i++) {
                 let el = document.getElementById(i.toString()),
@@ -296,7 +296,7 @@
 
     socket.on("pieceAleatoireClient",(tableauPiece,caseIdDebut,playerID)=>{
         document.getElementById("message").textContent="";
-        //console.log("Appel de 'pieceAleatoireClient' coté client.")
+        console.log("Appel de 'pieceAleatoireClient' coté client.")
         let color = (playerID==1) ? "r" : "b";
         let indice=0;
         // Affichage des images sur le plateau Stratego
@@ -314,14 +314,14 @@
         let tbodyPions = (playerID==1) ? document.getElementById("tableauPionsJ1") : document.getElementById("tableauPionsJ2")
         for(let i=0;i<12;i++){
             tbodyPions.children[2].children[i].children[1].textContent=0;
-            tbodyPions.children[2].children[i].style.background="white";
+            tbodyPions.children[2].children[i].style.background="black";
         }
     })
 
     socket.on("gameBegin",(player)=> {
         let tableauDuJeu = document.getElementById("tableauDuJeu");
         tableauDuJeu.removeChild(document.getElementById("tableauPionsJ"+player)); // Supprime le tableau des pions à poser
-
+        document.getElementById("message").textContent="";
         tableauPionsPris(); // Affichage du tableau des pions pris
 
         document.getElementById("ready").parentNode.removeChild(document.getElementById("ready")); // Supprime le bouton "Prêt"
@@ -385,7 +385,7 @@
     socket.on("attackLost",(start,end,piece,player,looser)=>{
         let playerColor = (player==1) ? "r" : "b";
         document.getElementById(looser+playerColor).textContent++;
-        //console.log("attackLost : La piece de couleur ",playerColor," et de force ",looser," meurt.")
+        console.log("attackLost : La pièce de couleur ",playerColor," et de force ",looser," meurt.")
 
         document.getElementById(start).removeChild(document.getElementById(start).firstChild)
         let newLocation = document.getElementById(end.toString())
@@ -398,7 +398,7 @@
     socket.on("attackWon",(start,end,looser,player)=>{
         let ennemyColor = (player==1) ? "b" : "r";
         document.getElementById(looser+ennemyColor).textContent++;
-        //console.log("attackWon : La piece de couleur ",ennemyColor," et de force ",looser," meurt.")
+        console.log("attackWon : La pièce de couleur ",ennemyColor," et de force ",looser," meurt.")
 
         let previousLocation = document.getElementById(start.toString()).firstChild
         let newLocation = document.getElementById(end.toString())
@@ -409,8 +409,7 @@
     socket.on("attackEven",(start,end,looser,player)=>{
         document.getElementById(looser+"b").textContent++;
         document.getElementById(looser+"r").textContent++;
-        // console.log("attackEven : La piece de couleur rouge et de force ",looser," meurt.")
-        // console.log("attackEven : La piece de couleur bleue et de force ",looser," meurt.")
+        console.log("attackEven : La pièce rouge et la pièce bleue, de force ",looser," meurent.")
 
         document.getElementById(start).removeChild(document.getElementById(start).firstChild)
         document.getElementById(end).removeChild(document.getElementById(end).firstChild)
@@ -419,7 +418,7 @@
     socket.on("defenseWon",(start,looser,ennemyPlayer)=>{
         let ennemyColor = (ennemyPlayer==1) ? "r" : "b";
         document.getElementById(looser+ennemyColor).textContent++;
-        //console.log("defenseWon : La piece de couleur ",ennemyColor," et de force ",looser," meurt.")
+        console.log("defenseWon : La piece de couleur ",ennemyColor," et de force ",looser," meurt.")
 
         document.getElementById(start).removeChild(document.getElementById(start).firstChild)
     })
@@ -427,7 +426,7 @@
     socket.on("defenseLost",(start,end,piece,ennemyPlayer,looser)=>{
         let playerColor = (ennemyPlayer==1) ? "b" : "r";
         document.getElementById(looser+playerColor).textContent++;
-        //console.log(" defenseLost : La piece de couleur ",playerColor," et de force ",looser," meurt.")
+        console.log(" defenseLost : La piece de couleur ",playerColor," et de force ",looser," meurt.")
 
         let previousLocation = document.getElementById(start.toString()).firstChild
 

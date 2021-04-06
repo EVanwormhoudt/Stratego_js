@@ -1,3 +1,7 @@
+*{
+    color:white;
+}
+
 .conteneurDuJeu {
     position: relative;
     width: 100%;
@@ -35,7 +39,9 @@ div.stretchy-wrapper > div {
     position: absolute;
     top: 0;  bottom: 0;  left: 0;  right: 0;
 }*/
-
+#tableauDuJeu{
+    padding: 10px;
+}
 #tableauPionsJ1{
     height:100%;
     display:inline-block;
@@ -44,20 +50,14 @@ div.stretchy-wrapper > div {
 #tableauPionsJ2{
     height:100%;
     display:inline-block;
+    
 }
-
+#pret,#aleatoire{
+    margin:5px
+}
 #annonceur p{
     align-items:center;
 }
-
-#voirTableauDesPieces:hover{
-    background:green;
-}
-
-#grilleCommune:hover{
-    background:red;
-}
-
 #ready{
     height:100px;
     width:100px;

@@ -102,8 +102,7 @@ app.get('/waitingRoom', (req,res) => {
         res.sendFile(__dirname + '/Front/Html/salleAttente.html');
     }
     else{
-        res.username = "cquetuveux"
-        res.sendFile(__dirname + '/Front/Html/salleAttente.html');
+        res.sendFile(__dirname + '/Front/Html/accueil.html');
     }
 });
 
@@ -223,14 +222,14 @@ io.on('connection', (socket) => {
 
         // Affiche les informations générales (joueur adverse,room, phase de préparation)
         socket.on("introductionServer",()=>{
-            //console.log("Appel de la fonction 'introduction' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
+            console.log("Appel de la fonction 'introduction' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
             let enemyID = (socket.handshake.session.player==1) ? 2 : 1;
             socket.emit("introductionClient",socket.handshake.session.username,socket.handshake.session.player,rooms[socket.handshake.session.room][enemyID],enemyID,socket.handshake.session.room ); // NomDuJoueur,idDuJoueur,NomJoueurEnnemi,IdJoueurEnnemi,idRoom
         })
         
         // Grise les cases adverses, question d'intuitivité 
         socket.on("caseGriseServer",()=>{
-            //console.log("Appel de la fonction 'caseGriseServer' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
+            console.log("Appel de la fonction 'caseGriseServer' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
             let deb = (socket.handshake.session.player==1) ? 0 : 40;
             let fin = (socket.handshake.session.player==1) ? 59 : 99;
             socket.emit("caseGriseClientON",deb,fin),socket.handshake.session.player;
@@ -238,20 +237,20 @@ io.on('connection', (socket) => {
 
         // Appelle la socket coté client qui crée dynamiquement le tableau des pions du joueur, en fonction de 'playerNbr' (J1 ou J2)
         socket.on("tableauPionsServerBuild",()=>{
-            //console.log("Appel de la fonction 'tableauPionsServerBuild' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
+            console.log("Appel de la fonction 'tableauPionsServerBuild' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
             socket.emit("tableauPionsClientBuild",socket.handshake.session.player);
         })
 
         // Appelle la socket coté client qui remplit le tableau des pions des 2 joueurs
         socket.on("tableauPionsServerContent",()=>{
-            //console.log("Appel de la fonction 'tableauPionsServerContent' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
+            console.log("Appel de la fonction 'tableauPionsServerContent' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
             let tableauDesPionsJoueur = (socket.handshake.session.player==1) ? games[socket.handshake.session.room].joueur1.tableOfPawns : games[socket.handshake.session.room].joueur2.tableOfPawns;
             socket.emit('tableauPionsClientContent',tableauDesPionsJoueur,socket.handshake.session.player);
        })
 
         // Appelle la socket coté client qui applique des listeners sur le tableau des pions du joueur
         socket.on('preparationListenersServer',()=>{
-            //console.log("Appel de la fonction 'preparationListenersServer' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
+            console.log("Appel de la fonction 'preparationListenersServer' dans la room "+socket.handshake.session.room+" coté serveur pour le joueur",socket.handshake.session.player,"(",socket.handshake.session.username,").")
             socket.emit('preparationListenersClient',socket.handshake.session.player);
         })
 
@@ -289,20 +288,7 @@ io.on('connection', (socket) => {
             socket.emit("decrementationTypePionJoueurClient",possible,gameJoueur.forceDuType(typePiece),idCaseStratego,gameJoueur.indiceDuType(typePiece),idPiecePop,nbrDeClics);
         });
 
-        /* -------------------------------- Informations pour débuger ---------------- ----------------*/
-
-        socket.on("tableauPiecesJoueurServer",()=>{
-            if(socket.handshake.session.player==1){
-            socket.emit("tableauPiecesJoueurClient",games[socket.handshake.session.room].joueur1.tableOfPawns)
-            }else{socket.emit("tableauPiecesJoueurClient",games[socket.handshake.session.room].joueur2.tableOfPawns)}
-        })
-
-        socket.on("grilleCommuneServer",()=>{
-            socket.emit("grilleCommuneClient", games[socket.handshake.session.room].grille);
-        })
-
         /* -------------------------------- Effets des boutons cliquables -------------------------------- */
-
 
         // Bouton 'Pret' 
         socket.on('readyButtonServer',()=>{
@@ -369,7 +355,7 @@ io.on('connection', (socket) => {
         games[socket.handshake.session.room][0] = 0
         games[socket.handshake.session.room][1] = null;
         games[socket.handshake.session.room][2] = null;
-        let srvSockets = io.to[socket.handshake.session.room].sockets.sockets;
+        let srvSockets = io.sockets.sockets;
         srvSockets.forEach(user => {
             if (user.handshake.session.room === socket.handshake.session.room){
                 user.handshake.session.player = undefined;
@@ -403,7 +389,7 @@ io.on('connection', (socket) => {
     socket.on("attack",(start,end)=>{
         if(!games[socket.handshake.session.room].verifMove(socket.handshake.session.player,start,end)) {
             socket.emit("moveImpossible");
-            // console.log("moveImpossible")
+            //console.log("moveImpossible")
             return
         }
         let result = games[socket.handshake.session.room].attack(start,end,socket.handshake.session.player);
