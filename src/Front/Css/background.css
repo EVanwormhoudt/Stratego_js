@@ -1,3 +1,4 @@
+/* header */
 html {
     position: relative;
     min-height: 100%;
@@ -8,11 +9,6 @@ html {
     background-size: cover;
     width: 120px;
     height: 35px;
-}
-
-.icon {
-    width: 28px;
-    height: 28px;
 }
 
 nav {
@@ -43,6 +39,12 @@ body {
 .bg-black {
     background-color: black;
     min-height: 100vh;
+}
+
+
+.icon {
+    width: 28px;
+    height: 28px;
 }
 
 .row {

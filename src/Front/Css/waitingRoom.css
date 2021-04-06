@@ -1,14 +1,12 @@
-.message{
+.message {
     margin-top: 2%;
 }
 
 .center {
     text-align: center;
-    margin-top: 35vh; /* poussé de la moitié de hauteur de viewport */
-
-    transform: translateY(-50%); /* tiré de la moitié de sa propre hauteur */
+    margin-top: 35vh;
+    transform: translateY(-50%);
 }
-
 
 .loader {
     max-width: 5rem;
@@ -18,7 +16,6 @@
     align-items: center;
     margin-bottom: 10%;
 }
-
 
 circle {
     fill: none;

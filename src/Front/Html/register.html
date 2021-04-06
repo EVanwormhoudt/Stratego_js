@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Registerpage</title>
+    <title>Stratego - Registerpage</title>
 
     <!--    ajout du logo du site-->
     <link rel="icon" type="image/x-icon" href="../Images/icon.png"/>
@@ -13,7 +13,7 @@
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 
     <!-- include css-->
-    <link rel="stylesheet" type="text/css" href="../Css/styleLog.css"/>
+    <link rel="stylesheet" type="text/css" href="../Css/formLogReg.css"/>
 
     <!-- socket io-->
     <script src="/socket.io/socket.io.js"></script>
@@ -84,9 +84,9 @@
     </div>
 </div>
 </body>
+
+<script>let socket = io();</script>
 <script src="../Js/modules/logger.js"></script>
 <script src="../Js/register.js"></script>
-<script>
-    let socket = io();
-</script>
+
 </html>
