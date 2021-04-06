@@ -272,7 +272,7 @@
     });
 
     /* ---------------- Boutons cliquables ---------------- */
-
+    //socket pour quand le joueur appuie sur le bouton ready,  on retire les évenements qui servaient à placer les pièces, et on définit les lacs
     socket.on("readyButtonClient",(ready)=>{
         if (ready) {
             console.log("Vous êtes prêt. En attente de l'autre joueur.");
@@ -288,13 +288,14 @@
                 } else {
 
                     document.getElementById(i.toString()).innerText = ' ';
-                    document.getElementById(i.toString()).style.color = "pink"
+                    document.getElementById(i.toString()).style.color = "pink"; //ça marche et c'est efficace critiquez pas
                 }
             }
         }else{document.getElementById("message").textContent="Veuillez poser toutes vos pièces avant d'appuyer sur le bouton 'Prêt'."}
 
     });
 
+    //fonction qui va remplir chez le client mais aussi pour le serveur le tableau de pionts de manière aléatoire
     socket.on("pieceAleatoireClient",(tableauPiece,caseIdDebut,playerID)=>{
         document.getElementById("message").textContent="";
         console.log("Appel de 'pieceAleatoireClient' coté client.")
@@ -319,6 +320,8 @@
         }
     })
 
+    //Fonction qui gère le début de la partie, cad qu'elle ajoute les pionts d'en face,
+    //Et ajoute les nouveaux evenements. On retire aussi le fond qui indiquait où placer les pièces
     socket.on("gameBegin",(player)=> {
         let tableauDuJeu = document.getElementById("tableauDuJeu");
         tableauDuJeu.removeChild(document.getElementById("tableauPionsJ"+player)); // Supprime le tableau des pions à poser
@@ -377,12 +380,14 @@
             document.getElementById(i).style.opacity='';
         }
     });
+
+    //Reception coté client du déplacement
     socket.on("PieceMoved",(start,end)=>{
         let previousLocation = document.getElementById(start.toString()).firstChild
         let newLocation = document.getElementById(end.toString())
         newLocation.appendChild(previousLocation);
     });
-
+    //lorsque le joueur a attaqué et qu'il a perdu
     socket.on("attackLost",(start,end,piece,player,looser)=>{
         let playerColor = (player==1) ? "r" : "b";
         document.getElementById(looser+playerColor).textContent++;
@@ -396,6 +401,7 @@
 
     })
 
+    //lorsque le joueur a attaqué et qu'il a gagné
     socket.on("attackWon",(start,end,looser,player)=>{
         let ennemyColor = (player==1) ? "b" : "r";
         document.getElementById(looser+ennemyColor).textContent++;
@@ -407,6 +413,7 @@
         newLocation.appendChild(previousLocation);
     });
 
+    //lorsqu'un des deux joueurs a attaqué et que c'était la même pièce
     socket.on("attackEven",(start,end,looser,player)=>{
         document.getElementById(looser+"b").textContent++;
         document.getElementById(looser+"r").textContent++;
@@ -416,6 +423,7 @@
         document.getElementById(end).removeChild(document.getElementById(end).firstChild)
     });
 
+    //Evenement quand l'adversaire à attaquer une pièce et le joueur a gagné
     socket.on("defenseWon",(start,looser,ennemyPlayer)=>{
         let ennemyColor = (ennemyPlayer==1) ? "r" : "b";
         document.getElementById(looser+ennemyColor).textContent++;
@@ -424,6 +432,7 @@
         document.getElementById(start).removeChild(document.getElementById(start).firstChild)
     })
 
+    //Evenement quand l'adversaire à attaquer une pièce et le joueur a perdu
     socket.on("defenseLost",(start,end,piece,ennemyPlayer,looser)=>{
         let playerColor = (ennemyPlayer==1) ? "b" : "r";
         document.getElementById(looser+playerColor).textContent++;
@@ -439,6 +448,7 @@
         newLocation.firstChild.style.width = "55px";
     });
 
+    //Evenement quand le joueur a gagné la partie
     socket.on("Victory",(data)=>{
         //alert("Victory!")
         let winner,looser;
@@ -463,6 +473,7 @@
         }
     })
 
+    //Evenement quand le joueur a perdu la partie
     socket.on("Defeat",(data)=>{
         //alert("Defeat!")
         let winner,looser;
@@ -488,6 +499,7 @@
         }
     })
 
+    //Evenement quand l'adversaire s'est déconnecté ou a abandonné
     socket.on("winByFF",(data)=>{
         //alert("Your opponent gave up!")
         if(data) {

@@ -46,7 +46,7 @@ class Game{
     consoleLogTable(){
         console.log(this.grille);
     }
-
+    //Fonction qui gère toutes les résultats d'attaque possible, que ce soit victoire, défaire, égalité ou cas spéciaux.
     attack(start,end,player){
         let s = parseInt(start)
         let e = parseInt(end)
@@ -119,7 +119,7 @@ class Game{
         this.grille[Math.trunc(s/10)][s%10] = null;
     }
 
-
+    //on verifie que le joueur triche pas
     verifMove(player,start,end){
 
         let s = parseInt(start)
@@ -189,7 +189,7 @@ class Game{
             this.time = gameTime - this.time;
         }
     }
-
+    //Pour faciliter l'ecriture des scores
     exportData(){
         let data = {
             joueur1 : this.joueur1.getName(),

@@ -37,6 +37,7 @@ app.use(express.static(__dirname + '/front/'));
 app.use(urlencodedParser);
 app.use(session);
 
+//Pour changer le nombre de salons
 const roomnbr = 10
 let rooms = new Array(roomnbr)
 let games =  new Array(roomnbr)
@@ -45,7 +46,7 @@ for(let i = 0;i<roomnbr;i++){
     rooms[i] = new Array(3);
     rooms[i][0] = 0;
 }
-scoreHandler.readScore()
+scoreHandler.readScore()    // comme c'est pas instantané, et qu'on stocke autant le faire au début
 
 // Le serveur ecoute sur ce port
 http.listen(8880, () => {
@@ -162,7 +163,7 @@ io.on('connection', (socket) => {
             socket.emit("resultDecrypt", res);
         });
     });
-
+    //Place les gens dans les différentes rooms
     socket.on("getRoom",()=>{
         for(let i = 0;i<roomnbr;i++){
             if(rooms[i][0] !== 2 && (i === 0||rooms[i-1][0]===2)){
@@ -183,7 +184,7 @@ io.on('connection', (socket) => {
             }
         }
     });
-
+    //gère les déconexions peut importe la page
     socket.on('disconnect', () => {
         if(socket.handshake.session.room !== undefined && !games[socket.handshake.session.room]){
             rooms[socket.handshake.session.room][0] = 0;
@@ -348,6 +349,7 @@ io.on('connection', (socket) => {
 
     // ------------------------------ Sockets pour la phase de jeu ------------------------------
 
+    //envoie les à l'autre joueur quand quelqu'un abandonne
     socket.on("giveUp",()=>{
         //console.log("giveUp")
         socket.broadcast.to("room"+socket.handshake.session.room).emit("winByFF")
@@ -375,7 +377,7 @@ io.on('connection', (socket) => {
     socket.on("getTurn",()=>{
         socket.emit("sendTurn",(games[socket.handshake.session.room].turn ===socket.handshake.session.player) );
     })
-
+    //gère l'attaque, et renvoie au deux joueurs les résultats
     socket.on("move",(start,end)=>{
         // console.log("Move")
 
@@ -388,7 +390,7 @@ io.on('connection', (socket) => {
         socket.broadcast.to("room"+socket.handshake.session.room).emit("PieceMoved",start,end);
         socket.emit("PieceMoved",start,end);
     });
-
+    //gère l'attaque, et renvoie au deux joueurs les résultats
     socket.on("attack",(start,end)=>{
         if(!games[socket.handshake.session.room].verifMove(socket.handshake.session.player,start,end)) {
             socket.emit("moveImpossible");

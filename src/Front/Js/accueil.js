@@ -7,7 +7,7 @@ let wel = document.getElementById("bonjour")
 socket.emit("isSession","");
 
 
-socket.on("onSession", data=>{
+socket.on("onSession", data=>{              //affichage selon s'il y a une session d'active ou non
     console.log(data);
     if(data){
         log.style.display = "none";
@@ -29,7 +29,7 @@ socket.on("onSession", data=>{
 let formInvit = document.getElementById("loginForm");
 let input = document.getElementById("invite");
 
-formInvit.addEventListener('submit', event => {
+formInvit.addEventListener('submit', event => {     // Pour jouer au jeu sans se connecter
     event.preventDefault();
     console.log('Invité connecté :', input.value);
     logger.sendLogin(input.value);

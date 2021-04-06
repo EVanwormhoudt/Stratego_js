@@ -13,18 +13,19 @@ let scoreHandler = (function (){
     let scores = []
 
     return{
+        //ecriture des scores dans le fichier .json
         writeScore(newScore){
             fs.readFile('./Back/Data/Scores.json', (err, data) => {
                 if (err) throw err;
-                const scores = JSON.parse(data);
+                const newscores = JSON.parse(data);
 
 
-                if(scores.scores.length === 5){
-                    scores.scores.shift();
+                if(newscores.scores.length === 5){
+                    newscores.scores.shift();
                 }
-                scores.scores.push(newScore);
+                newscores.scores.push(newScore);
 
-                let mydatas = JSON.stringify(scores, null, 2);
+                let mydatas = JSON.stringify(newscores, null, 2);
 
 
                 fs.writeFile('./Back/Data/Scores.json', mydatas, (err) => {
@@ -33,6 +34,7 @@ let scoreHandler = (function (){
                 });
             })
         },
+        //Lecture des scores dans le fichier .json
         readScore(index){
             fs.readFile('./Back/Data/Scores.json', (err, data) => {
                 if (err) throw err;
@@ -40,6 +42,7 @@ let scoreHandler = (function (){
                 scores = scoresJson
             });
         },
+        //Ecriture d'un score dans la base de données
         writePersonnalScore(newScore) {
             let sql = "INSERT INTO scores VALUES (default,?,?,?)";
             let winner,looser;
@@ -69,6 +72,7 @@ let scoreHandler = (function (){
                 }
             });
         },
+        //Fonction qui renvoie tous les scores de quelqu'un à partir d'un nom
         readPersonnalScore(name){
             //If you want to use this, careful that it's an async function
             //there is a promise to use it, with this form:

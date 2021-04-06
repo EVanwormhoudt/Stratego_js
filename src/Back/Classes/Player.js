@@ -19,17 +19,9 @@ class Player{
 
         ];
     }
+    //fonctions de retours
     getName(){
         return this.name;
-    }
-    getColor(){
-        return this.color;
-    }
-    setColor(newColor){
-        this.color=newColor;
-    }
-    viewTableOfPawns(){
-        console.table(this.tableOfPawns);
     }
     tableOfPawnsView(){
         return this.tableOfPawns;
@@ -70,7 +62,7 @@ class Player{
             }
         }
     }
-
+    //remplir le tableau des pièces d'un joueur, afin de pouvoir compter combien il en reste
     Remplirtab(){
         this.tableOfPawns = [
             {name:"Bombes",nombreRestant:6,force:"100"},
